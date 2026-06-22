@@ -1,9 +1,7 @@
 // ── Supabase 連線設定 ──────────────────────────────────
-// 到 Supabase 後台 → Project Settings → Data API（或 API）
-//   1) Project URL        → 填到 url
-//   2) Project API Keys 的 anon / public key → 填到 anonKey
-// anon key 設計上就是公開的，靠資料表的 RLS 政策保護，放在前端是安全的。
+// 這兩個值都是公開金鑰（靠資料表的 RLS 政策保護），放在前端、commit 進 public repo 都是安全的。
+// 由 Supabase MCP 自動填入（專案 ref: xwtklvwrudzxzxjknjtm）。
 window.SUPABASE_CONFIG = {
-  url: "在此貼上你的 Project URL",
-  anonKey: "在此貼上你的 anon public key"
+  url: "https://xwtklvwrudzxzxjknjtm.supabase.co",
+  anonKey: "sb_publishable_kjTPH4skYEfcAnArj8cYmg_TGEbCbry"
 };
