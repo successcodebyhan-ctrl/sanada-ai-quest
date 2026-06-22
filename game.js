@@ -3753,14 +3753,14 @@ function drawEraScene(sceneName){
   // 左側傳送門（返回領地）
   drawEraPortal(200,GROUND_Y-106);
 
-  // 右側時代城堡（貼在地面上）
+  // 右側時代城堡（底部對齊地面 GROUND_Y）
   const gY=GROUND_Y;
   if(sceneName==='three-kingdom'){
-    drawThreeKingdomCastle(1050, gY-70);
+    drawThreeKingdomCastle(1050, gY-120); // 最低點 y+120
   } else if(sceneName==='knight'){
-    drawKnightCastle(1050, gY-70);
+    drawKnightCastle(1050, gY-40);        // 最低點 y+40
   } else {
-    drawEdoCastle(1050, gY);
+    drawEdoCastle(1050, gY-85);           // 最低點 y+85
   }
 
   // 繪製時代NPC
