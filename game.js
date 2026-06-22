@@ -729,6 +729,8 @@ let battleAnimations=[]; // 正在進行的動畫
 let playerAttackFrame=0; // 我方揮刀幀數
 let enemyShakeFrame=0; // 敵方晃動幀數
 let damageDisplays=[]; // 傷害顯示 [{x,y,damage,timer}]
+let battleArrows=[]; // 對戰背景飛箭 [{x,y,vx,vy,color,life}]
+let battleArrowTimer=0; // 飛箭發射計時器
 
 // 教學場景狀態
 let teachingPhase=1; // 1=隨從講話, 2=真田幸村確認
@@ -1215,6 +1217,7 @@ function startBattle(){
     maxHP=100;
     questionAnswered=false;
     selectedAnswer=null;
+    battleArrows=[]; battleArrowTimer=0; // 清空背景飛箭
     loadCurrentQuestion();
   };
 }
@@ -3006,6 +3009,70 @@ function drawBattleScene(){
   else drawBattleSceneLandscape();
 }
 
+// 閃爍星空（重用全域 stars，與其他場景一致）
+function drawTwinkleStars(){
+  for(const s of stars){
+    s.phase+=s.speed;
+    s.x=s.bx+Math.sin(s.phase*.31)*1.4;
+    s.y=s.by+Math.cos(s.phase*.19)*.7;
+    const b=(Math.sin(s.phase)+1)/2;
+    const a=Math.floor(70+b*185).toString(16).padStart(2,'0');
+    const sx=Math.round(s.x), sy=Math.round(s.y);
+    ctx.fillStyle=(s.big?'#ffffff':'#cecac9')+a;
+    ctx.fillRect(sx,sy,1,1);
+    if(s.big&&b>.65){
+      ctx.fillStyle='#ffffff33';
+      ctx.fillRect(sx-1,sy,1,1); ctx.fillRect(sx+1,sy,1,1);
+      ctx.fillRect(sx,sy-1,1,1);
+    }
+  }
+}
+
+// 發射一支從 (sx,sy) 飛向 (tx,ty) 的弧線箭矢（參數化，弧高固定不隨距離爆增）
+function spawnBattleArrow(sx,sy,tx,ty,color){
+  const dist=Math.hypot(tx-sx,ty-sy)||1;
+  battleArrows.push({sx,sy,tx,ty,t:0,speed:9/dist,arc:38+Math.random()*28,color});
+}
+function arrowPos(a,t){
+  return {
+    x:a.sx+(a.tx-a.sx)*t,
+    y:a.sy+(a.ty-a.sy)*t-a.arc*Math.sin(Math.PI*t), // 弧線：中段最高
+  };
+}
+
+// 更新雙方背景飛箭：敵方(左)→我方(右)，我方(右)→敵方(左)
+function updateBattleArrows(ex,ey,px,py){
+  battleArrowTimer++;
+  if(battleArrowTimer>=42){
+    battleArrowTimer=0;
+    spawnBattleArrow(ex,ey,px+(Math.random()*40-20),py+(Math.random()*30-15),'#ffcf6b'); // 敵方箭（金黃）
+    spawnBattleArrow(px,py,ex+(Math.random()*40-20),ey+(Math.random()*30-15),'#aee4ff'); // 我方箭（淺藍）
+  }
+  for(let i=battleArrows.length-1;i>=0;i--){
+    battleArrows[i].t+=battleArrows[i].speed;
+    if(battleArrows[i].t>=1) battleArrows.splice(i,1);
+  }
+}
+
+// 繪製飛箭（依飛行方向旋轉的像素箭）
+function drawBattleArrows(){
+  for(const a of battleArrows){
+    const p=arrowPos(a,a.t);
+    const p2=arrowPos(a,Math.min(1,a.t+0.02)); // 取下一點求飛行方向
+    ctx.save();
+    ctx.translate(p.x,p.y);
+    ctx.rotate(Math.atan2(p2.y-p.y,p2.x-p.x));
+    ctx.fillStyle=a.color;
+    ctx.fillRect(-9,-1,15,2);                 // 箭桿
+    ctx.beginPath();                          // 箭頭
+    ctx.moveTo(6,-3); ctx.lineTo(12,0); ctx.lineTo(6,3); ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle='#ffffff';                  // 尾羽
+    ctx.fillRect(-9,-2,3,1); ctx.fillRect(-9,1,3,1);
+    ctx.restore();
+  }
+}
+
 function drawBattleSceneLandscape(){
   // 更新動畫幀數
   if(playerAttackFrame>0) playerAttackFrame--;
@@ -3021,6 +3088,13 @@ function drawBattleSceneLandscape(){
   g.addColorStop(1,col.bgSub);
   ctx.fillStyle=g;
   ctx.fillRect(0,0,DESIGN_W,GROUND_Y);
+
+  // 星空（隨機閃爍）
+  drawTwinkleStars();
+
+  // 雙方背景飛箭（敵左→我右、我右→敵左）
+  updateBattleArrows(150, GROUND_Y-55, DESIGN_W-150, GROUND_Y-55);
+  drawBattleArrows();
 
   // 左上：答題進度
   ctx.fillStyle='#ffffff';
@@ -3243,6 +3317,13 @@ function drawBattleScenePortrait(){
   g.addColorStop(1,col.bgSub);
   ctx.fillStyle=g;
   ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+
+  // 星空（隨機閃爍）
+  drawTwinkleStars();
+
+  // 雙方背景飛箭（上方，敵左↔我右）
+  updateBattleArrows(70, 95, DESIGN_W-70, 95);
+  drawBattleArrows();
 
   // 左上：答題進度
   ctx.fillStyle='#ffffff';
