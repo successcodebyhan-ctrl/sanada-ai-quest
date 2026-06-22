@@ -32,10 +32,10 @@
         {
           "id": "cw-01-3",
           "type": "選擇題",
-          "question": "Cowork 目前支援哪個作業系統？",
-          "options": ["只有Windows", "只有macOS", "macOS和Linux", "所有系統都支援"],
-          "answer": "只有macOS",
-          "explanation": "Cowork 目前只支援 macOS，需要下載 Claude Desktop App 才能使用，Windows 版本尚在規劃中。"
+          "question": "Cowork 目前支援哪些作業系統？",
+          "options": ["只有Windows", "只有macOS", "macOS 和 Windows", "只有Linux"],
+          "answer": "macOS 和 Windows",
+          "explanation": "Cowork 透過 Claude Desktop App 使用，macOS 與 Windows 皆有支援。"
         },
         {
           "id": "cw-01-4",

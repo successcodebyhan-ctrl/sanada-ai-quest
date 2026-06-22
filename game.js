@@ -705,7 +705,12 @@ let fadeAlpha=0, fadeDir=0, fadeCb=null, fadeFrame=0;
 let currentEra=null;
 let gems=[false,false,false]; // 三國、騎士、江戶
 let coins=0, inventory={noodle:0, fish:0, tempura:0};
-let levelProgress={unlockedLevels:Array(30).fill(false).map((v,i)=>i===0), maxStars:Array(30).fill(0)};
+// 每個時代各自一份關卡進度（避免三時代共用同一組索引）
+function freshEraProgress(){ return {unlockedLevels:Array(30).fill(false).map((v,i)=>i===0), maxStars:Array(30).fill(0)}; }
+function freshLevelProgress(){ return {ai:freshEraProgress(), cowork:freshEraProgress(), code:freshEraProgress()}; }
+function isNewProgressFormat(lp){ return !!(lp && lp.ai && Array.isArray(lp.ai.unlockedLevels) && lp.cowork && lp.code); }
+let levelProgress=freshLevelProgress();
+function curProg(){ return levelProgress[currentEra] || levelProgress.ai; }
 let eraGameData={ai:null, cowork:null, code:null};
 let eraGroundMap=null; // 時期地面貼圖（固定）
 
@@ -1058,7 +1063,7 @@ function onTap(cx,cy){
       const ly=MY+60+displayIdx*(itemH+itemGap);
       const levelItemX=MX+20, levelItemW=MW-40;
       if(cx>=levelItemX&&cx<levelItemX+levelItemW&&cy>=ly&&cy<ly+itemH){
-        if(levelProgress.unlockedLevels[i]){
+        if(curProg().unlockedLevels[i]){
           enterTeachingScene(i);
           levelMenuOpen=false;
         }
@@ -1086,7 +1091,7 @@ function onTap(cx,cy){
         gems=[false,false,false];
         coins=0;
         inventory={noodle:0,fish:0,tempura:0};
-        levelProgress={unlockedLevels:Array(30).fill(false).map((v,i)=>i===0),maxStars:Array(30).fill(0)};
+        levelProgress=freshLevelProgress();
         flagsPlanted={ai:false,cowork:false,code:false};
         portalMenuOpen=false;
         saveProgress();
@@ -1310,12 +1315,13 @@ function endBattle(){
   const earnedCoins=dropCoins;
   coins+=earnedCoins; // 加到全域玩家銅幣總數
 
-  if(starCount>levelProgress.maxStars[currentStage.stageId-1]){
-    levelProgress.maxStars[currentStage.stageId-1]=starCount;
+  const prog=curProg(); // 當前時代的進度
+  if(starCount>prog.maxStars[currentStage.stageId-1]){
+    prog.maxStars[currentStage.stageId-1]=starCount;
   }
 
   if(currentStage.stageId<30){
-    levelProgress.unlockedLevels[currentStage.stageId]=true;
+    prog.unlockedLevels[currentStage.stageId]=true;
   }
 
   levelClearReward={coins:earnedCoins, items};
@@ -1987,8 +1993,9 @@ function drawLevelMenu(){
   for(let i=startIdx;i<endIdx;i++){
     const displayIdx=i-startIdx;
     const ly=MY+60+displayIdx*(itemH+itemGap);
-    const unlocked=levelProgress.unlockedLevels[i];
-    const maxStar=levelProgress.maxStars[i];
+    const prog=levelProgress[currentEra]||levelProgress.ai;
+    const unlocked=prog.unlockedLevels[i];
+    const maxStar=prog.maxStars[i];
     const stageName=eraData.data?.stages?.[i]?.stageName||'第 '+(i+1)+' 關';
     const enemy=eraData.data?.stages?.[i]?.enemy||'未知敵人';
 
@@ -4829,9 +4836,20 @@ function currentStateData(){
 }
 function applySaveData(data){
   if(!data) return;
+  // 舊版「三時代共用進度」格式不相容 → 整份視為失效，全部重置（保留是否看過開場與音樂設定）
+  if(!isNewProgressFormat(data.levelProgress)){
+    coins=0;
+    inventory={noodle:0,fish:0,tempura:0};
+    gems=[false,false,false];
+    flagsPlanted={ai:false, cowork:false, code:false};
+    levelProgress=freshLevelProgress();
+    musicEnabled=data.musicEnabled!==false;
+    showIntro=!data.introShown;
+    return;
+  }
   coins=data.coins||0;
   inventory=data.inventory||{noodle:0,fish:0,tempura:0};
-  levelProgress=data.levelProgress||{unlockedLevels:Array(30).fill(false).map((v,i)=>i===0),maxStars:Array(30).fill(0)};
+  levelProgress=data.levelProgress;
   gems=data.gems||[false,false,false];
   flagsPlanted=data.flagsPlanted||{ai:false, cowork:false, code:false};
   musicEnabled=data.musicEnabled!==false;
