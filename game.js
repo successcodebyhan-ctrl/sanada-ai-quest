@@ -3756,7 +3756,7 @@ function drawEraScene(sceneName){
   // 右側時代城堡（底部對齊地面 GROUND_Y）
   const gY=GROUND_Y;
   if(sceneName==='three-kingdom'){
-    drawThreeKingdomCastle(1050, gY-120); // 最低點 y+120
+    drawThreeKingdomCastle(1000, gY-120); // 最低點 y+120；x 左移避免基座(±250)超出右緣
   } else if(sceneName==='knight'){
     drawKnightCastle(1050, gY-40);        // 最低點 y+40
   } else {
