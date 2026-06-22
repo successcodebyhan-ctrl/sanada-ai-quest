@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <style>
+      .sky { fill: #3a3030; }
+      .wall-dark { fill: #4a3a2a; }
+      .wall-mid { fill: #6a5a4a; }
+      .wall-light { fill: #8a7a6a; }
+      .brick-dark { fill: #5a4a3a; }
+      .brick-light { fill: #7a6a5a; }
+      .door-dark { fill: #3a2a1a; }
+      .door-mid { fill: #5a4a3a; }
+      .roof-dark { fill: #7a3a2a; }
+      .roof-light { fill: #a a5a4a; }
+      .flag-yellow { fill: #d4a53a; }
+      .flag-red { fill: #c94a2a; }
+      .lantern { fill: #d95a2a; }
+      .gold { fill: #daa520; }
+      .wood { fill: #5a4a3a; }
+      .outline { stroke: #2a1a1a; stroke-width: 1; }
+      .outline-2 { stroke: #2a1a1a; stroke-width: 2; }
+      .text-label { font-family: DotGothic16, monospace; font-size: 32px; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- 背景天空 -->
+  <rect width="1280" height="720" class="sky" />
+
+  <!-- ═══ 城牆基座 ═══════════════════════════════════════ -->
+  <rect x="0" y="480" width="1280" height="240" class="wall-dark" />
+
+  <!-- 城牆磚紋（大磚塊） -->
+  <g opacity="0.7">
+    <!-- 水平磚行 -->
+    <g class="brick-dark">
+      <rect x="0" y="480" width="1280" height="30" />
+      <rect x="0" y="530" width="1280" height="30" />
+      <rect x="0" y="580" width="1280" height="30" />
+      <rect x="0" y="630" width="1280" height="30" />
+    </g>
+    <!-- 垂直磚分割線 -->
+    <g class="brick-light" stroke-width="1">
+      <line x1="40" y1="480" x2="40" y2="720" />
+      <line x1="80" y1="480" x2="80" y2="720" />
+      <line x1="120" y1="480" x2="120" y2="720" />
+      <line x1="160" y1="480" x2="160" y2="720" />
+      <line x1="200" y1="480" x2="200" y2="720" />
+      <line x1="240" y1="480" x2="240" y2="720" />
+      <line x1="280" y1="480" x2="280" y2="720" />
+      <line x1="320" y1="480" x2="320" y2="720" />
+      <line x1="360" y1="480" x2="360" y2="720" />
+      <line x1="400" y1="480" x2="400" y2="720" />
+      <line x1="440" y1="480" x2="440" y2="720" />
+      <line x1="480" y1="480" x2="480" y2="720" />
+      <line x1="520" y1="480" x2="520" y2="720" />
+      <line x1="560" y1="480" x2="560" y2="720" />
+      <line x1="600" y1="480" x2="600" y2="720" />
+      <line x1="640" y1="480" x2="640" y2="720" />
+      <line x1="680" y1="480" x2="680" y2="720" />
+      <line x1="720" y1="480" x2="720" y2="720" />
+      <line x1="760" y1="480" x2="760" y2="720" />
+      <line x1="800" y1="480" x2="800" y2="720" />
+      <line x1="840" y1="480" x2="840" y2="720" />
+      <line x1="880" y1="480" x2="880" y2="720" />
+      <line x1="920" y1="480" x2="920" y2="720" />
+      <line x1="960" y1="480" x2="960" y2="720" />
+      <line x1="1000" y1="480" x2="1000" y2="720" />
+      <line x1="1040" y1="480" x2="1040" y2="720" />
+      <line x1="1080" y1="480" x2="1080" y2="720" />
+      <line x1="1120" y1="480" x2="1120" y2="720" />
+      <line x1="1160" y1="480" x2="1160" y2="720" />
+      <line x1="1200" y1="480" x2="1200" y2="720" />
+      <line x1="1240" y1="480" x2="1240" y2="720" />
+    </g>
+  </g>
+
+  <!-- 城牆頂部雉堞 -->
+  <g class="wall-mid">
+    <rect x="40" y="460" width="25" height="25" class="outline" />
+    <rect x="120" y="460" width="25" height="25" class="outline" />
+    <rect x="200" y="460" width="25" height="25" class="outline" />
+    <rect x="280" y="460" width="25" height="25" class="outline" />
+    <rect x="360" y="460" width="25" height="25" class="outline" />
+    <rect x="440" y="460" width="25" height="25" class="outline" />
+    <rect x="520" y="460" width="25" height="25" class="outline" />
+    <rect x="600" y="460" width="25" height="25" class="outline" />
+    <rect x="680" y="460" width="25" height="25" class="outline" />
+    <rect x="760" y="460" width="25" height="25" class="outline" />
+    <rect x="840" y="460" width="25" height="25" class="outline" />
+    <rect x="920" y="460" width="25" height="25" class="outline" />
+    <rect x="1000" y="460" width="25" height="25" class="outline" />
+    <rect x="1080" y="460" width="25" height="25" class="outline" />
+    <rect x="1160" y="460" width="25" height="25" class="outline" />
+    <rect x="1240" y="460" width="25" height="25" class="outline" />
+  </g>
+
+  <!-- ═══ 左側箭樓 ═══════════════════════════════════════ -->
+  <g id="left-tower">
+    <!-- 下層塔身 -->
+    <rect x="60" y="300" width="120" height="180" class="wall-mid" />
+
+    <!-- 下層磚紋 -->
+    <g class="brick-dark" opacity="0.6">
+      <rect x="60" y="300" width="30" height="45" />
+      <rect x="90" y="300" width="30" height="45" />
+      <rect x="120" y="300" width="30" height="45" />
+
+      <rect x="60" y="345" width="30" height="45" />
+      <rect x="90" y="345" width="30" height="45" />
+      <rect x="120" y="345" width="30" height="45" />
+
+      <rect x="60" y="390" width="30" height="45" />
+      <rect x="90" y="390" width="30" height="45" />
+      <rect x="120" y="390" width="30" height="45" />
+    </g>
+
+    <!-- 上層塔身（縮小） -->
+    <rect x="85" y="200" width="70" height="100" class="wall-mid" />
+
+    <!-- 上層磚紋 -->
+    <g class="brick-dark" opacity="0.6">
+      <rect x="85" y="200" width="25" height="30" />
+      <rect x="110" y="200" width="25" height="30" />
+
+      <rect x="85" y="230" width="25" height="30" />
+      <rect x="110" y="230" width="25" height="30" />
+    </g>
+
+    <!-- 屋頂（中式翹簷） -->
+    <!-- 屋頂邊緣 -->
+    <polygon points="70,200 120,160 170,200" class="roof-dark" />
+    <!-- 屋簷上翹 -->
+    <polygon points="65,205 125,170 185,205" class="roof-light" opacity="0.8" />
+    <!-- 屋脊金飾 -->
+    <circle cx="120" cy="155" r="8" class="gold" />
+
+    <!-- 塔窗（下層） -->
+    <rect x="80" y="330" width="16" height="20" class="door-dark" class="outline" />
+    <rect x="130" y="330" width="16" height="20" class="door-dark" class="outline" />
+    <rect x="80" y="400" width="16" height="20" class="door-dark" class="outline" />
+    <rect x="130" y="400" width="16" height="20" class="door-dark" class="outline" />
+
+    <!-- 塔窗（上層） -->
+    <rect x="95" y="230" width="14" height="16" class="door-dark" class="outline" />
+    <rect x="125" y="230" width="14" height="16" class="door-dark" class="outline" />
+
+    <!-- 塔門（下層正面） -->
+    <rect x="100" y="450" width="40" height="50" class="door-dark" class="outline-2" />
+    <line x1="120" y1="450" x2="120" y2="500" class="outline" stroke-width="2" />
+
+    <!-- 紅色燈籠（上層） -->
+    <circle cx="100" cy="185" r="8" class="lantern" />
+    <circle cx="140" cy="185" r="8" class="lantern" />
+    <line x1="100" y1="177" x2="100" y2="165" class="gold" stroke-width="2" />
+    <line x1="140" y1="177" x2="140" y2="165" class="gold" stroke-width="2" />
+  </g>
+
+  <!-- ═══ 中央城門 ═══════════════════════════════════════ -->
+  <g id="main-gate">
+    <!-- 城門基座 -->
+    <rect x="380" y="340" width="520" height="140" class="door-mid" />
+
+    <!-- 城門磚紋 -->
+    <g class="door-dark" opacity="0.5">
+      <rect x="380" y="340" width="65" height="35" />
+      <rect x="445" y="340" width="65" height="35" />
+      <rect x="510" y="340" width="65" height="35" />
+      <rect x="575" y="340" width="65" height="35" />
+      <rect x="640" y="340" width="65" height="35" />
+      <rect x="705" y="340" width="65" height="35" />
+      <rect x="770" y="340" width="65" height="35" />
+      <rect x="835" y="340" width="65" height="35" />
+
+      <rect x="380" y="375" width="65" height="35" />
+      <rect x="445" y="375" width="65" height="35" />
+      <rect x="510" y="375" width="65" height="35" />
+      <rect x="575" y="375" width="65" height="35" />
+      <rect x="640" y="375" width="65" height="35" />
+      <rect x="705" y="375" width="65" height="35" />
+      <rect x="770" y="375" width="65" height="35" />
+      <rect x="835" y="375" width="65" height="35" />
+    </g>
+
+    <!-- 拱形木門 -->
+    <g>
+      <!-- 左側拱門 -->
+      <path d="M 430 380 Q 430 320 470 310 L 470 380" fill="none" stroke="#3a2a1a" stroke-width="8" />
+      <path d="M 430 380 Q 430 320 470 310" fill="none" stroke="#5a4a3a" stroke-width="6" opacity="0.7" />
+
+      <!-- 右側拱門 -->
+      <path d="M 810 380 Q 810 320 770 310 L 770 380" fill="none" stroke="#3a2a1a" stroke-width="8" />
+      <path d="M 810 380 Q 810 320 770 310" fill="none" stroke="#5a4a3a" stroke-width="6" opacity="0.7" />
+
+      <!-- 門框邊界 -->
+      <rect x="420" y="310" width="440" height="170" fill="none" stroke="#2a1a1a" stroke-width="2" />
+    </g>
+
+    <!-- 門上匾額 -->
+    <rect x="480" y="280" width="320" height="35" class="gold" />
+    <rect x="480" y="280" width="320" height="35" class="outline-2" fill="none" />
+    <text x="640" y="307" class="text-label" text-anchor="middle" fill="#2a1a1a">城門</text>
+
+    <!-- 門上方屋頂（中式翹簷） -->
+    <polygon points="380,310 640,240 900,310" class="roof-dark" />
+    <polygon points="370,315 640,245 910,315" class="roof-light" opacity="0.7" />
+    <circle cx="640" cy="235" r="10" class="gold" />
+
+    <!-- 門前旗竿（左） -->
+    <rect x="420" y="260" width="4" height="120" class="wood" />
+    <rect x="418" y="260" width="8" height="4" class="gold" />
+    <rect x="422" y="254" width="0" height="0" />
+    <!-- 門前旗幟（左） -->
+    <rect x="424" y="265" width="28" height="20" class="flag-yellow" class="outline" />
+
+    <!-- 門前旗竿（右） -->
+    <rect x="856" y="260" width="4" height="120" class="wood" />
+    <rect x="854" y="260" width="8" height="4" class="gold" />
+    <!-- 門前旗幟（右） -->
+    <rect x="828" y="265" width="28" height="20" class="flag-yellow" class="outline" />
+  </g>
+
+  <!-- ═══ 右側箭樓 ═══════════════════════════════════════ -->
+  <g id="right-tower">
+    <!-- 下層塔身 -->
+    <rect x="1100" y="300" width="120" height="180" class="wall-mid" />
+
+    <!-- 下層磚紋 -->
+    <g class="brick-dark" opacity="0.6">
+      <rect x="1100" y="300" width="30" height="45" />
+      <rect x="1130" y="300" width="30" height="45" />
+      <rect x="1160" y="300" width="30" height="45" />
+
+      <rect x="1100" y="345" width="30" height="45" />
+      <rect x="1130" y="345" width="30" height="45" />
+      <rect x="1160" y="345" width="30" height="45" />
+
+      <rect x="1100" y="390" width="30" height="45" />
+      <rect x="1130" y="390" width="30" height="45" />
+      <rect x="1160" y="390" width="30" height="45" />
+    </g>
+
+    <!-- 上層塔身（縮小） -->
+    <rect x="1125" y="200" width="70" height="100" class="wall-mid" />
+
+    <!-- 上層磚紋 -->
+    <g class="brick-dark" opacity="0.6">
+      <rect x="1125" y="200" width="25" height="30" />
+      <rect x="1150" y="200" width="25" height="30" />
+
+      <rect x="1125" y="230" width="25" height="30" />
+      <rect x="1150" y="230" width="25" height="30" />
+    </g>
+
+    <!-- 屋頂（中式翹簷） -->
+    <polygon points="1110,200 1160,160 1210,200" class="roof-dark" />
+    <polygon points="1105,205 1165,170 1215,205" class="roof-light" opacity="0.8" />
+    <circle cx="1160" cy="155" r="8" class="gold" />
+
+    <!-- 塔窗（下層） -->
+    <rect x="1120" y="330" width="16" height="20" class="door-dark" class="outline" />
+    <rect x="1170" y="330" width="16" height="20" class="door-dark" class="outline" />
+    <rect x="1120" y="400" width="16" height="20" class="door-dark" class="outline" />
+    <rect x="1170" y="400" width="16" height="20" class="door-dark" class="outline" />
+
+    <!-- 塔窗（上層） -->
+    <rect x="1135" y="230" width="14" height="16" class="door-dark" class="outline" />
+    <rect x="1165" y="230" width="14" height="16" class="door-dark" class="outline" />
+
+    <!-- 塔門（下層正面） -->
+    <rect x="1140" y="450" width="40" height="50" class="door-dark" class="outline-2" />
+    <line x1="1160" y1="450" x2="1160" y2="500" class="outline" stroke-width="2" />
+
+    <!-- 紅色燈籠（上層） -->
+    <circle cx="1140" cy="185" r="8" class="lantern" />
+    <circle cx="1180" cy="185" r="8" class="lantern" />
+    <line x1="1140" y1="177" x2="1140" y2="165" class="gold" stroke-width="2" />
+    <line x1="1180" y1="177" x2="1180" y2="165" class="gold" stroke-width="2" />
+  </g>
+
+  <!-- ═══ 城牆上的旗幟 ═══════════════════════════════════ -->
+  <!-- 旗竿和旗幟（左區） -->
+  <g class="flag-red">
+    <line x1="160" y1="430" x2="160" y2="390" stroke-width="3" class="wood" />
+    <rect x="163" y="390" width="24" height="18" class="outline" />
+
+    <line x1="280" y1="430" x2="280" y2="390" stroke-width="3" class="wood" />
+    <rect x="283" y="390" width="24" height="18" class="outline" />
+
+    <line x1="400" y1="430" x2="400" y2="390" stroke-width="3" class="wood" />
+    <rect x="403" y="390" width="24" height="18" class="outline" />
+  </g>
+
+  <!-- 旗竿和旗幟（右區） -->
+  <g class="flag-red">
+    <line x1="880" y1="430" x2="880" y2="390" stroke-width="3" class="wood" />
+    <rect x="883" y="390" width="24" height="18" class="outline" />
+
+    <line x1="1000" y1="430" x2="1000" y2="390" stroke-width="3" class="wood" />
+    <rect x="1003" y="390" width="24" height="18" class="outline" />
+
+    <line x1="1120" y1="430" x2="1120" y2="390" stroke-width="3" class="wood" />
+    <rect x="1123" y="390" width="24" height="18" class="outline" />
+  </g>
+
+  <!-- ═══ 門前裝飾物 ═══════════════════════════════════════ -->
+  <!-- 左側木桶 -->
+  <g id="left-barrel">
+    <circle cx="300" cy="490" r="20" class="wood" />
+    <ellipse cx="300" cy="490" rx="20" ry="8" class="wall-light" />
+    <line x1="280" y1="490" x2="320" y2="490" stroke="#2a1a1a" stroke-width="1" />
+  </g>
+
+  <!-- 左側武器架 -->
+  <rect x="370" y="480" width="6" height="40" class="wood" />
+  <line x1="373" y1="485" x2="390" y2="495" stroke="#2a1a1a" stroke-width="3" />
+  <line x1="373" y1="495" x2="390" y2="505" stroke="#2a1a1a" stroke-width="3" />
+
+  <!-- 右側木桶 -->
+  <g id="right-barrel">
+    <circle cx="980" cy="490" r="20" class="wood" />
+    <ellipse cx="980" cy="490" rx="20" ry="8" class="wall-light" />
+    <line x1="960" y1="490" x2="1000" y2="490" stroke="#2a1a1a" stroke-width="1" />
+  </g>
+
+  <!-- 右側武器架 -->
+  <rect x="910" y="480" width="6" height="40" class="wood" />
+  <line x1="913" y1="485" x2="930" y2="495" stroke="#2a1a1a" stroke-width="3" />
+  <line x1="913" y1="495" x2="930" y2="505" stroke="#2a1a1a" stroke-width="3" />
+
+  <!-- 中央城門前武器架 -->
+  <rect x="600" y="485" width="6" height="35" class="wood" />
+  <line x1="603" y1="490" x2="620" y2="500" stroke="#2a1a1a" stroke-width="3" />
+  <line x1="603" y1="500" x2="620" y2="510" stroke="#2a1a1a" stroke-width="3" />
+
+  <rect x="674" y="485" width="6" height="35" class="wood" />
+  <line x1="677" y1="490" x2="694" y2="500" stroke="#2a1a1a" stroke-width="3" />
+  <line x1="677" y1="500" x2="694" y2="510" stroke="#2a1a1a" stroke-width="3" />
+
+  <!-- ═══ 整體邊框 ═══════════════════════════════════════ -->
+  <rect x="0" y="0" width="1280" height="720" class="outline-2" fill="none" />
+</svg>

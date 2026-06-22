@@ -1,0 +1,10 @@
+# 本機開發用的伺服器日誌
+server.log
+
+# 誤放進專案的暫存 skills 資料夾
+UsersVivoBookAppDataLocalTempawesome-claude-skills/
+
+# 系統 / 編輯器雜物
+.DS_Store
+Thumbs.db
+.vscode/

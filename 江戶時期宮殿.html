@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>江戶時期宮殿 - Canvas 像素藝術</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
+
+    #canvas {
+      border: 2px solid #333;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      background: #ffffff;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 20px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <h1>江戶時期宮殿 - Pixel Art</h1>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // 禁用平滑
+    ctx.imageSmoothingEnabled = false;
+
+    const colors = {
+      white: '#ffffff',
+      stonePath: '#c0b898',      // 石板路
+      stoneStep: '#d8cdb0',      // 台階
+      woodWall: '#3a2518',       // 木牆
+      column: '#8b1a1a',         // 紅柱
+      roofDark: '#1e1e1e',       // 屋頂
+      roofGold: '#c8a020',       // 屋脊金色
+      gold: '#d4a830',           // 金色細柱
+      window: '#1a1a1a',         // 窗戶
+      mapleRed: '#cc3311',       // 楓樹紅
+      mapleDark: '#aa2200',      // 楓樹深紅
+      greenBush: '#2a5010',      // 綠叢
+      treeTrunk: '#5a2a00'       // 樹幹
+    };
+
+    function fillRect(x, y, w, h, color) {
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, w, h);
+    }
+
+    function drawPixelPalace() {
+      // 1. 背景
+      fillRect(0, 0, 600, 600, colors.white);
+
+      // 2. 石板路（最前景）
+      fillRect(100, 480, 400, 80, colors.stonePath);
+      // 石板磚縫網格
+      ctx.strokeStyle = '#a89070';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(100, 480 + i * 20);
+        ctx.lineTo(500, 480 + i * 20);
+        ctx.stroke();
+      }
+      for (let i = 0; i <= 8; i++) {
+        ctx.beginPath();
+        ctx.moveTo(100 + i * 50, 480);
+        ctx.lineTo(100 + i * 50, 560);
+        ctx.stroke();
+      }
+
+      // 3. 台階（3層）
+      // 第三層（最上）
+      fillRect(270, 400, 60, 12, colors.stoneStep);
+      // 第二層
+      fillRect(250, 412, 100, 12, colors.stoneStep);
+      // 第一層
+      fillRect(230, 424, 140, 12, colors.stoneStep);
+
+      // 4. 第一層宮殿主體
+      const layer1X = 120;
+      const layer1Y = 300;
+      const layer1W = 360;
+      const layer1H = 120;
+
+      // 牆身
+      fillRect(layer1X, layer1Y, layer1W, layer1H, colors.woodWall);
+
+      // 6根紅柱（等距排列）
+      const colW = 12;
+      const colH = 120;
+      const colSpacing = (layer1W - colW) / 5;
+      for (let i = 0; i < 6; i++) {
+        const colX = layer1X + i * colSpacing;
+        fillRect(colX, layer1Y, colW, colH, colors.column);
+      }
+
+      // 屋頂（翹簷效果）
+      drawRoof(layer1X, layer1Y - 40, layer1W, colors.roofDark, true);
+
+      // 5. 第二層宮殿主體
+      const layer2X = 180;
+      const layer2Y = 200;
+      const layer2W = 240;
+      const layer2H = 80;
+
+      // 牆身
+      fillRect(layer2X, layer2Y, layer2W, layer2H, colors.woodWall);
+
+      // 2個窗戶
+      fillRect(layer2X + 40, layer2Y + 25, 30, 25, colors.window);
+      fillRect(layer2X + layer2W - 70, layer2Y + 25, 30, 25, colors.window);
+
+      // 屋頂
+      drawRoof(layer2X, layer2Y - 30, layer2W, colors.roofDark, false);
+
+      // 6. 第三層（頂部小塔）
+      const layer3X = 250;
+      const layer3Y = 130;
+      const layer3W = 100;
+      const layer3H = 50;
+
+      // 牆身
+      fillRect(layer3X, layer3Y, layer3W, layer3H, colors.woodWall);
+
+      // 小屋頂
+      drawSmallRoof(layer3X, layer3Y - 20, layer3W, colors.roofDark);
+
+      // 頂端金色細柱
+      fillRect(layer3X + layer3W / 2 - 2, layer3Y - 50, 4, 30, colors.gold);
+      // 金色頂端尖
+      fillRect(layer3X + layer3W / 2 - 1, layer3Y - 52, 2, 2, colors.gold);
+
+      // 7. 左側紅楓樹
+      const mapleX = 80;
+      const mapleY = 280;
+
+      // 樹幹
+      fillRect(mapleX - 4, mapleY, 8, 80, colors.treeTrunk);
+
+      // 樹冠（不規則圓形，用多個矩形堆疊）
+      drawMapleTree(mapleX, mapleY - 50);
+
+      // 8. 右側綠叢
+      drawGreenBushes(520, 350);
+    }
+
+    function drawRoof(x, y, w, color, isLarge) {
+      // 屋頂主體（翹簷效果）
+      let steps = isLarge ? 20 : 15;
+      let maxHeight = isLarge ? 40 : 30;
+
+      // 從左到右，中間最高，兩端逐漸降低
+      for (let i = 0; i < steps; i++) {
+        let height;
+        let distFromCenter = Math.abs(i - (steps - 1) / 2);
+        height = Math.max(4, maxHeight - (distFromCenter * maxHeight / (steps / 2)));
+
+        let rectX = x + (i * w / steps);
+        let rectW = w / steps + 1;
+        let rectY = y + maxHeight - height;
+
+        fillRect(rectX, rectY, rectW, height, color);
+      }
+
+      // 屋脊金線
+      fillRect(x, y - 4, w, 4, colors.roofGold);
+    }
+
+    function drawSmallRoof(x, y, w, color) {
+      // 小屋頂
+      let steps = 10;
+      let maxHeight = 20;
+
+      for (let i = 0; i < steps; i++) {
+        let height;
+        let distFromCenter = Math.abs(i - (steps - 1) / 2);
+        height = Math.max(3, maxHeight - (distFromCenter * maxHeight / (steps / 2)));
+
+        let rectX = x + (i * w / steps);
+        let rectW = w / steps + 1;
+        let rectY = y + maxHeight - height;
+
+        fillRect(rectX, rectY, rectW, height, color);
+      }
+
+      // 屋脊金線
+      fillRect(x, y - 3, w, 3, colors.roofGold);
+    }
+
+    function drawMapleTree(x, y) {
+      // 樹冠：用多個矩形堆疊出不規則圓形
+      // 底層（深紅）
+      const positions = [
+        // 中心層
+        { x: 0, y: 20, w: 50, h: 25, color: colors.mapleDark },
+        { x: -5, y: 25, w: 20, h: 15, color: colors.mapleDark },
+        { x: 15, y: 25, w: 20, h: 15, color: colors.mapleDark },
+
+        // 外層（紅色）
+        { x: -15, y: 15, w: 35, h: 20, color: colors.mapleRed },
+        { x: 20, y: 15, w: 35, h: 20, color: colors.mapleRed },
+        { x: -10, y: 0, w: 25, h: 20, color: colors.mapleRed },
+        { x: 15, y: 0, w: 25, h: 20, color: colors.mapleRed },
+
+        // 上層（紅色）
+        { x: 0, y: -15, w: 30, h: 25, color: colors.mapleRed },
+      ];
+
+      for (let pos of positions) {
+        fillRect(x + pos.x, y + pos.y, pos.w, pos.h, pos.color);
+      }
+    }
+
+    function drawGreenBushes(startX, startY) {
+      // 灌木1（上方）
+      const bush1Positions = [
+        { x: startX - 30, y: startY - 40, w: 35, h: 30, color: colors.greenBush },
+        { x: startX - 20, y: startY - 50, w: 25, h: 25, color: colors.greenBush },
+        { x: startX + 5, y: startY - 40, w: 35, h: 30, color: colors.greenBush },
+      ];
+
+      // 灌木2（中間）
+      const bush2Positions = [
+        { x: startX - 25, y: startY + 10, w: 30, h: 25, color: colors.greenBush },
+        { x: startX + 5, y: startY + 15, w: 35, h: 25, color: colors.greenBush },
+      ];
+
+      // 灌木3（下方）
+      const bush3Positions = [
+        { x: startX - 30, y: startY + 60, w: 35, h: 25, color: colors.greenBush },
+        { x: startX + 10, y: startY + 65, w: 30, h: 25, color: colors.greenBush },
+      ];
+
+      const allBushes = [...bush1Positions, ...bush2Positions, ...bush3Positions];
+
+      for (let bush of allBushes) {
+        fillRect(bush.x, bush.y, bush.w, bush.h, bush.color);
+      }
+    }
+
+    // 主繪製函數
+    drawPixelPalace();
+  </script>
+</body>
+</html>

@@ -1,0 +1,3171 @@
+{
+  "themeId": "claude-code",
+  "themeName": "Claude Code",
+  "era": "江戶時期",
+  "bossStageId": 30,
+  "bossDropItem": "德川家康的黃玉",
+  "stages": [
+    {
+      "stageId": 1,
+      "stageName": "什麼是Claude Code？",
+      "enemy": "本多忠勝",
+      "difficulty": 1,
+      "questionCount": 5,
+      "teachingDialogue": "大人！德川四天王之首本多忠勝登場！Claude Code 不只是聊天的 AI，而是真的能直接讀取您電腦裡的程式碼、修改檔案、執行指令，完成整個開發任務！就像請了一位隨時待命的資深工程師坐在您旁邊。最重要的是，在它動手改任何東西之前，一定會先問您同意！大人，掌握這件利器，今日必勝！",
+      "questions": [
+        {
+          "id": "cc-01-1",
+          "type": "選擇題",
+          "question": "Claude Code 和一般 Claude 聊天最根本的差別是什麼？",
+          "options": [
+            "Claude Code回答速度更快",
+            "Claude Code能直接讀取修改電腦程式碼，不只是回答問題",
+            "Claude Code費用更低",
+            "Claude Code只能說英文"
+          ],
+          "answer": "Claude Code能直接讀取修改電腦程式碼，不只是回答問題",
+          "explanation": "Claude Code 能真正「做事」：讀取你的程式碼、修改檔案、執行指令，完成完整的開發任務，而不只是回答問題。"
+        },
+        {
+          "id": "cc-01-2",
+          "type": "填空題",
+          "question": "Claude Code 就像請了一位隨時待命的___坐在你旁邊，幫你處理程式開發問題。",
+          "options": [
+            "設計師",
+            "資深工程師",
+            "專案經理",
+            "測試人員"
+          ],
+          "answer": "資深工程師",
+          "explanation": "這個比喻說明 Claude Code 不只是提供建議，而是像一位能直接動手的工程師，協助你完成開發工作。"
+        },
+        {
+          "id": "cc-01-3",
+          "type": "選擇題",
+          "question": "Claude Code 可以在哪些環境使用？",
+          "options": [
+            "只有終端機",
+            "只有瀏覽器",
+            "終端機、VS Code、JetBrains等IDE，以及網頁版",
+            "只有Mac電腦"
+          ],
+          "answer": "終端機、VS Code、JetBrains等IDE，以及網頁版",
+          "explanation": "Claude Code 支援多種開發環境，讓你在習慣的工具裡使用，不需要切換工作環境。"
+        },
+        {
+          "id": "cc-01-4",
+          "type": "填空題",
+          "question": "使用 Claude Code 需要什麼付費方案？",
+          "options": [
+            "完全免費",
+            "Pro、Max、Team或Enterprise付費方案",
+            "只需要一次性購買",
+            "每次使用才付費"
+          ],
+          "answer": "Pro、Max、Team或Enterprise付費方案",
+          "explanation": "Claude Code 是付費功能，需要訂閱 Pro 以上的方案才能使用，也可透過 API 帳戶使用。"
+        },
+        {
+          "id": "cc-01-5",
+          "type": "選擇題",
+          "question": "Claude Code 在修改檔案前，會怎麼做？",
+          "options": [
+            "直接修改不告知",
+            "一定會先問你同意才動手",
+            "自動備份後修改",
+            "發郵件通知你"
+          ],
+          "answer": "一定會先問你同意才動手",
+          "explanation": "這是 Claude Code 的核心安全機制，任何修改檔案或執行指令的動作，都會先問你同意，確保你完全掌控。"
+        }
+      ]
+    },
+    {
+      "stageId": 2,
+      "stageName": "安裝Claude Code",
+      "enemy": "井伊直政",
+      "difficulty": 1,
+      "questionCount": 5,
+      "teachingDialogue": "大人！赤鬼井伊直政威名遠播！安裝 Claude Code 只需要一個指令，在終端機執行官方安裝腳本就大功告成了。安裝完成後，執行 `claude doctor` 可以檢查安裝是否正確。重要提醒：不要用 `sudo npm install` 安裝，這樣容易出問題！大人，準備好武器，出發！",
+      "questions": [
+        {
+          "id": "cc-02-1",
+          "type": "選擇題",
+          "question": "安裝 Claude Code 最正確的方式是什麼？",
+          "options": [
+            "用sudo npm install -g安裝",
+            "執行官方安裝腳本",
+            "從App Store下載",
+            "手動下載壓縮檔解壓"
+          ],
+          "answer": "執行官方安裝腳本",
+          "explanation": "使用官方提供的安裝腳本是最正確的方式，不要用 sudo npm install，那樣容易產生權限問題。"
+        },
+        {
+          "id": "cc-02-2",
+          "type": "填空題",
+          "question": "安裝完成後，執行___指令可以檢查安裝是否正確並顯示版本號。",
+          "options": [
+            "claude check",
+            "claude doctor",
+            "claude verify",
+            "claude test"
+          ],
+          "answer": "claude doctor",
+          "explanation": "claude doctor 是 Claude Code 的診斷指令，能顯示安裝狀態、版本號和設定是否正確。"
+        },
+        {
+          "id": "cc-02-3",
+          "type": "選擇題",
+          "question": "Claude Code 支援哪些作業系統？",
+          "options": [
+            "只有macOS",
+            "只有Windows",
+            "macOS、Ubuntu/Debian、Fedora、Windows(需WSL)",
+            "所有系統都支援"
+          ],
+          "answer": "macOS、Ubuntu/Debian、Fedora、Windows(需WSL)",
+          "explanation": "Claude Code 支援主流的開發者作業系統，Windows 需要搭配 WSL 或 Git for Windows 使用。"
+        },
+        {
+          "id": "cc-02-4",
+          "type": "填空題",
+          "question": "第一次啟動 Claude Code 時需要___Anthropic 帳號，之後就不需要每次重新登入。",
+          "options": [
+            "刪除",
+            "登入",
+            "付費",
+            "備份"
+          ],
+          "answer": "登入",
+          "explanation": "首次使用需要登入帳號驗證身份，之後 Claude Code 會記住登入狀態，不需要每次重新輸入。"
+        },
+        {
+          "id": "cc-02-5",
+          "type": "選擇題",
+          "question": "為什麼不應該用 sudo npm install 安裝 Claude Code？",
+          "options": [
+            "因為費用更高",
+            "因為容易產生權限問題，官方腳本才是正確方式",
+            "因為速度更慢",
+            "因為只有英文版"
+          ],
+          "answer": "因為容易產生權限問題，官方腳本才是正確方式",
+          "explanation": "sudo npm install 容易造成系統層級的權限問題，官方推薦的安裝腳本能正確處理所有設定。"
+        }
+      ]
+    },
+    {
+      "stageId": 3,
+      "stageName": "第一天能做什麼",
+      "enemy": "榊原康政",
+      "difficulty": 1,
+      "questionCount": 5,
+      "teachingDialogue": "大人！使用 Claude Code 的第一步：進入你的專案資料夾，執行 `claude` 啟動。建議馬上執行 `/init`，讓 Claude 自動掃描你的專案，產生一份 CLAUDE.md 說明檔！最基本的用法就是用日常語言描述你想做的事，例如「幫我解釋這個檔案做了什麼」。第一天最適合的任務：了解陌生程式碼、修一個明確的 Bug！",
+      "questions": [
+        {
+          "id": "cc-03-1",
+          "type": "選擇題",
+          "question": "使用 Claude Code 的第一步應該做什麼？",
+          "options": [
+            "先學程式語言",
+            "進入專案資料夾後執行claude啟動",
+            "先閱讀所有說明文件",
+            "先付費升級"
+          ],
+          "answer": "進入專案資料夾後執行claude啟動",
+          "explanation": "進入你的專案資料夾，執行 claude 指令就能立刻開始使用，不需要任何複雜的前置設定。"
+        },
+        {
+          "id": "cc-03-2",
+          "type": "填空題",
+          "question": "執行___指令，Claude 會自動掃描你的專案，產生一份 CLAUDE.md 說明檔記錄專案結構。",
+          "options": [
+            "/start",
+            "/init",
+            "/setup",
+            "/begin"
+          ],
+          "answer": "/init",
+          "explanation": "/init 是 Claude Code 的初始化指令，讓 Claude 自動了解你的專案並建立永久說明文件。"
+        },
+        {
+          "id": "cc-03-3",
+          "type": "選擇題",
+          "question": "第一天使用 Claude Code 最適合的任務是什麼？",
+          "options": [
+            "立刻重構整個系統",
+            "了解陌生程式碼結構和修明確的Bug",
+            "做完整的架構設計",
+            "部署到正式環境"
+          ],
+          "answer": "了解陌生程式碼結構和修明確的Bug",
+          "explanation": "了解程式碼和修 Bug 是 Claude Code 最直接的入門任務，門檻低但效益高，是建立信心的最佳起點。"
+        },
+        {
+          "id": "cc-03-4",
+          "type": "填空題",
+          "question": "Claude Code 不需要你上傳任何檔案，它直接讀取你___的程式碼開始工作。",
+          "options": [
+            "雲端",
+            "本機",
+            "備份",
+            "網路"
+          ],
+          "answer": "本機",
+          "explanation": "Claude Code 直接讀取你電腦上的本機程式碼，不需要上傳或同步到任何外部服務。"
+        },
+        {
+          "id": "cc-03-5",
+          "type": "選擇題",
+          "question": "以下哪個是好的 Claude Code 第一天任務指令？",
+          "options": [
+            "改程式",
+            "幫我理解這個 login.py 做了什麼",
+            "做任何事",
+            "寫程式"
+          ],
+          "answer": "幫我理解這個 login.py 做了什麼",
+          "explanation": "具體指明檔案名稱和想知道的事，讓 Claude Code 能精準地完成你的需求，是好指令的基本原則。"
+        }
+      ]
+    },
+    {
+      "stageId": 4,
+      "stageName": "用自然語言溝通",
+      "enemy": "酒井忠次",
+      "difficulty": 1,
+      "questionCount": 5,
+      "teachingDialogue": "大人！和 Claude Code 溝通越具體越好！不要說「這個函式壞了」，要說「calculate_tax() 在傳入負數時會當掉，幫我修一下」。如果第一次不是你要的，直接說「不對，我的意思是⋯⋯」，不需要重新開始。也可以把背景說清楚：用什麼框架、什麼語言版本。不確定怎麼描述問題時，直接問「這段程式碼有什麼潛在問題？」讓它先找再討論！",
+      "questions": [
+        {
+          "id": "cc-04-1",
+          "type": "選擇題",
+          "question": "以下哪個 Claude Code 指令品質更好？",
+          "options": [
+            "這個函式壞了",
+            "calculate_tax()在傳入負數時會當掉，幫我修一下",
+            "修程式",
+            "程式有問題"
+          ],
+          "answer": "calculate_tax()在傳入負數時會當掉，幫我修一下",
+          "explanation": "具體說明函式名稱、觸發條件和期望行為，讓 Claude Code 能精準定位問題並提出正確的修復方案。"
+        },
+        {
+          "id": "cc-04-2",
+          "type": "填空題",
+          "question": "如果 Claude Code 第一次的修改不是你要的，直接說「___」，它會根據反饋重新調整。",
+          "options": [
+            "重新開始",
+            "不對，我的意思是",
+            "這樣不行",
+            "你失敗了"
+          ],
+          "answer": "不對，我的意思是",
+          "explanation": "不需要重新開始對話，直接在當前對話中告訴 Claude 哪裡不對，它會根據你的反饋調整方向重新執行。"
+        },
+        {
+          "id": "cc-04-3",
+          "type": "選擇題",
+          "question": "在指令中加入背景資訊（框架、語言版本）的目的是什麼？",
+          "options": [
+            "讓指令看起來更專業",
+            "讓Claude Code能提供更符合你環境的修改方案",
+            "讓對話更長",
+            "沒有特別意義"
+          ],
+          "answer": "讓Claude Code能提供更符合你環境的修改方案",
+          "explanation": "環境背景讓 Claude Code 了解你的技術限制，避免提出不適合你框架或版本的解決方案。"
+        },
+        {
+          "id": "cc-04-4",
+          "type": "填空題",
+          "question": "不確定怎麼描述問題時，可以先問 Claude「這段程式碼有什麼___問題？」讓它先找問題再討論。",
+          "options": [
+            "已知的",
+            "潛在",
+            "付費的",
+            "所有"
+          ],
+          "answer": "潛在",
+          "explanation": "讓 Claude 做廣泛分析找出潛在問題，然後再針對它找到的問題討論解法，是處理模糊問題的有效策略。"
+        },
+        {
+          "id": "cc-04-5",
+          "type": "選擇題",
+          "question": "給 Claude Code 的指令，越具體的好處是什麼？",
+          "options": [
+            "讓Claude更快",
+            "Claude能更精準地完成任務，減少來回修改的次數",
+            "讓指令更短",
+            "讓費用更低"
+          ],
+          "answer": "Claude能更精準地完成任務，減少來回修改的次數",
+          "explanation": "具體的指令讓 Claude Code 一次就做到你想要的結果，節省來回溝通的時間，大幅提升工作效率。"
+        }
+      ]
+    },
+    {
+      "stageId": 5,
+      "stageName": "讀懂陌生程式碼",
+      "enemy": "服部半藏",
+      "difficulty": 1,
+      "questionCount": 5,
+      "teachingDialogue": "大人！接手一個不熟悉的專案時，讓 Claude Code 幫你快速讀懂它最有效率。問「幫我解釋這個專案的整體架構」，Claude 會用白話說明設計思路和各部分功能。可以問得很具體：「這個 middleware.js 會影響哪些路由？」對複雜的流程，說「用流程說明這個登入流程的步驟」。理解程式碼後，後續的開發就快多了！",
+      "questions": [
+        {
+          "id": "cc-05-1",
+          "type": "選擇題",
+          "question": "接手陌生專案時，讓 Claude Code 幫你做什麼最有效率？",
+          "options": [
+            "立刻開始修改程式碼",
+            "幫你快速理解整體架構和各部分功能",
+            "幫你刪掉不需要的程式碼",
+            "幫你重寫整個專案"
+          ],
+          "answer": "幫你快速理解整體架構和各部分功能",
+          "explanation": "先理解再動手是最有效率的做法，Claude Code 能快速消化大量程式碼並用白話說明，讓你建立正確的心智模型。"
+        },
+        {
+          "id": "cc-05-2",
+          "type": "填空題",
+          "question": "對複雜的程式流程，可以說「請用___說明這個登入流程」，Claude 會把整個邏輯用文字描述清楚。",
+          "options": [
+            "圖表",
+            "流程",
+            "程式碼",
+            "英文"
+          ],
+          "answer": "流程",
+          "explanation": "要求 Claude 用流程說明，讓它把抽象的程式邏輯轉換成清楚的步驟描述，更容易理解和記憶。"
+        },
+        {
+          "id": "cc-05-3",
+          "type": "選擇題",
+          "question": "理解程式碼對後續開發有什麼好處？",
+          "options": [
+            "沒有特別好處",
+            "後續新增功能或除錯速度大幅加快",
+            "讓程式碼更長",
+            "讓費用更低"
+          ],
+          "answer": "後續新增功能或除錯速度大幅加快",
+          "explanation": "充分理解程式碼後，你能更快找到要修改的位置、避免不必要的衝突，讓每次修改都更有把握。"
+        },
+        {
+          "id": "cc-05-4",
+          "type": "填空題",
+          "question": "可以問 Claude Code「UserService 和 AuthService 是什麼___？」讓它解釋不同模組之間的依賴關係。",
+          "options": [
+            "費用",
+            "關係",
+            "顏色",
+            "語言"
+          ],
+          "answer": "關係",
+          "explanation": "了解模組間的關係是理解大型專案的關鍵，Claude Code 能分析依賴關係並用清楚的方式解釋。"
+        },
+        {
+          "id": "cc-05-5",
+          "type": "選擇題",
+          "question": "Claude Code 幫你讀懂程式碼時，它會怎麼做？",
+          "options": [
+            "只回答你的問題不讀程式碼",
+            "主動讀取你指定的檔案或整個目錄，再用白話說明",
+            "要你先上傳程式碼到雲端",
+            "只能讀取10行以內的程式碼"
+          ],
+          "answer": "主動讀取你指定的檔案或整個目錄，再用白話說明",
+          "explanation": "Claude Code 能主動讀取你指定的範圍，不需要你複製貼上程式碼，直接在你的本機環境進行分析。"
+        }
+      ]
+    },
+    {
+      "stageId": 6,
+      "stageName": "權限確認機制",
+      "enemy": "真田信幸",
+      "difficulty": 2,
+      "questionCount": 5,
+      "teachingDialogue": "大人！Claude Code 在修改檔案或執行系統指令前，一定會先問你同意，這是保護你的核心設計。你可以選擇「只批准這一次」或「這類操作都允許」。就算你設定了自動允許，遇到高風險指令（例如刪除檔案），Claude 仍會特別提醒你確認！而且 Claude Code 只能讀取你開啟的專案資料夾，跑不到別的地方去！",
+      "questions": [
+        {
+          "id": "cc-06-1",
+          "type": "選擇題",
+          "question": "Claude Code 在什麼情況下一定會先問你同意？",
+          "options": [
+            "回答問題時",
+            "修改檔案或執行系統指令前",
+            "分析程式碼時",
+            "解釋概念時"
+          ],
+          "answer": "修改檔案或執行系統指令前",
+          "explanation": "這是 Claude Code 保護使用者的核心機制，任何會改變你電腦狀態的操作都需要先取得你的同意。"
+        },
+        {
+          "id": "cc-06-2",
+          "type": "填空題",
+          "question": "批准 Claude Code 操作時，選擇「___都允許」讓工作流程更流暢，不需要每次確認。",
+          "options": [
+            "只這一次",
+            "這類操作",
+            "所有操作",
+            "以後所有"
+          ],
+          "answer": "這類操作",
+          "explanation": "選擇允許「這類操作」讓你批准同一種類型的操作不需要每次都確認，提升工作效率同時保持一定的控制權。"
+        },
+        {
+          "id": "cc-06-3",
+          "type": "選擇題",
+          "question": "即使設定了「自動允許」，遇到什麼情況 Claude 仍會特別提醒你確認？",
+          "options": [
+            "所有操作",
+            "高風險指令，例如刪除檔案",
+            "讀取程式碼時",
+            "解釋問題時"
+          ],
+          "answer": "高風險指令，例如刪除檔案",
+          "explanation": "這是安全機制的雙重保護，即使在自動化模式下，高風險操作仍會觸發確認提示，防止意外的資料遺失。"
+        },
+        {
+          "id": "cc-06-4",
+          "type": "填空題",
+          "question": "Claude Code 有嚴格的讀取/寫入限制，它只能存取你___的專案資料夾，無法讀取其他地方。",
+          "options": [
+            "付費",
+            "開啟",
+            "備份",
+            "上傳"
+          ],
+          "answer": "開啟",
+          "explanation": "這個範圍限制確保 Claude Code 只能在你允許的範圍內工作，不會意外讀取或修改其他重要的系統檔案。"
+        },
+        {
+          "id": "cc-06-5",
+          "type": "選擇題",
+          "question": "權限確認機制對使用者最大的好處是什麼？",
+          "options": [
+            "讓Claude更快",
+            "確保你完全掌控Claude的所有操作，不會偷偷改掉你的東西",
+            "讓費用更低",
+            "讓程式碼更好"
+          ],
+          "answer": "確保你完全掌控Claude的所有操作，不會偷偷改掉你的東西",
+          "explanation": "確認機制讓使用者保持對 Claude Code 的完全掌控，建立信任的同時也確保任何改變都是在你同意下發生的。"
+        }
+      ]
+    },
+    {
+      "stageId": 7,
+      "stageName": "選擇使用方案",
+      "enemy": "島津義弘",
+      "difficulty": 2,
+      "questionCount": 5,
+      "teachingDialogue": "大人！Pro 方案適合個人開發者偶爾使用；Max 方案用量是 Pro 的五倍以上；Team 方案適合開發團隊，用量每週重置；Enterprise 方案無使用量上限按消耗計費。所有方案都可以購買「額外用量點數」，達到限制後還能繼續工作不被中斷！",
+      "questions": [
+        {
+          "id": "cc-07-1",
+          "type": "選擇題",
+          "question": "Claude Code 的 Max 方案相比 Pro 方案，使用量大約是幾倍？",
+          "options": [
+            "2倍",
+            "5倍以上",
+            "10倍",
+            "完全無限制"
+          ],
+          "answer": "5倍以上",
+          "explanation": "Max 方案的使用量是 Pro 的 5 倍以上，適合大量使用 Claude Code 的重度用戶或自由接案工程師。"
+        },
+        {
+          "id": "cc-07-2",
+          "type": "填空題",
+          "question": "Team 方案的使用量每___重置一次，適合有多個開發者的團隊使用。",
+          "options": [
+            "天",
+            "週",
+            "月",
+            "年"
+          ],
+          "answer": "週",
+          "explanation": "Team 方案的用量採用每週重置制，讓團隊能在每週週期內靈活分配使用量。"
+        },
+        {
+          "id": "cc-07-3",
+          "type": "選擇題",
+          "question": "Enterprise 方案的計費方式有什麼特別之處？",
+          "options": [
+            "固定月費，用量有限制",
+            "無使用量上限，按實際消耗計費",
+            "完全免費",
+            "每次使用單獨付費"
+          ],
+          "answer": "無使用量上限，按實際消耗計費",
+          "explanation": "Enterprise 方案讓大型組織不受使用量限制，根據實際需求使用，管理員可設定每人費用上限避免超支。"
+        },
+        {
+          "id": "cc-07-4",
+          "type": "填空題",
+          "question": "達到使用量限制後，可以購買「額外___點數」，讓工作不被中斷繼續進行。",
+          "options": [
+            "學習",
+            "用量",
+            "付費",
+            "Token"
+          ],
+          "answer": "用量",
+          "explanation": "額外用量點數是彈性的補充方案，讓你在達到方案限制時仍能繼續工作，不會因為突發需求而被迫停止。"
+        },
+        {
+          "id": "cc-07-5",
+          "type": "選擇題",
+          "question": "對偶爾使用 Claude Code 的個人開發者，最適合的方案是什麼？",
+          "options": [
+            "Enterprise方案",
+            "Pro方案",
+            "Max方案",
+            "Team方案"
+          ],
+          "answer": "Pro方案",
+          "explanation": "Pro 方案提供基本的 Claude Code 使用量，對偶爾使用的個人開發者來說已經足夠，費用也最合理。"
+        }
+      ]
+    },
+    {
+      "stageId": 8,
+      "stageName": "在IDE裡使用Claude Code",
+      "enemy": "加藤清正",
+      "difficulty": 2,
+      "questionCount": 5,
+      "teachingDialogue": "大人！Claude Code 可以直接整合進 VS Code 和 JetBrains 等 IDE，不需要切換視窗！GitHub 整合更強大：在 PR 的留言裡 @claude，它會自動審查並把建議貼在相關程式碼行旁邊！如果習慣網頁操作，也有網頁版可以把耗時任務丟給雲端執行。",
+      "questions": [
+        {
+          "id": "cc-08-1",
+          "type": "選擇題",
+          "question": "Claude Code 整合進 IDE 最大的好處是什麼？",
+          "options": [
+            "讓程式碼更漂亮",
+            "不需要切換視窗，看到問題就能立刻在IDE裡問Claude",
+            "讓IDE執行更快",
+            "讓費用更低"
+          ],
+          "answer": "不需要切換視窗，看到問題就能立刻在IDE裡問Claude",
+          "explanation": "工具整合讓工作流程更流暢，不需要在終端機和編輯器之間切換，降低使用的摩擦力。"
+        },
+        {
+          "id": "cc-08-2",
+          "type": "填空題",
+          "question": "在 GitHub 的 PR 留言裡___，Claude 會自動審查程式碼並把建議貼在相關行數旁邊。",
+          "options": [
+            "@claude",
+            "#claude",
+            "!claude",
+            "$claude"
+          ],
+          "answer": "@claude",
+          "explanation": "GitHub 整合讓 Claude Code 能在 PR 工作流程中自動參與程式碼審查，不需要手動觸發。"
+        },
+        {
+          "id": "cc-08-3",
+          "type": "選擇題",
+          "question": "Claude Code 的網頁版最適合哪種使用場景？",
+          "options": [
+            "快速的問答",
+            "不急但耗時的任務，丟給雲端執行自己去做別的事",
+            "學習新語言",
+            "設定IDE插件"
+          ],
+          "answer": "不急但耗時的任務，丟給雲端執行自己去做別的事",
+          "explanation": "網頁版讓 Claude Code 在雲端環境執行耗時任務，你不需要守在電腦前，任務完成後才需要回來審查結果。"
+        },
+        {
+          "id": "cc-08-4",
+          "type": "填空題",
+          "question": "JetBrains 整合的特別功能：自動把你目前___的程式碼傳給 Claude 當上下文，省去複製貼上的麻煩。",
+          "options": [
+            "刪除",
+            "選取",
+            "備份",
+            "上傳"
+          ],
+          "answer": "選取",
+          "explanation": "自動傳送選取的程式碼讓你不需要手動複製，Claude 能立即獲得最相關的上下文，提升互動效率。"
+        },
+        {
+          "id": "cc-08-5",
+          "type": "選擇題",
+          "question": "Claude Code 網頁版和終端機版的主要差別是什麼？",
+          "options": [
+            "功能不同",
+            "只有執行環境不同：一個本機，一個雲端，功能一致",
+            "網頁版更貴",
+            "終端機版功能更多"
+          ],
+          "answer": "只有執行環境不同：一個本機，一個雲端，功能一致",
+          "explanation": "網頁版和終端機版功能完全一致，只是執行環境不同，根據你的使用習慣和任務類型選擇最合適的版本。"
+        }
+      ]
+    },
+    {
+      "stageId": 9,
+      "stageName": "選擇對的AI模型",
+      "enemy": "福島正則",
+      "difficulty": 2,
+      "questionCount": 5,
+      "teachingDialogue": "大人！Claude Code 提供三種模型：Sonnet 是預設值，速度快能力強最具性價比；Opus 最強大但用量消耗最高，只在碰到真正困難的問題時才切換；Haiku 最快最省，適合簡單任務。進階技巧：「Opus 規劃、Sonnet 執行」！用 `/model` 指令隨時切換！",
+      "questions": [
+        {
+          "id": "cc-09-1",
+          "type": "選擇題",
+          "question": "大多數程式開發工作，最推薦使用哪個 Claude Code 模型？",
+          "options": [
+            "Haiku，速度最快",
+            "Sonnet，速度快能力強最具性價比",
+            "Opus，能力最強",
+            "三個都一樣"
+          ],
+          "answer": "Sonnet，速度快能力強最具性價比",
+          "explanation": "Sonnet 是 Claude Code 的預設模型，在速度、能力和費用之間取得最佳平衡，適合絕大多數的日常開發工作。"
+        },
+        {
+          "id": "cc-09-2",
+          "type": "填空題",
+          "question": "___模型最適合簡單任務，例如重新命名變數或解釋一段程式碼，速度最快費用最低。",
+          "options": [
+            "Opus",
+            "Sonnet",
+            "Haiku",
+            "Pro"
+          ],
+          "answer": "Haiku",
+          "explanation": "Haiku 是最輕量的模型，速度快費用低，對不需要深度推理的簡單任務是最經濟的選擇。"
+        },
+        {
+          "id": "cc-09-3",
+          "type": "選擇題",
+          "question": "「Opus 規劃、Sonnet 執行」的進階技巧，好處是什麼？",
+          "options": [
+            "讓程式碼更好看",
+            "用最強模型想清楚方案，再用標準模型執行，兼顧品質和費用",
+            "讓執行速度更快",
+            "不需要思考直接執行"
+          ],
+          "answer": "用最強模型想清楚方案，再用標準模型執行，兼顧品質和費用",
+          "explanation": "規劃需要深度思考才用 Opus，執行依照計畫用 Sonnet 就夠，這樣的搭配兼顧了品質和成本效益。"
+        },
+        {
+          "id": "cc-09-4",
+          "type": "填空題",
+          "question": "用___指令可以隨時查看和切換 Claude Code 使用的 AI 模型。",
+          "options": [
+            "/switch",
+            "/model",
+            "/change",
+            "/select"
+          ],
+          "answer": "/model",
+          "explanation": "/model 是切換模型的專用指令，讓你根據當前任務的複雜程度靈活選擇最適合的模型。"
+        },
+        {
+          "id": "cc-09-5",
+          "type": "選擇題",
+          "question": "什麼情況最適合切換到 Opus 模型？",
+          "options": [
+            "所有任務都應該用Opus",
+            "只在碰到跨多個模組的大型重構或難以定位的複雜Bug時",
+            "每天開始工作時",
+            "每次都切換"
+          ],
+          "answer": "只在碰到跨多個模組的大型重構或難以定位的複雜Bug時",
+          "explanation": "Opus 的高費用應該用在刀口上，保留給真正需要最強推理能力的複雜問題，日常工作用 Sonnet 就夠了。"
+        }
+      ]
+    },
+    {
+      "stageId": 10,
+      "stageName": "常用指令速查",
+      "enemy": "細川忠興（江戶版）",
+      "difficulty": 2,
+      "questionCount": 5,
+      "teachingDialogue": "大人！在 Claude Code 對話框輸入 `/`，就能看到所有可用指令，不需要死記！最常用的：`/init`（初始化）、`/compact`（壓縮對話）、`/model`（切換模型）、`/clear`（清空對話）、`/resume`（繼續上次任務）。在 Mac 上連按兩次 Option 鍵，從任何應用程式直接呼叫 Claude！",
+      "questions": [
+        {
+          "id": "cc-10-1",
+          "type": "選擇題",
+          "question": "在 Claude Code 輸入框打「/」會發生什麼？",
+          "options": [
+            "輸入一個斜線符號",
+            "跳出所有可用指令的完整清單",
+            "關閉Claude Code",
+            "開始新的對話"
+          ],
+          "answer": "跳出所有可用指令的完整清單",
+          "explanation": "斜線是 Claude Code 快速指令的入口，輸入後會顯示所有可用指令，不需要死記任何指令名稱。"
+        },
+        {
+          "id": "cc-10-2",
+          "type": "填空題",
+          "question": "___指令把目前對話的歷史壓縮成摘要，釋放脈絡視窗空間，讓長時間工作不中斷。",
+          "options": [
+            "/clear",
+            "/compact",
+            "/compress",
+            "/save"
+          ],
+          "answer": "/compact",
+          "explanation": "/compact 是長時間工作的必備指令，它壓縮對話歷史釋放空間，讓 Claude Code 在長任務中保持良好表現。"
+        },
+        {
+          "id": "cc-10-3",
+          "type": "選擇題",
+          "question": "如果想繼續上一次中斷的任務，應該使用哪個指令？",
+          "options": [
+            "/start",
+            "/resume",
+            "/continue",
+            "/back"
+          ],
+          "answer": "/resume",
+          "explanation": "/resume 讓你能從上一次中斷的地方繼續工作，不需要重新說明背景，節省時間提升連續工作的效率。"
+        },
+        {
+          "id": "cc-10-4",
+          "type": "填空題",
+          "question": "在 Mac 上，連按兩次___鍵可以從任何應用程式快速呼叫 Claude Code，無需切換視窗。",
+          "options": [
+            "Command",
+            "Option",
+            "Shift",
+            "Control"
+          ],
+          "answer": "Option",
+          "explanation": "這個全域快捷鍵讓你在任何情況下都能快速呼叫 Claude Code，大幅降低使用的摩擦力。"
+        },
+        {
+          "id": "cc-10-5",
+          "type": "選擇題",
+          "question": "面對不熟悉的 Claude Code 指令，最好的做法是什麼？",
+          "options": [
+            "死背所有指令",
+            "輸入「/」瀏覽清單，看到需要的就點，漸漸就熟了",
+            "查網路教學",
+            "問工程師朋友"
+          ],
+          "answer": "輸入「/」瀏覽清單，看到需要的就點，漸漸就熟了",
+          "explanation": "不需要死記所有指令，養成輸入「/」查看清單的習慣，在實際使用中自然熟悉，是最有效的學習方式。"
+        }
+      ]
+    },
+    {
+      "stageId": 11,
+      "stageName": "CLAUDE.md永久記憶",
+      "enemy": "黑田長政",
+      "difficulty": 3,
+      "questionCount": 7,
+      "teachingDialogue": "大人！黑田長政以「如水」的智謀著稱！CLAUDE.md 是專案根目錄裡的說明文件，Claude Code 每次啟動都會自動讀取，等於是給 Claude 的「永久說明書」。應該放進去的內容：建置指令、測試指令、程式碼規範（縮排幾格、禁用哪些語法）。有了 CLAUDE.md，就不需要每次都重新跟 Claude 解釋專案規定！子目錄也可以有自己的 CLAUDE.md。用 `/init` 讓 Claude 幫你自動產生第一版！大人，記憶是智慧的根基！",
+      "questions": [
+        {
+          "id": "cc-11-1",
+          "type": "選擇題",
+          "question": "CLAUDE.md 的主要作用是什麼？",
+          "options": [
+            "儲存你的個人資料",
+            "每次啟動都自動讀取，讓Claude永遠記住專案規則",
+            "備份你的程式碼",
+            "記錄你的帳單"
+          ],
+          "answer": "每次啟動都自動讀取，讓Claude永遠記住專案規則",
+          "explanation": "CLAUDE.md 是跨對話保留重要資訊的最有效方式，建置指令、程式碼規範等內容寫進去後，Claude 每次都知道。"
+        },
+        {
+          "id": "cc-11-2",
+          "type": "填空題",
+          "question": "CLAUDE.md 應該放在專案的___目錄，Claude Code 進入專案時會自動讀取。",
+          "options": [
+            "src",
+            "根",
+            "docs",
+            "build"
+          ],
+          "answer": "根",
+          "explanation": "根目錄的 CLAUDE.md 是全專案的說明文件，確保每次啟動 Claude Code 都能獲得完整的專案背景。"
+        },
+        {
+          "id": "cc-11-3",
+          "type": "選擇題",
+          "question": "以下哪個內容最適合放在 CLAUDE.md 裡？",
+          "options": [
+            "你的密碼",
+            "建置指令、測試指令、程式碼規範",
+            "個人行事曆",
+            "信用卡號碼"
+          ],
+          "answer": "建置指令、測試指令、程式碼規範",
+          "explanation": "CLAUDE.md 應該記錄 Claude 需要了解的專案規則和指令，讓它在開始工作時就掌握所有必要的背景資訊。"
+        },
+        {
+          "id": "cc-11-4",
+          "type": "填空題",
+          "question": "子目錄也可以有自己的 CLAUDE.md，讓 Claude 進入那個目錄時自動讀取___特有的規則。",
+          "options": [
+            "所有",
+            "該模組",
+            "外部",
+            "系統"
+          ],
+          "answer": "該模組",
+          "explanation": "模組層級的 CLAUDE.md 讓不同子模組能有各自的特定規則，Claude 進入該目錄時能自動套用對應的規範。"
+        },
+        {
+          "id": "cc-11-5",
+          "type": "選擇題",
+          "question": "如何快速產生第一版 CLAUDE.md？",
+          "options": [
+            "手動從頭寫",
+            "執行/init讓Claude自動掃描專案產生第一版，再手動補充",
+            "從網路下載範本",
+            "複製別人的CLAUDE.md"
+          ],
+          "answer": "執行/init讓Claude自動掃描專案產生第一版，再手動補充",
+          "explanation": "/init 讓 Claude 自動分析你的專案並生成基礎的 CLAUDE.md，節省從零開始寫的時間。"
+        },
+        {
+          "id": "cc-11-6",
+          "type": "填空題",
+          "question": "CLAUDE.md 是跨對話保留資訊的最好方式，新對話開始 Claude 自動___，不需要重新說明。",
+          "options": [
+            "付費",
+            "讀取",
+            "備份",
+            "更新"
+          ],
+          "answer": "讀取",
+          "explanation": "自動讀取讓每次開新對話都能立刻獲得專案背景，而不需要使用者重複說明已知的規則和設定。"
+        },
+        {
+          "id": "cc-11-7",
+          "type": "選擇題",
+          "question": "沒有 CLAUDE.md 的情況下，每次開新對話需要做什麼？",
+          "options": [
+            "什麼都不用做",
+            "重新向Claude解釋專案的所有規則和慣例",
+            "重新安裝Claude Code",
+            "付費升級"
+          ],
+          "answer": "重新向Claude解釋專案的所有規則和慣例",
+          "explanation": "沒有 CLAUDE.md 意味著每次對話都從零開始，需要浪費時間重複說明專案背景，大幅降低工作效率。"
+        }
+      ]
+    },
+    {
+      "stageId": 12,
+      "stageName": "Slash指令大全",
+      "enemy": "池田輝政",
+      "difficulty": 3,
+      "questionCount": 7,
+      "teachingDialogue": "大人！池田輝政以姬路城著稱！`/simplify` 讓 Claude 簡化複雜程式碼、`/debug` 開始除錯流程、`/batch` 批次處理多個檔案、`/loop` 設定重複任務最長可排程三天！`/compact` 是長時間工作必備：把對話歷史壓縮成摘要，釋放脈絡視窗空間。自訂的技能和插件的技能也都會出現在這個清單裡！大人，善用指令，掌握全局！",
+      "questions": [
+        {
+          "id": "cc-12-1",
+          "type": "選擇題",
+          "question": "以下哪個 Slash 指令用來讓 Claude 簡化複雜的程式碼？",
+          "options": [
+            "/debug",
+            "/simplify",
+            "/batch",
+            "/loop"
+          ],
+          "answer": "/simplify",
+          "explanation": "/simplify 讓 Claude 重新審視程式碼的複雜度，提出更簡潔易讀的版本，同時保持原有的功能不變。"
+        },
+        {
+          "id": "cc-12-2",
+          "type": "填空題",
+          "question": "___指令可以設定重複執行任務，最長可排程三天，例如每小時自動跑測試。",
+          "options": [
+            "/repeat",
+            "/loop",
+            "/schedule",
+            "/auto"
+          ],
+          "answer": "/loop",
+          "explanation": "/loop 讓 Claude 定期重複執行任務，最長三天，非常適合設定自動化的品質檢查或監控任務。"
+        },
+        {
+          "id": "cc-12-3",
+          "type": "選擇題",
+          "question": "「/batch」指令的主要用途是什麼？",
+          "options": [
+            "批量購買點數",
+            "批次處理多個檔案",
+            "批准所有Claude的操作",
+            "備份所有程式碼"
+          ],
+          "answer": "批次處理多個檔案",
+          "explanation": "/batch 讓 Claude 對多個檔案執行相同的操作，例如統一更新所有檔案的版權說明或格式，大幅節省時間。"
+        },
+        {
+          "id": "cc-12-4",
+          "type": "填空題",
+          "question": "/loop 指令特別實用，例如可以設定「每小時跑一次測試並___失敗的案例」，自動監控品質。",
+          "options": [
+            "刪除",
+            "回報",
+            "備份",
+            "忽略"
+          ],
+          "answer": "回報",
+          "explanation": "自動回報失敗案例讓你不需要一直守在電腦前，只在有測試失敗時才需要介入處理，提升監控效率。"
+        },
+        {
+          "id": "cc-12-5",
+          "type": "選擇題",
+          "question": "自訂的技能和插件提供的技能，在哪裡可以找到？",
+          "options": [
+            "需要另外安裝",
+            "在Slash指令的「/」清單裡，一個地方就能存取所有功能",
+            "在設定頁面",
+            "需要重新安裝Claude Code"
+          ],
+          "answer": "在Slash指令的「/」清單裡，一個地方就能存取所有功能",
+          "explanation": "統一的 Slash 指令清單讓所有功能都在同一個入口，不需要記憶不同功能的觸發方式，使用更直覺。"
+        },
+        {
+          "id": "cc-12-6",
+          "type": "填空題",
+          "question": "/debug 指令會開始___流程，引導 Claude 系統性地找出程式碼的問題。",
+          "options": [
+            "付費",
+            "除錯",
+            "備份",
+            "安裝"
+          ],
+          "answer": "除錯",
+          "explanation": "/debug 啟動系統化的除錯流程，讓 Claude 按照有效的步驟分析問題，比隨機嘗試更有效率。"
+        },
+        {
+          "id": "cc-12-7",
+          "type": "選擇題",
+          "question": "使用 /compact 後，重要的對話資訊會發生什麼事？",
+          "options": [
+            "全部刪除",
+            "壓縮成精簡摘要保留，重要資訊不會遺失",
+            "需要付費才能恢復",
+            "只有最後一條訊息保留"
+          ],
+          "answer": "壓縮成精簡摘要保留，重要資訊不會遺失",
+          "explanation": "/compact 的設計確保重要資訊在壓縮後仍然保留，只是以更精簡的形式存在，讓對話能在有限空間內繼續。"
+        }
+      ]
+    },
+    {
+      "stageId": 13,
+      "stageName": "除錯技巧",
+      "enemy": "藤堂高虎",
+      "difficulty": 3,
+      "questionCount": 7,
+      "teachingDialogue": "大人！藤堂高虎以築城術著稱，今日要攻破的是程式的 Bug！除錯時，把錯誤訊息直接貼給 Claude，它會追蹤程式碼執行路徑，找到問題根源再提出修復方案。修復方案提出後，Claude 通常會主動說「讓我重新跑一次測試確認已修好」，形成自我驗證迴圈！有個超好用技巧：告訴 Claude「這個問題昨天沒有，今天才出現」，它可以配合 git 歷史找出是哪次改動引起的！大人，找到根源才是真正的勝利！",
+      "questions": [
+        {
+          "id": "cc-13-1",
+          "type": "選擇題",
+          "question": "遇到 Bug 時，最有效的做法是什麼？",
+          "options": [
+            "先自己找出問題檔案再告訴Claude",
+            "把錯誤訊息直接貼給Claude，讓它追蹤找問題",
+            "重新寫整個功能",
+            "忽略錯誤繼續開發"
+          ],
+          "answer": "把錯誤訊息直接貼給Claude，讓它追蹤找問題",
+          "explanation": "直接提供錯誤訊息讓 Claude 自主追蹤問題，它會讀取測試檔和相關模組，找出真正的根源。"
+        },
+        {
+          "id": "cc-13-2",
+          "type": "填空題",
+          "question": "告訴 Claude「這個問題昨天的版本沒有，今天才出現」，它可以配合 git___找出引起問題的改動。",
+          "options": [
+            "付費",
+            "歷史",
+            "備份",
+            "語言"
+          ],
+          "answer": "歷史",
+          "explanation": "Git 歷史讓 Claude 能追蹤最近的程式碼變更，縮小問題範圍，找出是哪次具體的 commit 引入了這個 Bug。"
+        },
+        {
+          "id": "cc-13-3",
+          "type": "選擇題",
+          "question": "Claude Code 提出修復方案後，通常會主動建議做什麼？",
+          "options": [
+            "立刻部署到正式環境",
+            "重新跑一次測試確認修復是否成功",
+            "刪掉原本的程式碼",
+            "收費繼續"
+          ],
+          "answer": "重新跑一次測試確認修復是否成功",
+          "explanation": "自我驗證迴圈讓 Claude Code 在修復後自動確認問題解決，而不是假設修改正確，大幅提升除錯的可靠性。"
+        },
+        {
+          "id": "cc-13-4",
+          "type": "填空題",
+          "question": "對模糊問題（例如「系統感覺很慢」），讓 Claude 做「廣泛___」：掃描整個專案列出可能的原因。",
+          "options": [
+            "付費",
+            "分析",
+            "備份",
+            "翻譯"
+          ],
+          "answer": "分析",
+          "explanation": "廣泛分析讓 Claude 主動找出潛在問題，比你一個一個猜要有效率得多，找出後再逐一討論處理方案。"
+        },
+        {
+          "id": "cc-13-5",
+          "type": "選擇題",
+          "question": "除錯時，讓 Claude Code 自己追蹤的好處是什麼？",
+          "options": [
+            "讓Claude更快樂",
+            "它會讀取測試檔和相關模組，找出不一致的地方，比人工追蹤更全面",
+            "讓程式碼更短",
+            "不需要了解程式"
+          ],
+          "answer": "它會讀取測試檔和相關模組，找出不一致的地方，比人工追蹤更全面",
+          "explanation": "Claude Code 能同時讀取多個相關檔案，追蹤程式執行路徑，找出人工很容易遺漏的跨檔案問題。"
+        },
+        {
+          "id": "cc-13-6",
+          "type": "填空題",
+          "question": "除錯的「自我___迴圈」是指：Claude 修復問題後自動跑測試確認已修好，形成品質保障。",
+          "options": [
+            "付費",
+            "驗證",
+            "備份",
+            "安裝"
+          ],
+          "answer": "驗證",
+          "explanation": "自我驗證迴圈是 Claude Code 除錯流程的重要特點，讓修復結果在提交前先經過測試確認，提升可靠性。"
+        },
+        {
+          "id": "cc-13-7",
+          "type": "選擇題",
+          "question": "面對難以定位的 Bug，以下哪個技巧最有效？",
+          "options": [
+            "重新寫程式",
+            "告訴Claude問題是什麼時候開始出現的，配合git歷史縮小範圍",
+            "更換程式語言",
+            "忽略不管"
+          ],
+          "answer": "告訴Claude問題是什麼時候開始出現的，配合git歷史縮小範圍",
+          "explanation": "時間資訊配合 git 歷史能大幅縮小問題範圍，讓 Claude 集中分析最近的改動而不是掃描整個程式碼庫。"
+        }
+      ]
+    },
+    {
+      "stageId": 14,
+      "stageName": "重構與測試",
+      "enemy": "立花宗茂",
+      "difficulty": 3,
+      "questionCount": 7,
+      "teachingDialogue": "大人！立花宗茂被稱為「日本無雙」！重構任務交給 Claude Code 最合適：給它明確的目標（「把這個 1000 行的 class 拆成三個獨立模組」）和限制（「不能改變對外的 API 介面」），它就能自動執行，你去做別的事，回來再審查！補測試時，Claude 會先讀取你現有的測試檔，學習你的風格，然後用同樣的風格補寫新測試案例！讓 Claude 找遺漏的邊界情況特別有價值！大人，完美的武器需要反覆打磨！",
+      "questions": [
+        {
+          "id": "cc-14-1",
+          "type": "選擇題",
+          "question": "交給 Claude Code 重構任務時，最重要的兩個要素是什麼？",
+          "options": [
+            "速度和費用",
+            "明確的目標和限制（例如不能改變對外API介面）",
+            "模型選擇和語言",
+            "資料夾結構和命名"
+          ],
+          "answer": "明確的目標和限制（例如不能改變對外API介面）",
+          "explanation": "清楚的目標讓 Claude 知道要做到什麼，明確的限制防止它改到不該改的地方，兩者是安全重構的關鍵。"
+        },
+        {
+          "id": "cc-14-2",
+          "type": "填空題",
+          "question": "重構完成後，讓 Claude 重新___測試套件，確認重構沒有破壞現有功能。",
+          "options": [
+            "刪除",
+            "跑",
+            "備份",
+            "付費"
+          ],
+          "answer": "跑",
+          "explanation": "重構後自動跑測試是確認正確性的必要步驟，讓 Claude 驗證所有既有測試都仍然通過，確保重構安全。"
+        },
+        {
+          "id": "cc-14-3",
+          "type": "選擇題",
+          "question": "讓 Claude 補寫測試案例時，它會先做什麼？",
+          "options": [
+            "直接寫新的測試",
+            "先讀取現有的測試檔，學習你的風格和框架再照樣補寫",
+            "詢問你用什麼框架",
+            "查網路上的測試範例"
+          ],
+          "answer": "先讀取現有的測試檔，學習你的風格和框架再照樣補寫",
+          "explanation": "先學習現有風格確保新增的測試案例和既有的測試保持一致，維護測試碼的可讀性和統一性。"
+        },
+        {
+          "id": "cc-14-4",
+          "type": "填空題",
+          "question": "讓 Claude 找___情境特別有價值：例如空值、負數、超長字串等容易被忽略的測試案例。",
+          "options": [
+            "主要",
+            "邊界",
+            "付費",
+            "常見"
+          ],
+          "answer": "邊界",
+          "explanation": "邊界情況是最常被遺漏的測試類型，Claude 能系統性地找出你可能忽略的極端輸入，讓測試更全面。"
+        },
+        {
+          "id": "cc-14-5",
+          "type": "選擇題",
+          "question": "重構任務最適合的工作模式是什麼？",
+          "options": [
+            "一直盯著Claude執行",
+            "給Claude明確指令後去做別的事，回來再審查結果",
+            "一步一步確認每個改動",
+            "讓Claude問你每個決定"
+          ],
+          "answer": "給Claude明確指令後去做別的事，回來再審查結果",
+          "explanation": "重構是「花時間但不需要一直盯著」的任務，利用這個時間去做其他工作，回來審查結果是最有效率的做法。"
+        },
+        {
+          "id": "cc-14-6",
+          "type": "填空題",
+          "question": "好的重構指令範例：「把這個 1000 行的 class 拆成三個___模組，不能改變對外的 API 介面」。",
+          "options": [
+            "相同",
+            "獨立",
+            "付費",
+            "雲端"
+          ],
+          "answer": "獨立",
+          "explanation": "明確說明拆分目標（三個獨立模組）和限制（不改變 API），讓 Claude 有清楚的方向和安全邊界執行重構。"
+        },
+        {
+          "id": "cc-14-7",
+          "type": "選擇題",
+          "question": "Claude Code 補完測試後，最重要的下一步是什麼？",
+          "options": [
+            "立刻部署",
+            "審查Claude補寫的測試案例，確認邏輯正確再提交",
+            "刪掉原本的測試",
+            "不需要任何後續動作"
+          ],
+          "answer": "審查Claude補寫的測試案例，確認邏輯正確再提交",
+          "explanation": "AI 生成的測試可能有邏輯錯誤，人工審查確保每個測試案例都正確反映預期行為，是負責任的開發實踐。"
+        }
+      ]
+    },
+    {
+      "stageId": 15,
+      "stageName": "Git工作流程整合",
+      "enemy": "伊達政宗",
+      "difficulty": 3,
+      "questionCount": 7,
+      "teachingDialogue": "大人！獨眼龍伊達政宗雄才大略！Claude Code 完全理解 Git，可以幫你查 commit 歷史、比較分支差異、找出哪個改動引入了 Bug。常用問法：「幫我寫一段清楚的 commit message 說明這次的改動」。還有強大的「影響分析」：做大型改動前，讓 Claude 先分析「如果我修改這個函式，哪些地方會受到影響？」防止意外牽連其他模組！大人，掌握版本控制，無往不利！",
+      "questions": [
+        {
+          "id": "cc-15-1",
+          "type": "選擇題",
+          "question": "讓 Claude Code 幫你寫 commit message 的好處是什麼？",
+          "options": [
+            "讓Claude看起來在工作",
+            "生成清楚描述這次改動內容的訊息，讓版本歷史更可讀",
+            "節省輸入時間",
+            "讓程式碼更好"
+          ],
+          "answer": "生成清楚描述這次改動內容的訊息，讓版本歷史更可讀",
+          "explanation": "清楚的 commit message 讓團隊成員和未來的自己都能快速理解每次改動的目的，是好的版本控制習慣。"
+        },
+        {
+          "id": "cc-15-2",
+          "type": "填空題",
+          "question": "做大型改動前，讓 Claude 做「影響___」：「如果我修改這個函式，哪些地方會受到影響？」",
+          "options": [
+            "費用",
+            "分析",
+            "備份",
+            "翻譯"
+          ],
+          "answer": "分析",
+          "explanation": "影響分析讓你在動手前就了解改動的波及範圍，防止不小心破壞其他依賴該函式的模組。"
+        },
+        {
+          "id": "cc-15-3",
+          "type": "選擇題",
+          "question": "使用 Claude Code 網頁版的 GitHub 整合功能，工作流程是什麼？",
+          "options": [
+            "Claude在本機執行",
+            "選repo和分支，Claude在雲端執行，完成後開PR讓你審查",
+            "Claude直接推送到main分支",
+            "需要你手動確認每行改動"
+          ],
+          "answer": "選repo和分支，Claude在雲端執行，完成後開PR讓你審查",
+          "explanation": "雲端執行讓你不需要把程式碼拉到本機，Claude 在隔離的雲端環境完成工作後，透過 PR 讓你審查和合併。"
+        },
+        {
+          "id": "cc-15-4",
+          "type": "填空題",
+          "question": "利用 `/loop` 指令可以設定每天自動把 PR 的審查意見___完，讓 Git 例行工作自動化。",
+          "options": [
+            "刪除",
+            "處理",
+            "備份",
+            "付費"
+          ],
+          "answer": "處理",
+          "explanation": "自動處理 PR 審查意見讓 Claude 在背景持續維護程式碼品質，讓工程師能專注在新功能開發上。"
+        },
+        {
+          "id": "cc-15-5",
+          "type": "選擇題",
+          "question": "「Git 影響分析」最重要的價值是什麼？",
+          "options": [
+            "讓Git速度更快",
+            "在改動前了解影響範圍，防止意外破壞其他模組",
+            "自動備份程式碼",
+            "讓commit更好看"
+          ],
+          "answer": "在改動前了解影響範圍，防止意外破壞其他模組",
+          "explanation": "預先了解影響範圍是大型改動前的必要步驟，讓你能提前規劃並告知相關人員，降低改動帶來的風險。"
+        },
+        {
+          "id": "cc-15-6",
+          "type": "填空題",
+          "question": "問 Claude「___個 commit 引入了這個 Bug？」它可以配合 git 歷史分析最近的改動找出原因。",
+          "options": [
+            "第幾",
+            "哪",
+            "最後一",
+            "第一"
+          ],
+          "answer": "哪",
+          "explanation": "讓 Claude 分析 git 歷史找出問題的起源 commit，比手動一個一個查看 diff 要快得多。"
+        },
+        {
+          "id": "cc-15-7",
+          "type": "選擇題",
+          "question": "Claude Code 理解 Git 讓它能做哪些事？",
+          "options": [
+            "只能查commit訊息",
+            "查commit歷史、比較分支差異、找Bug來源、自動處理PR",
+            "只能備份程式碼",
+            "只能顯示分支列表"
+          ],
+          "answer": "查commit歷史、比較分支差異、找Bug來源、自動處理PR",
+          "explanation": "完整的 Git 理解讓 Claude Code 能深度整合進整個版本控制工作流程，從找問題到處理 PR 都能自動化。"
+        }
+      ]
+    },
+    {
+      "stageId": 16,
+      "stageName": "GitHub Actions自動化",
+      "enemy": "毛利輝元",
+      "difficulty": 4,
+      "questionCount": 7,
+      "teachingDialogue": "大人！毛利輝元統領山陰山陽！把 Claude Code 安裝到 GitHub Actions 後，每次 Push 或開 PR 時就自動執行，不需要人工觸發！在 PR 留言裡 @claude 加上說明，它就自動在那個分支上執行——不需要把程式碼拉到本機！自動化程式碼審查：PR 一開，Claude 就分析改動，貼出找到的問題作為 inline 留言。費用管理建議：把 Sonnet 當預設，設定費用上限！大人，自動化是真正的生產力解放！",
+      "questions": [
+        {
+          "id": "cc-16-1",
+          "type": "選擇題",
+          "question": "把 Claude Code 安裝到 GitHub Actions 後，何時會自動執行？",
+          "options": [
+            "只有手動觸發",
+            "每次Push或開PR時自動執行，不需要人工觸發",
+            "只有週一執行",
+            "只有測試失敗時"
+          ],
+          "answer": "每次Push或開PR時自動執行，不需要人工觸發",
+          "explanation": "GitHub Actions 整合讓 Claude Code 成為 CI/CD 流程的一部分，每次程式碼更新都能自動觸發分析和審查。"
+        },
+        {
+          "id": "cc-16-2",
+          "type": "填空題",
+          "question": "在 PR 留言裡 @claude 並描述要做什麼，Claude 就會自動在那個___上執行，不需要把程式碼拉到本機。",
+          "options": [
+            "伺服器",
+            "分支",
+            "資料庫",
+            "雲端"
+          ],
+          "answer": "分支",
+          "explanation": "直接在分支上執行讓工作流程更流暢，不需要先 checkout 到本機，Claude 在雲端環境處理後直接提交結果。"
+        },
+        {
+          "id": "cc-16-3",
+          "type": "選擇題",
+          "question": "Claude Code 的自動化程式碼審查，問題會以什麼形式顯示？",
+          "options": [
+            "發電子郵件通知",
+            "在有問題的程式碼行旁邊直接貼出inline留言",
+            "在獨立的報告文件裡",
+            "在終端機輸出"
+          ],
+          "answer": "在有問題的程式碼行旁邊直接貼出inline留言",
+          "explanation": "Inline 留言讓審查結果和程式碼緊密關聯，開發者能立刻看到問題在哪一行，不需要查找對應位置。"
+        },
+        {
+          "id": "cc-16-4",
+          "type": "填空題",
+          "question": "在 CI/CD 中使用 Claude Code 的費用管理建議：把___當預設，只在真正需要時才用 Opus。",
+          "options": [
+            "Haiku",
+            "Sonnet",
+            "Opus",
+            "Pro"
+          ],
+          "answer": "Sonnet",
+          "explanation": "CI/CD 任務頻繁執行，把 Sonnet 當預設能有效控制費用，Opus 的高費用只保留給真正複雜的任務。"
+        },
+        {
+          "id": "cc-16-5",
+          "type": "選擇題",
+          "question": "GitHub Actions 的 Claude Code 觸發時機可以設定為哪些情況？",
+          "options": [
+            "只能每次Push",
+            "每次Push時、PR開啟時，或只在人工@claude時才執行",
+            "只能每天一次",
+            "完全無法設定"
+          ],
+          "answer": "每次Push時、PR開啟時，或只在人工@claude時才執行",
+          "explanation": "靈活的觸發設定讓你根據項目需求選擇最合適的自動化程度，在效率和費用之間取得平衡。"
+        },
+        {
+          "id": "cc-16-6",
+          "type": "填空題",
+          "question": "安全掃描功能有現成的 GitHub Actions ___可以直接套用，幾分鐘就能設定好。",
+          "options": [
+            "付費",
+            "模板",
+            "語言",
+            "文件"
+          ],
+          "answer": "模板",
+          "explanation": "現成的模板讓你不需要從零開始設定自動化安全掃描，大幅降低導入的技術門檻，幾分鐘就能啟用。"
+        },
+        {
+          "id": "cc-16-7",
+          "type": "選擇題",
+          "question": "在 CI/CD 中使用 Claude Code，費用管理最重要的措施是什麼？",
+          "options": [
+            "不用在意費用",
+            "設定費用上限，避免自動化任務產生無預期的高額費用",
+            "只用免費功能",
+            "每次手動確認費用"
+          ],
+          "answer": "設定費用上限，避免自動化任務產生無預期的高額費用",
+          "explanation": "自動化任務可能頻繁觸發，設定費用上限是防止意外超支的重要安全機制，特別是在 CI/CD 環境中。"
+        }
+      ]
+    },
+    {
+      "stageId": 17,
+      "stageName": "安全機制",
+      "enemy": "上杉景勝",
+      "difficulty": 4,
+      "questionCount": 7,
+      "teachingDialogue": "大人！上杉景勝繼承謙信遺志，以義為先！Claude Code 預設用「最小權限」原則：只讀取，需要修改才額外申請。有個「黑名單指令清單」，高風險的系統指令預設被封鎖！MCP 伺服器安全注意：連接第三方 MCP 伺服器前要確認信任，惡意伺服器可能試圖讓 Claude 做你不想要的事（提示注入！）。Claude Code 還能掃描你的程式碼找出 SQL 注入、XSS 等常見安全漏洞！大人，安全第一！",
+      "questions": [
+        {
+          "id": "cc-17-1",
+          "type": "選擇題",
+          "question": "Claude Code 預設使用什麼安全原則？",
+          "options": [
+            "最大權限原則，盡量多做",
+            "最小權限原則，只讀取，修改時才額外申請權限",
+            "完全無限制",
+            "每次都需要密碼確認"
+          ],
+          "answer": "最小權限原則，只讀取，修改時才額外申請權限",
+          "explanation": "最小權限原則是安全設計的核心，讓 Claude Code 在需要更高權限時才額外申請，降低意外操作的風險。"
+        },
+        {
+          "id": "cc-17-2",
+          "type": "填空題",
+          "question": "Claude Code 有「___指令清單」，某些高風險的系統指令預設被封鎖，就算 Claude 認為需要也會被攔截。",
+          "options": [
+            "白名單",
+            "黑名單",
+            "付費",
+            "安全"
+          ],
+          "answer": "黑名單",
+          "explanation": "黑名單機制確保某些絕對危險的指令無法被執行，即使在自動化情境下也有最後一道防線保護系統安全。"
+        },
+        {
+          "id": "cc-17-3",
+          "type": "選擇題",
+          "question": "連接第三方 MCP 伺服器前，最重要的安全考量是什麼？",
+          "options": [
+            "確認速度夠快",
+            "確認你信任這個伺服器，惡意伺服器可能造成提示注入攻擊",
+            "確認費用合理",
+            "確認支援所有功能"
+          ],
+          "answer": "確認你信任這個伺服器，惡意伺服器可能造成提示注入攻擊",
+          "explanation": "MCP 伺服器能讀取外部資料，惡意伺服器可能在資料中藏入惡意指令試圖操控 Claude，信任驗證是必要步驟。"
+        },
+        {
+          "id": "cc-17-4",
+          "type": "填空題",
+          "question": "Claude Code 的自動安全審查能找出 SQL 注入、XSS、___漏洞等常見安全問題。",
+          "options": [
+            "付費",
+            "認證",
+            "語言",
+            "速度"
+          ],
+          "answer": "認證",
+          "explanation": "自動安全掃描涵蓋三大常見漏洞類型：SQL 注入（資料庫攻擊）、XSS（跨站腳本）和認證問題（身份驗證漏洞）。"
+        },
+        {
+          "id": "cc-17-5",
+          "type": "選擇題",
+          "question": "Claude Code 的自動安全審查和人工安全稽核的關係是什麼？",
+          "options": [
+            "自動審查完全取代人工",
+            "自動審查是第一道篩選輔助工具，不能取代人工的深度稽核",
+            "人工稽核已經不需要",
+            "兩者完全相同"
+          ],
+          "answer": "自動審查是第一道篩選輔助工具，不能取代人工的深度稽核",
+          "explanation": "AI 能快速找出常見問題，但對複雜的業務邏輯漏洞或特定情境的安全風險，仍需要人工的專業判斷。"
+        },
+        {
+          "id": "cc-17-6",
+          "type": "填空題",
+          "question": "使用 `.claude/settings.json` 的 allow/deny 規則，可以精確控制 Claude 可以___哪些操作。",
+          "options": [
+            "付費",
+            "執行",
+            "備份",
+            "翻譯"
+          ],
+          "answer": "執行",
+          "explanation": "精細的 allow/deny 規則讓你在保持 Claude Code 自動化能力的同時，精確限制它的操作範圍。"
+        },
+        {
+          "id": "cc-17-7",
+          "type": "選擇題",
+          "question": "在共享的開發環境中使用 Claude Code，最重要的安全注意事項是什麼？",
+          "options": [
+            "讓所有人共用同一個帳號",
+            "確保API金鑰和Token是加密儲存，不放在CLAUDE.md或指令裡",
+            "把所有指令設為公開",
+            "關掉所有安全設定"
+          ],
+          "answer": "確保API金鑰和Token是加密儲存，不放在CLAUDE.md或指令裡",
+          "explanation": "敏感憑證放在明文文件中可能被無意間提交到版本控制系統，造成嚴重的安全風險。"
+        }
+      ]
+    },
+    {
+      "stageId": 18,
+      "stageName": "脈絡視窗管理",
+      "enemy": "前田利長",
+      "difficulty": 4,
+      "questionCount": 7,
+      "teachingDialogue": "大人！前田利長繼承利家的大藩，以持續管理著稱！長時間和 Claude Code 工作後，脈絡視窗會逐漸被對話歷史填滿，Claude 的表現可能下降。`/compact` 是解決方案：把對話歷史壓縮成精簡摘要，清出空間讓對話繼續，重要資訊不會遺失！更好的習慣：一次只做一件事，一個獨立任務開一個新對話。對話開始時，把需要的相關檔案明確告訴 Claude，讓它聚焦不要亂搜！大人，管理好資源，才能持久作戰！",
+      "questions": [
+        {
+          "id": "cc-18-1",
+          "type": "選擇題",
+          "question": "脈絡視窗被填滿後，Claude Code 的表現會怎樣？",
+          "options": [
+            "表現更好",
+            "表現可能開始下降",
+            "完全停止工作",
+            "費用更低"
+          ],
+          "answer": "表現可能開始下降",
+          "explanation": "脈絡視窗有容量限制，填滿後早期的資訊可能被捨棄，讓 Claude 遺失重要的背景資訊，影響工作品質。"
+        },
+        {
+          "id": "cc-18-2",
+          "type": "填空題",
+          "question": "___指令把對話歷史壓縮成精簡摘要，清出脈絡視窗空間，讓長時間工作得以繼續。",
+          "options": [
+            "/clear",
+            "/compact",
+            "/save",
+            "/compress"
+          ],
+          "answer": "/compact",
+          "explanation": "/compact 是長時間工作的必備指令，它智慧地保留重要資訊同時釋放空間，讓工作能夠繼續進行。"
+        },
+        {
+          "id": "cc-18-3",
+          "type": "選擇題",
+          "question": "最好的脈絡視窗管理習慣是什麼？",
+          "options": [
+            "在同一個對話塞所有任務",
+            "一次只做一件事，一個獨立任務開一個新對話",
+            "永遠不清空對話",
+            "讓Claude自己管理"
+          ],
+          "answer": "一次只做一件事，一個獨立任務開一個新對話",
+          "explanation": "獨立的任務用獨立的對話，不僅讓每個對話都有充足的空間，也讓任務的邏輯更清晰，不同任務不互相干擾。"
+        },
+        {
+          "id": "cc-18-4",
+          "type": "填空題",
+          "question": "對話開始時，把需要的相關___明確告訴 Claude，讓它聚焦不要亂搜不相關的檔案。",
+          "options": [
+            "費用",
+            "檔案",
+            "密碼",
+            "帳號"
+          ],
+          "answer": "檔案",
+          "explanation": "明確指定相關檔案讓 Claude 能集中注意力在真正需要的地方，避免讀取大量不相關的程式碼浪費脈絡視窗空間。"
+        },
+        {
+          "id": "cc-18-5",
+          "type": "選擇題",
+          "question": "CLAUDE.md 在脈絡視窗管理中扮演什麼角色？",
+          "options": [
+            "消耗大量脈絡視窗",
+            "跨對話保留資訊的最好方式，新對話自動讀取不需要重複說明",
+            "只是備份文件",
+            "讓Claude變慢"
+          ],
+          "answer": "跨對話保留資訊的最好方式，新對話自動讀取不需要重複說明",
+          "explanation": "CLAUDE.md 把重要規則和決策儲存在對話外部，讓每次新對話都能立刻獲得完整背景，不消耗寶貴的脈絡視窗空間。"
+        },
+        {
+          "id": "cc-18-6",
+          "type": "填空題",
+          "question": "使用 /compact 後，重要的資訊會以___的形式保留，讓對話能在有限空間內繼續。",
+          "options": [
+            "刪除",
+            "摘要",
+            "備份",
+            "加密"
+          ],
+          "answer": "摘要",
+          "explanation": "精簡摘要保留最重要的資訊，讓 Claude 在清出空間的同時不會失去關鍵的工作背景。"
+        },
+        {
+          "id": "cc-18-7",
+          "type": "選擇題",
+          "question": "以下哪個做法最不利於脈絡視窗管理？",
+          "options": [
+            "每個任務開新對話",
+            "在同一個對話裡塞十個不相關的任務",
+            "使用CLAUDE.md記錄規則",
+            "定期執行/compact"
+          ],
+          "answer": "在同一個對話裡塞十個不相關的任務",
+          "explanation": "把不相關的任務都放在同一個對話，會讓脈絡視窗快速被填滿，導致 Claude 的表現下降。"
+        }
+      ]
+    },
+    {
+      "stageId": 19,
+      "stageName": "Claude Code網頁版",
+      "enemy": "蒲生氏鄉",
+      "difficulty": 4,
+      "questionCount": 7,
+      "teachingDialogue": "大人！蒲生氏鄉文武雙全！Claude Code 網頁版讓你不需要開啟本機終端機，直接在瀏覽器裡把任務派給 Claude 在雲端執行。使用方式：選一個 GitHub repo 和分支，描述你想做的事，Claude 就在雲端的隔離環境執行，你可以去做別的事！特別適合「不急但耗時」的任務：大型重構、補完整測試套件、掃描整個專案找安全問題。任務完成後，Claude 開一個 Pull Request 讓你審查！大人，善用雲端，讓電腦不停歇地為您工作！",
+      "questions": [
+        {
+          "id": "cc-19-1",
+          "type": "選擇題",
+          "question": "Claude Code 網頁版最大的優點是什麼？",
+          "options": [
+            "費用更低",
+            "不需要開本機終端機，直接在瀏覽器派任務給雲端執行",
+            "功能比終端機版更多",
+            "速度比本機快"
+          ],
+          "answer": "不需要開本機終端機，直接在瀏覽器派任務給雲端執行",
+          "explanation": "網頁版讓使用更方便，特別是在沒有開發環境的情況下，也能派任務給 Claude Code 執行。"
+        },
+        {
+          "id": "cc-19-2",
+          "type": "填空題",
+          "question": "使用 Claude Code 網頁版時，先選一個 GitHub repo 和___，然後描述任務讓 Claude 在雲端執行。",
+          "options": [
+            "費用",
+            "分支",
+            "語言",
+            "資料夾"
+          ],
+          "answer": "分支",
+          "explanation": "選擇特定分支讓 Claude 在隔離的環境中工作，不會影響其他分支，完成後再透過 PR 合併到目標分支。"
+        },
+        {
+          "id": "cc-19-3",
+          "type": "選擇題",
+          "question": "Claude Code 網頁版最適合哪種任務？",
+          "options": [
+            "需要立刻看到結果的快速問答",
+            "不急但耗時的任務，例如大型重構或完整安全掃描",
+            "即時除錯",
+            "設定IDE環境"
+          ],
+          "answer": "不急但耗時的任務，例如大型重構或完整安全掃描",
+          "explanation": "網頁版的非同步執行模式讓你派完任務後就能去做其他事，等任務完成再來審查，特別適合耗時的長任務。"
+        },
+        {
+          "id": "cc-19-4",
+          "type": "填空題",
+          "question": "網頁版任務完成後，Claude 會開一個___讓你審查，或直接通知你任務已完成。",
+          "options": [
+            "發票",
+            "Pull Request",
+            "報告",
+            "電子郵件"
+          ],
+          "answer": "Pull Request",
+          "explanation": "透過 PR 讓你審查 Claude 的工作成果是最安全的方式，確保任何程式碼變更在合併前都經過人工確認。"
+        },
+        {
+          "id": "cc-19-5",
+          "type": "選擇題",
+          "question": "Claude Code 網頁版和終端機版的功能差異是什麼？",
+          "options": [
+            "網頁版功能較少",
+            "功能一致，只有執行環境不同：本機和雲端",
+            "終端機版功能較少",
+            "兩者完全不同"
+          ],
+          "answer": "功能一致，只有執行環境不同：本機和雲端",
+          "explanation": "選擇哪個版本主要取決於使用習慣和任務性質，功能上完全一致，讓你靈活選擇最適合當下情境的使用方式。"
+        },
+        {
+          "id": "cc-19-6",
+          "type": "填空題",
+          "question": "Claude Code 網頁版在 Anthropic 的___環境執行，讓任務在雲端完成而不佔用你的電腦資源。",
+          "options": [
+            "本機",
+            "雲端",
+            "備份",
+            "付費"
+          ],
+          "answer": "雲端",
+          "explanation": "雲端執行讓你的電腦不需要一直開著，特別是對需要長時間運行的任務，讓資源使用更有效率。"
+        },
+        {
+          "id": "cc-19-7",
+          "type": "選擇題",
+          "question": "以下哪種情況最適合使用 Claude Code 網頁版？",
+          "options": [
+            "快速修一個Bug",
+            "派出大型重構任務後去開一個重要的會議",
+            "設定CLAUDE.md",
+            "學習Claude Code的基本指令"
+          ],
+          "answer": "派出大型重構任務後去開一個重要的會議",
+          "explanation": "網頁版的非同步特性讓你能在 Claude 執行長任務的同時去做其他重要的事，充分利用時間。"
+        }
+      ]
+    },
+    {
+      "stageId": 20,
+      "stageName": "用量管理與成本控制",
+      "enemy": "小早川秀秋",
+      "difficulty": 4,
+      "questionCount": 7,
+      "teachingDialogue": "大人！小早川秀秋以「關原的背叛」聞名，但今日要學的是不背叛自己荷包的智慧！不同模型費用差距很大：養成「大問題才用 Opus、一般工作用 Sonnet、簡單任務用 Haiku」的習慣！快取（Caching）技術讓固定的 CLAUDE.md 等設定只計費一次，自動減少費用。在 Claude Console 的「用量分析」頁面可以看到詳細的 Token 使用記錄，找出最耗量的任務。對 CI/CD 自動化任務特別要注意：設好費用上限，避免每次 commit 都觸發昂貴的 Opus 審查！大人，省錢才是長久之計！",
+      "questions": [
+        {
+          "id": "cc-20-1",
+          "type": "選擇題",
+          "question": "以下哪個使用習慣最能有效控制 Claude Code 的費用？",
+          "options": [
+            "每次都用Opus確保品質",
+            "大問題用Opus，一般工作用Sonnet，簡單任務用Haiku",
+            "只用Haiku省費用",
+            "完全不在意費用"
+          ],
+          "answer": "大問題用Opus，一般工作用Sonnet，簡單任務用Haiku",
+          "explanation": "根據任務複雜度選擇對應的模型，在保證品質的前提下最大化費用效益，是成本控制的黃金原則。"
+        },
+        {
+          "id": "cc-20-2",
+          "type": "填空題",
+          "question": "快取（Caching）技術讓重複出現的 CLAUDE.md 等設定只計費___，能自動減少費用。",
+          "options": [
+            "無限次",
+            "一次",
+            "三次",
+            "每天一次"
+          ],
+          "answer": "一次",
+          "explanation": "快取讓固定的系統設定只需要在第一次時計費，之後重複使用不再重複計費，對有穩定 CLAUDE.md 的專案效果顯著。"
+        },
+        {
+          "id": "cc-20-3",
+          "type": "選擇題",
+          "question": "在哪裡可以看到詳細的 Claude Code Token 使用記錄？",
+          "options": [
+            "Claude手機App",
+            "Claude Console的「用量分析（Usage Analytics）」頁面",
+            "電子郵件帳單",
+            "Claude Code終端機"
+          ],
+          "answer": "Claude Console的「用量分析（Usage Analytics）」頁面",
+          "explanation": "用量分析頁面提供細粒度的使用資料，讓你找出哪些任務最消耗 Token，有針對性地優化成本。"
+        },
+        {
+          "id": "cc-20-4",
+          "type": "填空題",
+          "question": "對 CI/CD 自動化任務特別要設好___上限，避免無預期的高額費用。",
+          "options": [
+            "功能",
+            "費用",
+            "時間",
+            "檔案"
+          ],
+          "answer": "費用",
+          "explanation": "自動化任務可能頻繁觸發，費用上限是防止失控的最重要保護措施，讓你在掌控成本的前提下享受自動化效益。"
+        },
+        {
+          "id": "cc-20-5",
+          "type": "選擇題",
+          "question": "Enterprise 方案的費用管理功能有哪些？",
+          "options": [
+            "沒有費用管理功能",
+            "管理員可在後台設定每人或整個組織的費用上限",
+            "只能事後查看費用",
+            "需要每天手動確認費用"
+          ],
+          "answer": "管理員可在後台設定每人或整個組織的費用上限",
+          "explanation": "企業版的集中費用管理讓管理員能控制整個組織的 AI 使用成本，防止任何單一用戶或自動化任務意外超支。"
+        },
+        {
+          "id": "cc-20-6",
+          "type": "填空題",
+          "question": "對 CI/CD 自動化任務，建議改用___模型作為預設，只在需要時才用 Opus。",
+          "options": [
+            "Haiku",
+            "Sonnet",
+            "Pro",
+            "Max"
+          ],
+          "answer": "Sonnet",
+          "explanation": "Sonnet 在能力和費用之間取得最佳平衡，作為 CI/CD 的預設模型能確保審查品質的同時有效控制成本。"
+        },
+        {
+          "id": "cc-20-7",
+          "type": "選擇題",
+          "question": "用量分析對費用優化最大的幫助是什麼？",
+          "options": [
+            "讓費用自動降低",
+            "找出哪些任務最耗量，有針對性地優化那些任務的指令或模型選擇",
+            "自動切換到最便宜的模型",
+            "不需要任何額外操作"
+          ],
+          "answer": "找出哪些任務最耗量，有針對性地優化那些任務的指令或模型選擇",
+          "explanation": "資料驅動的優化比盲目調整更有效，找出消耗最多的任務後，改善那些任務的設計能達到最大的費用節省效果。"
+        }
+      ]
+    },
+    {
+      "stageId": 21,
+      "stageName": "Hooks自動化觸發",
+      "enemy": "石田三成",
+      "difficulty": 5,
+      "questionCount": 10,
+      "teachingDialogue": "大人！石田三成以精於組織著稱！Hooks 讓你在 Claude Code 執行的特定時間點插入自訂動作，就像 Git hooks 一樣。常見應用：Claude 修改完程式碼後自動跑 prettier 格式化、執行指令前自動做安全檢查。Hook 類型：PreToolUse（工具執行前）、PostToolUse（工具執行後）、PermissionRequest（權限申請時）。設定在 `.claude/settings.json` 管理，可以針對特定工具或特定檔案類型觸發！大人，讓自動化保護你的品質！",
+      "questions": [
+        {
+          "id": "cc-21-1",
+          "type": "選擇題",
+          "question": "「Hooks」在 Claude Code 中的作用是什麼？",
+          "options": [
+            "讓Claude說話更流暢",
+            "在Claude執行的特定時間點插入自訂自動化動作",
+            "讓程式碼更短",
+            "讓費用更低"
+          ],
+          "answer": "在Claude執行的特定時間點插入自訂自動化動作",
+          "explanation": "Hooks 讓你把自動化邏輯嵌入 Claude Code 的工作流程，例如在每次修改後自動格式化，無需手動觸發。"
+        },
+        {
+          "id": "cc-21-2",
+          "type": "填空題",
+          "question": "「___Hook」在 Claude 執行工具前觸發，可以做安全檢查或確認動作。",
+          "options": [
+            "PostToolUse",
+            "PreToolUse",
+            "Permission",
+            "Safety"
+          ],
+          "answer": "PreToolUse",
+          "explanation": "PreToolUse Hook 讓你在 Claude 真正執行操作前插入檢查邏輯，是防止危險操作的最後一道防線。"
+        },
+        {
+          "id": "cc-21-3",
+          "type": "選擇題",
+          "question": "Hooks 的最常見應用之一是什麼？",
+          "options": [
+            "讓Claude說話更快",
+            "Claude修改完程式碼後自動跑prettier等格式化工具",
+            "讓費用更低",
+            "備份程式碼"
+          ],
+          "answer": "Claude修改完程式碼後自動跑prettier等格式化工具",
+          "explanation": "PostToolUse Hook 讓每次程式碼修改後自動格式化，確保程式碼風格一致性，無需人工記得每次執行格式化指令。"
+        },
+        {
+          "id": "cc-21-4",
+          "type": "填空題",
+          "question": "Hooks 的設定透過 `.claude/___` 檔案管理，可以針對特定工具或特定檔案類型設定觸發條件。",
+          "options": [
+            "hooks.json",
+            "settings.json",
+            "config.json",
+            "claude.md"
+          ],
+          "answer": "settings.json",
+          "explanation": ".claude/settings.json 是 Claude Code 的核心設定檔，Hooks 的觸發條件和行為都在這裡定義和管理。"
+        },
+        {
+          "id": "cc-21-5",
+          "type": "選擇題",
+          "question": "把品質保證自動化到 Hooks 裡，最大的好處是什麼？",
+          "options": [
+            "讓程式碼更好看",
+            "讓Claude改完就自動驗證，不需要人工記得每次都要手動跑檢查",
+            "節省費用",
+            "讓Claude更智慧"
+          ],
+          "answer": "讓Claude改完就自動驗證，不需要人工記得每次都要手動跑檢查",
+          "explanation": "自動化消除了依賴人工記憶的不確定性，讓每次修改後的品質驗證都自動完成，減少人為疏忽的風險。"
+        },
+        {
+          "id": "cc-21-6",
+          "type": "填空題",
+          "question": "Hook 可以針對「特定___類型」設定觸發條件，例如只在編輯 `.ts` 檔時觸發 TypeScript 型別檢查。",
+          "options": [
+            "付費",
+            "檔案",
+            "語言",
+            "模型"
+          ],
+          "answer": "檔案",
+          "explanation": "針對特定檔案類型的 Hook 讓自動化更精確，例如只對 TypeScript 檔觸發型別檢查，對 Python 檔觸發 black 格式化。"
+        },
+        {
+          "id": "cc-21-7",
+          "type": "選擇題",
+          "question": "「PermissionRequest Hook」的觸發時機是什麼？",
+          "options": [
+            "每次開啟Claude Code時",
+            "Claude需要申請新的操作權限時",
+            "每次修改程式碼後",
+            "每天定時觸發"
+          ],
+          "answer": "Claude需要申請新的操作權限時",
+          "explanation": "PermissionRequest Hook 讓你在 Claude 申請新權限時插入自訂邏輯，例如發送通知或自動日誌記錄。"
+        },
+        {
+          "id": "cc-21-8",
+          "type": "填空題",
+          "question": "「___Hook」在 Claude 執行工具後觸發，常用來自動跑格式化或測試。",
+          "options": [
+            "PreToolUse",
+            "PostToolUse",
+            "PermissionRequest",
+            "Safety"
+          ],
+          "answer": "PostToolUse",
+          "explanation": "PostToolUse 在工具執行後觸發，是跑格式化、型別檢查、自動測試等後續驗證步驟的最佳時機。"
+        },
+        {
+          "id": "cc-21-9",
+          "type": "選擇題",
+          "question": "Hooks 和 Git Hooks 最大的相似點是什麼？",
+          "options": [
+            "都是用來管理Git的",
+            "都是在特定事件發生時自動觸發自訂動作",
+            "都需要寫程式才能用",
+            "費用一樣"
+          ],
+          "answer": "都是在特定事件發生時自動觸發自訂動作",
+          "explanation": "兩者都基於相同的「事件驅動自動化」概念，在特定時間點插入自訂邏輯，理解 Git Hooks 的人能快速掌握 Claude Code Hooks。"
+        },
+        {
+          "id": "cc-21-10",
+          "type": "填空題",
+          "question": "善用 Hooks 讓 Claude Code 實現「改完就___，不需要人工記得每次手動跑」的自動品質保證。",
+          "options": [
+            "付費",
+            "自動驗證",
+            "備份",
+            "上傳"
+          ],
+          "answer": "自動驗證",
+          "explanation": "自動驗證是 Hooks 的核心價值，把品質檢查從「人工記得去做」變成「自動在每次修改後發生」，大幅提升可靠性。"
+        }
+      ]
+    },
+    {
+      "stageId": 22,
+      "stageName": "無頭模式程式呼叫",
+      "enemy": "大谷吉繼",
+      "difficulty": 5,
+      "questionCount": 10,
+      "teachingDialogue": "大人！大谷吉繼雖身患疾病卻忠義不渝！無頭模式讓你用程式碼呼叫 Claude Code，不需要人互動，適合整合進自動化腳本或 CI/CD。使用方式：`claude -p \"你的指令\"` 就能非互動式執行，結果輸出到終端機可被其他程式捕捉！搭配 `--allowedTools` 旗標預先批准特定工具，讓腳本不被中斷！「Bare 模式」是最精簡的執行方式：只帶著基本工具。常見應用：定期自動安全掃描、每天產出測試覆蓋率報告！大人，讓程式自動完成工作！",
+      "questions": [
+        {
+          "id": "cc-22-1",
+          "type": "選擇題",
+          "question": "「無頭模式（Headless Mode）」最大的特點是什麼？",
+          "options": [
+            "讓Claude說話更快",
+            "讓程式碼呼叫Claude Code，不需要人工互動，適合自動化腳本",
+            "讓介面消失",
+            "讓費用更低"
+          ],
+          "answer": "讓程式碼呼叫Claude Code，不需要人工互動，適合自動化腳本",
+          "explanation": "無頭模式把 Claude Code 從互動工具轉型為可程式化呼叫的服務，讓自動化工作流程能完整整合 AI 能力。"
+        },
+        {
+          "id": "cc-22-2",
+          "type": "填空題",
+          "question": "無頭模式的基本使用方式：`claude -p \"你的指令\"`，這樣執行一個任務結果輸出到___。",
+          "options": [
+            "雲端",
+            "終端機",
+            "瀏覽器",
+            "電子郵件"
+          ],
+          "answer": "終端機",
+          "explanation": "輸出到終端機讓其他腳本或程式能捕捉和處理 Claude Code 的結果，實現真正的自動化工作流程。"
+        },
+        {
+          "id": "cc-22-3",
+          "type": "選擇題",
+          "question": "在無頭模式中使用 `--allowedTools` 旗標的目的是什麼？",
+          "options": [
+            "讓Claude更聰明",
+            "預先批准特定工具的使用，讓自動化腳本執行不被中斷詢問",
+            "讓費用更低",
+            "讓執行更快"
+          ],
+          "answer": "預先批准特定工具的使用，讓自動化腳本執行不被中斷詢問",
+          "explanation": "在自動化場景中，每次詢問確認會中斷執行流程，預先批准讓腳本能無人值守地完整執行。"
+        },
+        {
+          "id": "cc-22-4",
+          "type": "填空題",
+          "question": "「___模式」是推薦的腳本和 SDK 呼叫方式，Claude 只帶著最基本的工具，最精簡最穩定。",
+          "options": [
+            "Pro",
+            "Bare",
+            "Safe",
+            "Auto"
+          ],
+          "answer": "Bare",
+          "explanation": "Bare 模式只載入必要的基本工具，讓腳本執行更可預測、更穩定，是自動化整合的最佳選擇。"
+        },
+        {
+          "id": "cc-22-5",
+          "type": "選擇題",
+          "question": "無頭模式的常見應用有哪些？",
+          "options": [
+            "只能回答問題",
+            "定期自動安全掃描、每天產出測試覆蓋率報告、自動化程式碼品質檢查",
+            "只能修改程式碼",
+            "只能讀取檔案"
+          ],
+          "answer": "定期自動安全掃描、每天產出測試覆蓋率報告、自動化程式碼品質檢查",
+          "explanation": "無頭模式讓這些需要定期執行的工作完全自動化，不需要工程師手動觸發，確保工作在背景持續進行。"
+        },
+        {
+          "id": "cc-22-6",
+          "type": "填空題",
+          "question": "無頭模式讓 Claude Code 從互動工具轉型為可被___呼叫的服務，整合進任何自動化流程。",
+          "options": [
+            "人工",
+            "程式",
+            "付費",
+            "網路"
+          ],
+          "answer": "程式",
+          "explanation": "可程式化呼叫是無頭模式的核心價值，讓 Claude Code 的 AI 能力能被整合進任何自動化系統中。"
+        },
+        {
+          "id": "cc-22-7",
+          "type": "選擇題",
+          "question": "以下哪種任務最適合用無頭模式自動化？",
+          "options": [
+            "需要和Claude討論設計方案",
+            "定期執行的品質檢查，例如每天早上自動掃描安全漏洞",
+            "學習新的程式語言",
+            "除錯一個新發現的Bug"
+          ],
+          "answer": "定期執行的品質檢查，例如每天早上自動掃描安全漏洞",
+          "explanation": "重複性、規律性的任務是無頭模式自動化最佳場景，讓這些工作在背景定期自動完成，不需要人工觸發。"
+        },
+        {
+          "id": "cc-22-8",
+          "type": "填空題",
+          "question": "無頭模式的輸出結果可以被其他程式___和處理，真正實現 AI 和自動化工作流程的整合。",
+          "options": [
+            "刪除",
+            "捕捉",
+            "付費",
+            "備份"
+          ],
+          "answer": "捕捉",
+          "explanation": "輸出捕捉讓 Claude Code 的結果能成為更大工作流程的一部分，例如把安全掃描結果儲存到資料庫或發送通知。"
+        },
+        {
+          "id": "cc-22-9",
+          "type": "選擇題",
+          "question": "為什麼 Bare 模式在腳本和 SDK 呼叫中是推薦的選擇？",
+          "options": [
+            "因為功能最多",
+            "因為只帶基本工具，最精簡、最穩定、最可預測",
+            "因為費用最低",
+            "因為速度最快"
+          ],
+          "answer": "因為只帶基本工具，最精簡、最穩定、最可預測",
+          "explanation": "精簡的工具集讓腳本行為更可預測，減少意外的工具呼叫，讓自動化工作流程更穩定可靠。"
+        },
+        {
+          "id": "cc-22-10",
+          "type": "填空題",
+          "question": "無頭模式讓 Claude Code 能在___條件下自動執行，例如設定每天凌晨跑一次完整的安全掃描。",
+          "options": [
+            "付費",
+            "排程",
+            "備份",
+            "網路"
+          ],
+          "answer": "排程",
+          "explanation": "排程自動執行是無頭模式最強大的應用場景，讓 AI 能力在你睡覺時也在背景持續為你的程式碼把關。"
+        }
+      ]
+    },
+    {
+      "stageId": 23,
+      "stageName": "連接MCP伺服器",
+      "enemy": "宇喜多秀家",
+      "difficulty": 5,
+      "questionCount": 10,
+      "teachingDialogue": "大人！宇喜多秀家年少英雄！MCP（模型上下文協議）是一個開放標準，讓 Claude Code 能連接到外部工具和資料來源，例如資料庫、監控系統、第三方 API。連接後，你可以說「從 Jira 撈出這週分配給我的 Issues」或「查一下 Datadog 昨天的錯誤率」！設定在專案根目錄的 `.mcp.json` 檔案裡。安全注意：只連接你信任的 MCP 伺服器，惡意伺服器可能試圖提示注入！插件可以把 MCP 伺服器打包一起發布，安裝插件就自動取得工具！大人，連接世界，無所不能！",
+      "questions": [
+        {
+          "id": "cc-23-1",
+          "type": "選擇題",
+          "question": "MCP（模型上下文協議）的主要用途是什麼？",
+          "options": [
+            "讓Claude說話更流暢",
+            "讓Claude Code能連接到外部工具和資料來源，例如資料庫和監控系統",
+            "讓費用更低",
+            "讓程式碼更短"
+          ],
+          "answer": "讓Claude Code能連接到外部工具和資料來源，例如資料庫和監控系統",
+          "explanation": "MCP 是 Claude Code 連接外部工具的標準介面，讓它能直接存取和操作各種第三方服務和資料來源。"
+        },
+        {
+          "id": "cc-23-2",
+          "type": "填空題",
+          "question": "連接 Jira 後，可以對 Claude Code 說「從 Jira 撈出___分配給我的 Issues，幫我依照優先順序整理」。",
+          "options": [
+            "所有",
+            "這週",
+            "明年",
+            "五年前"
+          ],
+          "answer": "這週",
+          "explanation": "透過 MCP 連接 Jira，讓 Claude Code 能直接查詢你的任務管理系統，把相關資料整合進你的工作流程。"
+        },
+        {
+          "id": "cc-23-3",
+          "type": "選擇題",
+          "question": "MCP 伺服器的設定放在哪裡？",
+          "options": [
+            "CLAUDE.md裡",
+            "專案根目錄的.mcp.json檔案裡",
+            "settings.json裡",
+            "任意位置都可以"
+          ],
+          "answer": "專案根目錄的.mcp.json檔案裡",
+          "explanation": ".mcp.json 是 MCP 伺服器連接設定的標準位置，讓整個專案都能使用同樣的外部工具連接設定。"
+        },
+        {
+          "id": "cc-23-4",
+          "type": "填空題",
+          "question": "連接 MCP 伺服器的安全注意事項：只連接你___的伺服器，惡意伺服器可能造成提示注入攻擊。",
+          "options": [
+            "付費給",
+            "信任",
+            "聽說過",
+            "找到"
+          ],
+          "answer": "信任",
+          "explanation": "MCP 伺服器能讀取外部資料並傳給 Claude，惡意伺服器可能在資料中藏入指令，信任驗證是必要的安全步驟。"
+        },
+        {
+          "id": "cc-23-5",
+          "type": "選擇題",
+          "question": "MCP 是什麼類型的標準？",
+          "options": [
+            "Anthropic的私有標準",
+            "開放標準，讓各種工具都能和Claude Code整合",
+            "需要付費購買的標準",
+            "政府制定的標準"
+          ],
+          "answer": "開放標準，讓各種工具都能和Claude Code整合",
+          "explanation": "MCP 的開放標準特性讓任何第三方工具都能實作支援，形成豐富的工具生態系，讓 Claude Code 的能力持續擴展。"
+        },
+        {
+          "id": "cc-23-6",
+          "type": "填空題",
+          "question": "插件可以把 MCP 伺服器___一起發布，安裝插件就自動取得對應的工具，不需要手動設定。",
+          "options": [
+            "刪除",
+            "打包",
+            "付費",
+            "備份"
+          ],
+          "answer": "打包",
+          "explanation": "插件的打包機制讓工具的分發和安裝變得簡單，降低了整合外部服務的技術門檻。"
+        },
+        {
+          "id": "cc-23-7",
+          "type": "選擇題",
+          "question": "會讀取外部資料的 MCP 伺服器，最需要注意的安全問題是什麼？",
+          "options": [
+            "速度問題",
+            "提示注入風險，外部資料可能含有惡意指令",
+            "費用問題",
+            "儲存空間問題"
+          ],
+          "answer": "提示注入風險，外部資料可能含有惡意指令",
+          "explanation": "MCP 伺服器從外部取得的資料可能含有提示注入攻擊，Claude 在處理這些資料時可能被惡意指令操控。"
+        },
+        {
+          "id": "cc-23-8",
+          "type": "填空題",
+          "question": "連接 Datadog 後，可以問 Claude「查一下 Datadog 昨天有沒有異常的___率」監控系統健康狀態。",
+          "options": [
+            "費用",
+            "錯誤",
+            "語言",
+            "版本"
+          ],
+          "answer": "錯誤",
+          "explanation": "透過 MCP 連接監控系統，讓 Claude Code 能直接查詢生產環境的健康指標，快速發現異常並協助分析原因。"
+        },
+        {
+          "id": "cc-23-9",
+          "type": "選擇題",
+          "question": "MCP 支援哪兩種連接伺服器的方式？",
+          "options": [
+            "只有網路連接",
+            "本機執行或遠端HTTP/SSE兩種方式",
+            "只有藍牙連接",
+            "需要實體安裝"
+          ],
+          "answer": "本機執行或遠端HTTP/SSE兩種方式",
+          "explanation": "兩種連接方式覆蓋不同場景：本機執行適合開發環境，遠端 HTTP/SSE 適合連接雲端服務和生產環境工具。"
+        },
+        {
+          "id": "cc-23-10",
+          "type": "填空題",
+          "question": "MCP 的開放標準特性讓任何___都能實作支援，形成豐富的工具生態系。",
+          "options": [
+            "個人",
+            "第三方工具",
+            "付費用戶",
+            "工程師"
+          ],
+          "answer": "第三方工具",
+          "explanation": "開放標準讓整個工具生態系都能和 Claude Code 整合，使用者能連接到越來越多的外部服務，功能持續擴展。"
+        }
+      ]
+    },
+    {
+      "stageId": 24,
+      "stageName": "自訂技能開發",
+      "enemy": "島左近",
+      "difficulty": 5,
+      "questionCount": 10,
+      "teachingDialogue": "大人！島左近是石田三成的首席軍師！你可以開發自己的技能，把常用的工作流程包裝成 `/your-skill-name` 指令，下次直接呼叫！技能的核心是 SKILL.md 文件：YAML 前置說明（技能名稱、何時觸發）加上 Markdown 格式的操作說明。技能放在 `.claude/skills/<name>/SKILL.md` 路徑。好的技能設計原則：職責單一、說明清晰具體、附上範例輸入和期望輸出！技能遵循 agentskills.io 標準格式，可在支援此標準的其他 AI 工具上使用！大人，打造專屬武器，百戰百勝！",
+      "questions": [
+        {
+          "id": "cc-24-1",
+          "type": "選擇題",
+          "question": "開發自訂技能的主要目的是什麼？",
+          "options": [
+            "讓Claude更聰明",
+            "把常用工作流程包裝成指令，下次直接呼叫，不需要重新說明",
+            "讓費用更低",
+            "讓程式碼更短"
+          ],
+          "answer": "把常用工作流程包裝成指令，下次直接呼叫，不需要重新說明",
+          "explanation": "自訂技能讓你把反覆使用的複雜工作流程標準化，一個指令就能觸發，大幅提升工作效率。"
+        },
+        {
+          "id": "cc-24-2",
+          "type": "填空題",
+          "question": "技能的核心是___文件，包含 YAML 前置說明和 Markdown 格式的操作說明。",
+          "options": [
+            "CLAUDE.md",
+            "SKILL.md",
+            "README.md",
+            "CONFIG.md"
+          ],
+          "answer": "SKILL.md",
+          "explanation": "SKILL.md 是技能的核心說明文件，定義了技能的名稱、觸發條件、操作說明，讓 Claude 知道何時和如何使用這個技能。"
+        },
+        {
+          "id": "cc-24-3",
+          "type": "選擇題",
+          "question": "技能文件應該放在哪個路徑？",
+          "options": [
+            "專案根目錄",
+            ".claude/skills/<name>/SKILL.md",
+            "src/skills/",
+            "任意位置都可以"
+          ],
+          "answer": ".claude/skills/<name>/SKILL.md",
+          "explanation": "這個標準路徑讓 Claude Code 能自動發現和載入技能，輸入 / 後就能在清單中看到技能名稱可以選擇。"
+        },
+        {
+          "id": "cc-24-4",
+          "type": "填空題",
+          "question": "好的技能設計原則：職責___、說明清晰具體、附上範例輸入和期望輸出。",
+          "options": [
+            "複雜",
+            "單一",
+            "廣泛",
+            "模糊"
+          ],
+          "answer": "單一",
+          "explanation": "職責單一讓技能的觸發條件清晰、執行精準，多個專職技能的組合遠比一個包辦一切的技能更靈活有效。"
+        },
+        {
+          "id": "cc-24-5",
+          "type": "選擇題",
+          "question": "技能遵循 agentskills.io 標準格式有什麼額外好處？",
+          "options": [
+            "讓技能更貴",
+            "可在支援此標準的其他AI工具上使用，增加可移植性",
+            "讓技能更複雜",
+            "讓技能只能自己用"
+          ],
+          "answer": "可在支援此標準的其他AI工具上使用，增加可移植性",
+          "explanation": "標準化讓你的技能投資能跨平台使用，不只限於 Claude Code，在其他支援此標準的 AI 工具中也能使用。"
+        },
+        {
+          "id": "cc-24-6",
+          "type": "填空題",
+          "question": "技能的 YAML 前置說明中，「___描述」告訴 Claude 在什麼情況下應該自動使用這個技能。",
+          "options": [
+            "付款",
+            "觸發",
+            "刪除",
+            "備份"
+          ],
+          "answer": "觸發",
+          "explanation": "觸發描述讓 Claude 知道何時主動建議或啟用技能，讓技能能在最適合的時機自動發揮作用。"
+        },
+        {
+          "id": "cc-24-7",
+          "type": "選擇題",
+          "question": "在技能說明中附上範例輸入和期望輸出的目的是什麼？",
+          "options": [
+            "讓說明文件更長",
+            "讓Claude從具體範例中學習期望的格式和風格，比文字描述更準確",
+            "展示功能給別人看",
+            "讓技能看起來更專業"
+          ],
+          "answer": "讓Claude從具體範例中學習期望的格式和風格，比文字描述更準確",
+          "explanation": "具體範例讓 Claude 直觀理解你的期望，比抽象描述更有效，讓技能的執行結果更符合預期。"
+        },
+        {
+          "id": "cc-24-8",
+          "type": "填空題",
+          "question": "建立自訂技能後，在對話框輸入 `/` 就能在清單中看到並___技能。",
+          "options": [
+            "刪除",
+            "呼叫",
+            "付費",
+            "備份"
+          ],
+          "answer": "呼叫",
+          "explanation": "技能整合到 Slash 指令系統，讓你能用統一的方式快速呼叫所有技能，不需要記憶不同的觸發方式。"
+        },
+        {
+          "id": "cc-24-9",
+          "type": "選擇題",
+          "question": "以下哪種技能設計最符合職責單一原則？",
+          "options": [
+            "一個技能包含所有程式碼品質檢查",
+            "一個技能只做TypeScript型別錯誤掃描，另一個只做程式碼格式化",
+            "一個技能包含除錯、重構和測試",
+            "讓技能越複雜功能越多"
+          ],
+          "answer": "一個技能只做TypeScript型別錯誤掃描，另一個只做程式碼格式化",
+          "explanation": "職責單一讓每個技能都精準有效，多個小技能的靈活組合遠比一個龐大的全功能技能更容易維護和使用。"
+        },
+        {
+          "id": "cc-24-10",
+          "type": "填空題",
+          "question": "技能讓常用工作流程標準化，讓整個___都能用同樣的方式完成工作，保持一致性。",
+          "options": [
+            "公司",
+            "團隊",
+            "世界",
+            "網路"
+          ],
+          "answer": "團隊",
+          "explanation": "分享技能讓整個開發團隊能用統一的工作方式，確保品質一致，避免每個人都用不同的方式做同樣的事。"
+        }
+      ]
+    },
+    {
+      "stageId": 25,
+      "stageName": "子代理人平行處理",
+      "enemy": "後藤又兵衛",
+      "difficulty": 5,
+      "questionCount": 10,
+      "teachingDialogue": "大人！後藤又兵衛是大阪方的猛將，以突破力著稱！子代理人是由主要 Claude Code 啟動的獨立 AI 執行個體，每個有自己的任務和上下文視窗。最大優勢是「平行執行」：同時啟動「風格檢查代理」、「安全掃描代理」、「測試覆蓋率代理」，三個並行，速度是依序執行的三倍！子代理人還可以跑在隔離的 worktree 裡，各自嘗試不同的解決方案，最後合併最好的！設計原則：每個代理人職責明確、只給必要權限、主代理人負責協調！大人，分兵出擊，速戰速決！",
+      "questions": [
+        {
+          "id": "cc-25-1",
+          "type": "選擇題",
+          "question": "子代理人（Subagent）最大的優勢是什麼？",
+          "options": [
+            "讓Claude更聰明",
+            "平行執行不同任務，速度是依序執行的數倍",
+            "讓費用更低",
+            "讓程式碼更短"
+          ],
+          "answer": "平行執行不同任務，速度是依序執行的數倍",
+          "explanation": "平行執行是子代理人的核心價值，讓多個獨立任務同時進行，大幅縮短完成複雜任務所需的時間。"
+        },
+        {
+          "id": "cc-25-2",
+          "type": "填空題",
+          "question": "子代理人是由___的 Claude Code 啟動的獨立 AI 執行個體，每個有自己的任務和上下文視窗。",
+          "options": [
+            "雲端",
+            "主要",
+            "付費",
+            "備份"
+          ],
+          "answer": "主要",
+          "explanation": "主要的 Claude Code（主代理人）負責啟動和協調各個子代理人，讓它們分工合作完成複雜任務。"
+        },
+        {
+          "id": "cc-25-3",
+          "type": "選擇題",
+          "question": "同時啟動三個子代理人各負責一個任務，速度是依序執行的幾倍？",
+          "options": [
+            "一樣快",
+            "約三倍快",
+            "約十倍快",
+            "無限快"
+          ],
+          "answer": "約三倍快",
+          "explanation": "三個子代理人並行執行，理想情況下速度是依序一個一個做的三倍，讓複雜任務的完成時間大幅縮短。"
+        },
+        {
+          "id": "cc-25-4",
+          "type": "填空題",
+          "question": "子代理人可以跑在隔離的___裡，各自嘗試不同的解決方案，不互相干擾，最後合併最好的。",
+          "options": [
+            "伺服器",
+            "worktree",
+            "資料夾",
+            "雲端"
+          ],
+          "answer": "worktree",
+          "explanation": "隔離的 worktree 讓各子代理人能在各自的程式碼版本上工作，不互相干擾，讓嘗試不同方案的風險降到最低。"
+        },
+        {
+          "id": "cc-25-5",
+          "type": "選擇題",
+          "question": "設計多子代理人系統的核心原則是什麼？",
+          "options": [
+            "越多代理人越好",
+            "每個代理人職責明確、只給必要權限、主代理人負責協調",
+            "讓所有代理人做同樣的事",
+            "不需要任何設計原則"
+          ],
+          "answer": "每個代理人職責明確、只給必要權限、主代理人負責協調",
+          "explanation": "職責明確讓每個子代理人的工作精準可控，最小權限確保安全，清晰的協調機制讓最終結果能被正確整合。"
+        },
+        {
+          "id": "cc-25-6",
+          "type": "填空題",
+          "question": "平行程式碼審查範例：同時啟動「風格___代理」、「安全掃描代理」、「測試覆蓋率代理」三個同時執行。",
+          "options": [
+            "付費",
+            "檢查",
+            "備份",
+            "翻譯"
+          ],
+          "answer": "檢查",
+          "explanation": "三個專職代理人同時從不同角度審查程式碼，比一個代理人依序審查三個面向快得多，讓 CI/CD 更有效率。"
+        },
+        {
+          "id": "cc-25-7",
+          "type": "選擇題",
+          "question": "子代理人最適合哪種任務設計？",
+          "options": [
+            "需要依序完成的單一任務",
+            "可以被拆分成多個獨立面向同時進行的複雜任務",
+            "簡單的問答",
+            "讀取單一檔案"
+          ],
+          "answer": "可以被拆分成多個獨立面向同時進行的複雜任務",
+          "explanation": "能被清晰拆分為獨立子任務的複雜工作，是子代理人最能發揮平行執行優勢的場景。"
+        },
+        {
+          "id": "cc-25-8",
+          "type": "填空題",
+          "question": "子代理人跑在隔離的 worktree 裡，確保各自的修改___，最後主代理人整合最好的方案。",
+          "options": [
+            "合並在一起",
+            "不互相干擾",
+            "立刻刪除",
+            "上傳到雲端"
+          ],
+          "answer": "不互相干擾",
+          "explanation": "隔離執行是子代理人安全探索不同方案的關鍵，確保在整合最終方案前，各種嘗試都不會影響到彼此。"
+        },
+        {
+          "id": "cc-25-9",
+          "type": "選擇題",
+          "question": "子代理人的「最小權限」原則是指什麼？",
+          "options": [
+            "讓代理人沒有任何權限",
+            "每個代理人只給它完成任務所需的最小必要權限，不多給",
+            "讓所有代理人有最大權限",
+            "不需要設定任何權限"
+          ],
+          "answer": "每個代理人只給它完成任務所需的最小必要權限，不多給",
+          "explanation": "最小權限降低風險，即使某個子代理人出現問題，有限的權限範圍能防止損害擴大到整個系統。"
+        },
+        {
+          "id": "cc-25-10",
+          "type": "填空題",
+          "question": "子代理人讓 Claude Code 從「___執行」進化到「平行執行」，大幅提升複雜任務的完成速度。",
+          "options": [
+            "快速",
+            "依序",
+            "付費",
+            "雲端"
+          ],
+          "answer": "依序",
+          "explanation": "這是子代理人最根本的突破，從一件一件做到同時做，讓處理複雜任務的效率有數倍的提升。"
+        }
+      ]
+    },
+    {
+      "stageId": 26,
+      "stageName": "Claude Agent SDK",
+      "enemy": "木村重成",
+      "difficulty": 5,
+      "questionCount": 10,
+      "teachingDialogue": "大人！木村重成年輕英俊卻有大將之風！SDK 讓開發者用 Python 或 TypeScript 建立完全客製化的 AI 代理人，擁有和 Claude Code 一樣的核心能力。SDK 提供完整工具包：讀取/寫入檔案、執行 Shell 指令、搜尋網路、編輯程式碼。可以定義完全自訂的工具，讓 Claude 呼叫你公司的內部 API！SDK 支援「有狀態的 Session」：保留每次執行的對話歷史！常見應用：SRE 代理人自動診斷生產問題、安全審查機器人定期掃描漏洞！大人，打造你的 AI 軍團！",
+      "questions": [
+        {
+          "id": "cc-26-1",
+          "type": "選擇題",
+          "question": "Claude Agent SDK 讓開發者用哪些程式語言建立 AI 代理人？",
+          "options": [
+            "只有Python",
+            "Python或TypeScript",
+            "只有JavaScript",
+            "所有語言都支援"
+          ],
+          "answer": "Python或TypeScript",
+          "explanation": "提供 Python 和 TypeScript 兩種語言的 SDK，讓前後端開發者都能用熟悉的語言建立 AI 代理人。"
+        },
+        {
+          "id": "cc-26-2",
+          "type": "填空題",
+          "question": "SDK 支援定義完全自訂的___，讓 Claude 能呼叫你公司內部的 API 和執行特定業務邏輯。",
+          "options": [
+            "語言",
+            "工具",
+            "付費方案",
+            "資料庫"
+          ],
+          "answer": "工具",
+          "explanation": "自訂工具讓 Claude 代理人能整合進任何公司的技術環境，呼叫內部 API 和業務系統，而不只限於通用功能。"
+        },
+        {
+          "id": "cc-26-3",
+          "type": "選擇題",
+          "question": "SDK 的「有狀態 Session（Stateful Session）」有什麼優點？",
+          "options": [
+            "讓程式更快",
+            "保留每次執行的對話歷史，讓代理人記住之前做了什麼，跨多次執行保持連貫",
+            "讓費用更低",
+            "讓代理人不需要登入"
+          ],
+          "answer": "保留每次執行的對話歷史，讓代理人記住之前做了什麼，跨多次執行保持連貫",
+          "explanation": "有狀態 Session 讓代理人能在多次執行間保持記憶，對需要追蹤歷史狀態的長期任務特別重要。"
+        },
+        {
+          "id": "cc-26-4",
+          "type": "填空題",
+          "question": "SRE 代理人（Site Reliability Engineering）的應用：自動___和修復生產環境問題，減少人工介入的時間。",
+          "options": [
+            "付費",
+            "診斷",
+            "備份",
+            "翻譯"
+          ],
+          "answer": "診斷",
+          "explanation": "SRE 代理人能在系統告警觸發時自動分析問題、找出根源並提出修復方案，大幅縮短事故解決時間。"
+        },
+        {
+          "id": "cc-26-5",
+          "type": "選擇題",
+          "question": "SDK 提供哪些基本工具給代理人使用？",
+          "options": [
+            "只能讀取檔案",
+            "讀寫檔案、執行Shell指令、搜尋網路、編輯程式碼",
+            "只能搜尋網路",
+            "只能執行指令"
+          ],
+          "answer": "讀寫檔案、執行Shell指令、搜尋網路、編輯程式碼",
+          "explanation": "完整的工具集讓 SDK 建立的代理人能真正「做事」，和 Claude Code 本身具有同等的核心開發能力。"
+        },
+        {
+          "id": "cc-26-6",
+          "type": "填空題",
+          "question": "安全審查___人能定期掃描程式碼漏洞，自動在發現問題時通知開發團隊。",
+          "options": [
+            "付費",
+            "機器",
+            "人類",
+            "網路"
+          ],
+          "answer": "機器",
+          "explanation": "安全審查機器人是 SDK 的典型應用，讓安全掃描從「偶爾手動做」變成「定期自動做」，大幅提升安全保障。"
+        },
+        {
+          "id": "cc-26-7",
+          "type": "選擇題",
+          "question": "使用 SDK 建立代理人，相比直接使用 Claude Code 最大的優點是什麼？",
+          "options": [
+            "更便宜",
+            "完全客製化，能整合進任何公司技術環境和業務流程",
+            "速度更快",
+            "更容易使用"
+          ],
+          "answer": "完全客製化，能整合進任何公司技術環境和業務流程",
+          "explanation": "SDK 的客製化能力讓代理人能深度融入公司的技術棧和業務流程，而不是使用通用的標準工具集。"
+        },
+        {
+          "id": "cc-26-8",
+          "type": "填空題",
+          "question": "事故應變助手的應用：在___觸發時自動分析問題、找出根源、提出修復方案。",
+          "options": [
+            "付費提醒",
+            "告警",
+            "版本更新",
+            "每天早上"
+          ],
+          "answer": "告警",
+          "explanation": "告警觸發時的自動分析讓事故應變時間大幅縮短，AI 能在人工介入前先做初步診斷，加速問題解決。"
+        },
+        {
+          "id": "cc-26-9",
+          "type": "選擇題",
+          "question": "SDK 代理人和 Claude Code 最根本的能力差別是什麼？",
+          "options": [
+            "SDK代理人功能更少",
+            "Claude Code是標準工具，SDK代理人是完全客製化的版本",
+            "兩者完全相同",
+            "SDK代理人不能讀取程式碼"
+          ],
+          "answer": "Claude Code是標準工具，SDK代理人是完全客製化的版本",
+          "explanation": "Claude Code 提供標準的開發者工具集，SDK 讓你把同樣的核心能力包裝成完全符合公司特定需求的客製化代理人。"
+        },
+        {
+          "id": "cc-26-10",
+          "type": "填空題",
+          "question": "Claude Agent SDK 讓開發者能打造「AI___人」，讓 AI 代理在你公司的技術環境中自主完成任務。",
+          "options": [
+            "付費",
+            "代理",
+            "管理",
+            "翻譯"
+          ],
+          "answer": "代理",
+          "explanation": "AI 代理人是 SDK 的核心產出，能在你的環境中自主規劃和執行複雜任務，是 AI 能力最高層次的應用。"
+        }
+      ]
+    },
+    {
+      "stageId": 27,
+      "stageName": "安全AI輔助開發",
+      "enemy": "真田幸村（分身）",
+      "difficulty": 5,
+      "questionCount": 10,
+      "teachingDialogue": "大人！出現了分身——這是真田幸村自己的力量的考驗！核心原則：「人工審查為最終關口」——Claude Code 提案、人類決定，特別是部署到正式環境的任何改動。用 `.claude/settings.json` 的 allow/deny 規則精確控制 Claude 可以做哪些操作。把高風險操作設為永遠需要確認——就算在自動化模式下也不跳過！在共享環境中，確保 API 金鑰是加密儲存，不放在 CLAUDE.md 或指令裡！定期稽核 Claude Code 的執行日誌！大人，安全是勝利的基礎！",
+      "questions": [
+        {
+          "id": "cc-27-1",
+          "type": "選擇題",
+          "question": "AI 輔助開發安全設計的核心原則是什麼？",
+          "options": [
+            "讓Claude做所有決定",
+            "人工審查為最終關口：Claude Code提案、人類決定",
+            "完全不需要人工介入",
+            "讓AI管理所有安全"
+          ],
+          "answer": "人工審查為最終關口：Claude Code提案、人類決定",
+          "explanation": "無論 AI 多強大，重要決策（特別是生產環境部署）的最終確認權應該在人類手中，確保責任歸屬明確。"
+        },
+        {
+          "id": "cc-27-2",
+          "type": "填空題",
+          "question": "使用 `.claude/settings.json` 的 ___/deny 規則，精確控制 Claude 可以做哪些操作。",
+          "options": [
+            "付款",
+            "allow",
+            "block",
+            "permit"
+          ],
+          "answer": "allow",
+          "explanation": "allow/deny 規則讓你精確定義 Claude 的操作邊界，例如允許讀取所有 .ts 檔，但只能修改 src/ 目錄下的。"
+        },
+        {
+          "id": "cc-27-3",
+          "type": "選擇題",
+          "question": "高風險操作（如資料庫寫入、部署指令）應該如何設定？",
+          "options": [
+            "設為自動執行",
+            "設為永遠需要確認，就算在自動化模式下也不跳過",
+            "設為每週確認一次",
+            "不需要特別設定"
+          ],
+          "answer": "設為永遠需要確認，就算在自動化模式下也不跳過",
+          "explanation": "高風險操作的永遠確認機制確保即使在高自動化環境中，人類也始終是這些關鍵操作的最終決策者。"
+        },
+        {
+          "id": "cc-27-4",
+          "type": "填空題",
+          "question": "在共享的開發環境中，確保 API 金鑰和 Token 是___儲存，不要明文放在 CLAUDE.md 或指令裡。",
+          "options": [
+            "公開",
+            "加密",
+            "備份",
+            "刪除"
+          ],
+          "answer": "加密",
+          "explanation": "敏感憑證放在明文文件中可能被無意間提交到版本控制，加密儲存確保即使文件被公開，憑證也不會洩露。"
+        },
+        {
+          "id": "cc-27-5",
+          "type": "選擇題",
+          "question": "定期稽核 Claude Code 執行日誌的目的是什麼？",
+          "options": [
+            "讓Claude更快",
+            "確認Claude的操作符合預期，特別是在高自動化的工作流程中",
+            "讓費用更低",
+            "讓程式碼更短"
+          ],
+          "answer": "確認Claude的操作符合預期，特別是在高自動化的工作流程中",
+          "explanation": "日誌稽核讓你能事後審查 Claude 的所有操作，發現任何意外或不符合規範的行為，是安全管理的重要環節。"
+        },
+        {
+          "id": "cc-27-6",
+          "type": "填空題",
+          "question": "Allow/deny 規則範例：允許讀取所有 `.ts` 檔，但只能修改 `___/` 目錄下的檔案。",
+          "options": [
+            "docs",
+            "src",
+            "tests",
+            "build"
+          ],
+          "answer": "src",
+          "explanation": "這個規則範例說明如何讓 Claude 有廣泛的讀取能力，但寫入權限被限制在核心程式碼目錄，保護其他區域的安全。"
+        },
+        {
+          "id": "cc-27-7",
+          "type": "選擇題",
+          "question": "在自動化程度高的工作流程中，為什麼安全設計特別重要？",
+          "options": [
+            "因為自動化更貴",
+            "因為缺少人工確認，若設定不當任何問題都可能在無人知情下自動被執行",
+            "因為自動化更慢",
+            "因為規定要這樣做"
+          ],
+          "answer": "因為缺少人工確認，若設定不當任何問題都可能在無人知情下自動被執行",
+          "explanation": "高自動化放大了設計的重要性，好的設計讓效率和安全並存，壞的設計讓問題在無人知情下不斷發生。"
+        },
+        {
+          "id": "cc-27-8",
+          "type": "填空題",
+          "question": "AI 輔助開發最理想的模式：AI 提供___，人類做最終決定，特別是所有影響正式環境的改動。",
+          "options": [
+            "費用",
+            "建議",
+            "命令",
+            "規定"
+          ],
+          "answer": "建議",
+          "explanation": "建議而非命令的定位讓 AI 能充分發揮分析能力，同時確保人類始終保持對重要決策的最終控制權。"
+        },
+        {
+          "id": "cc-27-9",
+          "type": "選擇題",
+          "question": "以下哪個安全措施最能防止敏感資訊洩露？",
+          "options": [
+            "把API金鑰放在CLAUDE.md方便Claude讀取",
+            "API金鑰加密儲存在安全的金鑰管理系統，Claude透過環境變數取得",
+            "把API金鑰貼在對話框裡",
+            "讓所有人共用同一個API金鑰"
+          ],
+          "answer": "API金鑰加密儲存在安全的金鑰管理系統，Claude透過環境變數取得",
+          "explanation": "金鑰管理系統加密儲存敏感憑證，透過環境變數讓 Claude 能使用但無法讀取明文值，是業界標準的安全做法。"
+        },
+        {
+          "id": "cc-27-10",
+          "type": "填空題",
+          "question": "安全 AI 輔助開發的三大支柱：精確的操作___、高風險操作的永遠確認、定期的日誌稽核。",
+          "options": [
+            "費用",
+            "控制",
+            "速度",
+            "語言"
+          ],
+          "answer": "控制",
+          "explanation": "操作控制、確認機制和日誌稽核三者形成完整的安全體系，讓 AI 的強大能力在嚴格的安全框架下運作。"
+        }
+      ]
+    },
+    {
+      "stageId": 28,
+      "stageName": "自動化程式碼審查",
+      "enemy": "本多正信",
+      "difficulty": 5,
+      "questionCount": 10,
+      "teachingDialogue": "大人！本多正信是德川的智囊，以縝密的謀略著稱！Claude Code 的 Code Review 功能會派出一組子代理人，分析 PR 的每一行改動，在有問題的程式碼行旁邊直接貼出 inline 留言！審查面向包括：邏輯錯誤、安全漏洞（SQL 注入、XSS、認證問題）、邊界情況遺漏、和其他程式碼的相容性問題。觸發時機三種：每次 PR 開啟時自動執行、每次 Push 時執行、只在人工 @claude 時才執行。安全掃描有現成模板可直接套用！大人，讓審查成為習慣！",
+      "questions": [
+        {
+          "id": "cc-28-1",
+          "type": "選擇題",
+          "question": "Claude Code 的程式碼審查功能如何顯示找到的問題？",
+          "options": [
+            "發電子郵件",
+            "在有問題的程式碼行旁邊直接貼出inline留言",
+            "只輸出報告",
+            "在終端機顯示"
+          ],
+          "answer": "在有問題的程式碼行旁邊直接貼出inline留言",
+          "explanation": "Inline 留言讓問題和程式碼緊密關聯，開發者能立刻看到問題在哪裡，不需要查找對應位置。"
+        },
+        {
+          "id": "cc-28-2",
+          "type": "填空題",
+          "question": "自動化程式碼審查的面向包括：邏輯錯誤、___漏洞、邊界情況遺漏和程式碼相容性問題。",
+          "options": [
+            "付費",
+            "安全",
+            "速度",
+            "語言"
+          ],
+          "answer": "安全",
+          "explanation": "安全漏洞（SQL 注入、XSS、認證問題）是需要早期發現的關鍵問題，自動化審查能在合併前就找出這些風險。"
+        },
+        {
+          "id": "cc-28-3",
+          "type": "選擇題",
+          "question": "自動化程式碼審查有哪三種觸發時機可以設定？",
+          "options": [
+            "只有手動觸發",
+            "每次PR開啟時、每次Push時、或只在人工@claude時",
+            "每天固定時間",
+            "只在測試失敗時"
+          ],
+          "answer": "每次PR開啟時、每次Push時、或只在人工@claude時",
+          "explanation": "靈活的觸發設定讓你根據專案規模和需求選擇最合適的自動化程度，在效率和費用之間取得平衡。"
+        },
+        {
+          "id": "cc-28-4",
+          "type": "填空題",
+          "question": "安全掃描功能有現成的 GitHub Actions___可以直接套用，幾分鐘就能設定好，不需要從頭撰寫。",
+          "options": [
+            "付費方案",
+            "模板",
+            "插件",
+            "文件"
+          ],
+          "answer": "模板",
+          "explanation": "現成模板大幅降低了設定自動化安全掃描的門檻，讓任何團隊都能快速啟用這個保護機制。"
+        },
+        {
+          "id": "cc-28-5",
+          "type": "選擇題",
+          "question": "AI 程式碼審查和人工程式碼審查的最佳搭配方式是什麼？",
+          "options": [
+            "只用AI審查就夠了",
+            "AI快速找出常見問題，人工做深度審查，兩者搭配效果最好",
+            "只用人工審查",
+            "兩者完全取代彼此"
+          ],
+          "answer": "AI快速找出常見問題，人工做深度審查，兩者搭配效果最好",
+          "explanation": "AI 擅長快速掃描大量程式碼找常見問題，人工擅長理解業務邏輯和複雜的設計問題，兩者互補效果最佳。"
+        },
+        {
+          "id": "cc-28-6",
+          "type": "填空題",
+          "question": "Code Review 功能會派出一組子___人，分析 PR 的每一行改動，找出潛在問題。",
+          "options": [
+            "付費",
+            "代理",
+            "語言",
+            "版本"
+          ],
+          "answer": "代理",
+          "explanation": "多個子代理人平行分析不同面向的問題，讓審查更全面也更快，充分發揮 Claude Code 的多代理人架構優勢。"
+        },
+        {
+          "id": "cc-28-7",
+          "type": "選擇題",
+          "question": "自動化程式碼審查最重要的價值是什麼？",
+          "options": [
+            "讓程式碼更好看",
+            "在問題合併到主分支前就發現並修正，降低問題進入正式環境的風險",
+            "讓開發速度更快",
+            "讓費用更低"
+          ],
+          "answer": "在問題合併到主分支前就發現並修正，降低問題進入正式環境的風險",
+          "explanation": "越早發現問題，修復成本越低，自動化審查讓問題在最容易修改的階段就被找出來，是品質保證的最佳實踐。"
+        },
+        {
+          "id": "cc-28-8",
+          "type": "填空題",
+          "question": "SQL 注入、XSS 和___問題是自動化安全掃描最常找到的三種安全漏洞類型。",
+          "options": [
+            "速度",
+            "認證",
+            "付費",
+            "語言"
+          ],
+          "answer": "認證",
+          "explanation": "這三種是最常見的 Web 應用安全漏洞，自動化掃描能系統性地檢查這些模式，填補人工審查可能遺漏的盲點。"
+        },
+        {
+          "id": "cc-28-9",
+          "type": "選擇題",
+          "question": "為什麼說 AI 審查是「第一道篩選」而不是全部？",
+          "options": [
+            "因為AI不夠聰明",
+            "AI能快速找明顯問題，但複雜業務邏輯漏洞需要人工理解才能判斷",
+            "因為費用太高",
+            "因為AI太慢"
+          ],
+          "answer": "AI能快速找明顯問題，但複雜業務邏輯漏洞需要人工理解才能判斷",
+          "explanation": "AI 的優勢在於速度和廣度，人工的優勢在於理解業務意圖和複雜的上下文，兩者搭配才能達到最全面的審查效果。"
+        },
+        {
+          "id": "cc-28-10",
+          "type": "填空題",
+          "question": "把 Code Review 設定為在 PR 開啟時自動執行，讓每個改動在合併前都自動經過___的第一道檢查。",
+          "options": [
+            "付費",
+            "AI",
+            "人工",
+            "系統"
+          ],
+          "answer": "AI",
+          "explanation": "PR 自動觸發讓每個程式碼變更都無法繞過 AI 的初步審查，形成系統性的品質守門機制。"
+        }
+      ]
+    },
+    {
+      "stageId": 29,
+      "stageName": "企業級部署",
+      "enemy": "天海僧正",
+      "difficulty": 5,
+      "questionCount": 10,
+      "teachingDialogue": "大人！天海僧正是德川家康最信任的謀士！Enterprise 管理員可以在 Claude Console 設定全組織使用政策：哪些模型可用、最大花費上限、哪些工具允許。用量分析讓管理員看到整個組織的使用狀況。企業可以用 MDM 工具統一部署 Claude Code 設定，確保所有工程師使用相同的安全設定！建議策略：先小型試點團隊深度使用，收集數據，再逐步推廣！大人，統領全局，運籌帷幄！",
+      "questions": [
+        {
+          "id": "cc-29-1",
+          "type": "選擇題",
+          "question": "Enterprise 管理員在 Claude Console 可以設定哪些全組織政策？",
+          "options": [
+            "只能看用量",
+            "哪些模型可用、最大花費上限、哪些工具允許使用",
+            "只能設定付款方式",
+            "只能管理帳號"
+          ],
+          "answer": "哪些模型可用、最大花費上限、哪些工具允許使用",
+          "explanation": "全組織政策設定讓管理員能集中控制 AI 工具的使用範圍，確保符合公司的安全和費用管理要求。"
+        },
+        {
+          "id": "cc-29-2",
+          "type": "填空題",
+          "question": "「用量___（Usage Analytics）」讓管理員看到整個組織的 Claude Code 使用狀況和趨勢。",
+          "options": [
+            "付款",
+            "分析",
+            "備份",
+            "設定"
+          ],
+          "answer": "分析",
+          "explanation": "用量分析提供資料驅動的管理視角，讓管理員能了解 AI 工具的使用模式，做出更好的資源分配決策。"
+        },
+        {
+          "id": "cc-29-3",
+          "type": "選擇題",
+          "question": "企業使用 MDM（行動裝置管理）工具部署 Claude Code 的主要目的是什麼？",
+          "options": [
+            "讓Claude更快",
+            "統一部署設定，確保所有工程師使用相同的安全設定和工具限制",
+            "降低費用",
+            "讓介面更好看"
+          ],
+          "answer": "統一部署設定，確保所有工程師使用相同的安全設定和工具限制",
+          "explanation": "MDM 統一部署確保全組織的安全基準一致，避免個別工程師使用不安全的設定，降低組織整體的安全風險。"
+        },
+        {
+          "id": "cc-29-4",
+          "type": "填空題",
+          "question": "Team 方案的座位管理：管理員可以靈活調整哪些人用 Standard 座位、哪些人用___座位。",
+          "options": [
+            "Free",
+            "Premium",
+            "Basic",
+            "Pro"
+          ],
+          "answer": "Premium",
+          "explanation": "根據工作量和需求分配不同規格的座位，讓重度使用者得到更多資源，同時控制整體費用。"
+        },
+        {
+          "id": "cc-29-5",
+          "type": "選擇題",
+          "question": "企業部署 Claude Code 的最佳推廣策略是什麼？",
+          "options": [
+            "立刻全組織強制使用",
+            "先在小型試點團隊深度使用，收集數據和反饋，再逐步推廣",
+            "等所有人準備好才開始",
+            "讓每個人自己決定"
+          ],
+          "answer": "先在小型試點團隊深度使用，收集數據和反饋，再逐步推廣",
+          "explanation": "試點讓你在小範圍內發現問題並調整，同時建立成功案例說服其他人，是企業導入新工具的最佳實踐。"
+        },
+        {
+          "id": "cc-29-6",
+          "type": "填空題",
+          "question": "管理員可以在用量分析中看到哪些___用最多、哪些任務消耗最大量，有針對性地優化。",
+          "options": [
+            "付費",
+            "團隊",
+            "版本",
+            "語言"
+          ],
+          "answer": "團隊",
+          "explanation": "了解各團隊的使用模式讓管理員能針對高消耗團隊提供指導，優化他們的使用方式，控制整體費用。"
+        },
+        {
+          "id": "cc-29-7",
+          "type": "選擇題",
+          "question": "企業設定「最大花費上限」的重要性是什麼？",
+          "options": [
+            "讓Claude更聰明",
+            "防止任何個人或自動化任務意外產生無預期的高額費用",
+            "讓費用更低",
+            "讓Claude更快"
+          ],
+          "answer": "防止任何個人或自動化任務意外產生無預期的高額費用",
+          "explanation": "費用上限是企業財務管理的安全機制，確保任何情況下 AI 工具的使用費用都在可控範圍內。"
+        },
+        {
+          "id": "cc-29-8",
+          "type": "填空題",
+          "question": "企業部署 Claude Code 的三個核心管理要素：___政策、用量分析、統一設定部署。",
+          "options": [
+            "付費",
+            "使用",
+            "備份",
+            "語言"
+          ],
+          "answer": "使用",
+          "explanation": "完善的使用政策定義邊界，用量分析提供洞察，統一部署確保一致性，三者形成完整的企業 AI 治理框架。"
+        },
+        {
+          "id": "cc-29-9",
+          "type": "選擇題",
+          "question": "企業導入 Claude Code 最重要的成功指標是什麼？",
+          "options": [
+            "使用的人數",
+            "開發速度、Bug密度、程式碼審查時間等實際效益數據",
+            "使用的模型版本",
+            "付費金額"
+          ],
+          "answer": "開發速度、Bug密度、程式碼審查時間等實際效益數據",
+          "explanation": "用實際的開發效益數據說話，才能說服整個組織持續投入，也讓企業能持續優化 AI 輔助開發的方式。"
+        },
+        {
+          "id": "cc-29-10",
+          "type": "填空題",
+          "question": "企業 Claude Code 部署的最終目標：打造「AI___開發文化」，讓每個工程師都善用 AI 提升效率。",
+          "options": [
+            "付費",
+            "輔助",
+            "取代",
+            "管理"
+          ],
+          "answer": "輔助",
+          "explanation": "AI 輔助開發文化的目標是增強工程師的能力，而非取代他們，讓每個人都能發揮更大的價值。"
+        }
+      ]
+    },
+    {
+      "stageId": 30,
+      "stageName": "Claude Code達人終極挑戰",
+      "enemy": "德川家康（大魔王）",
+      "difficulty": 5,
+      "isBossStage": true,
+      "drops": "德川家康的黃玉",
+      "questionCount": 10,
+      "teachingDialogue": "大人！最終決戰！德川家康親自出馬！這位「狸公公」以耐心和謀略統一天下，是真田幸村最強大的宿敵！集結所有關於 Claude Code 的知識——從 CLAUDE.md 到 Hooks、MCP、子代理人、SDK！擊敗德川家康，最後一顆寶石——德川家康的黃玉——就屬於您！三顆寶石集齊，傳送門即將開啟！大人，這是您的高光時刻！決戰德川家康！",
+      "questions": [
+        {
+          "id": "cc-30-1",
+          "type": "選擇題",
+          "question": "Claude Code 和一般 Claude 聊天最根本的能力差異是什麼？",
+          "options": [
+            "速度更快",
+            "能直接讀取修改本機程式碼、執行指令，完成完整開發任務",
+            "費用更低",
+            "回答更長"
+          ],
+          "answer": "能直接讀取修改本機程式碼、執行指令，完成完整開發任務",
+          "explanation": "Claude Code 是真正能「動手做事」的 AI，而不只是提供建議，這是它相比一般聊天最根本的差異。"
+        },
+        {
+          "id": "cc-30-2",
+          "type": "填空題",
+          "question": "CLAUDE.md 讓 Claude 永遠記住專案規則，用___指令可以快速產生第一版。",
+          "options": [
+            "/start",
+            "/init",
+            "/setup",
+            "/create"
+          ],
+          "answer": "/init",
+          "explanation": "/init 自動掃描你的專案並生成 CLAUDE.md，是開始使用 Claude Code 的最重要第一步。"
+        },
+        {
+          "id": "cc-30-3",
+          "type": "選擇題",
+          "question": "「Hooks」的三種類型是哪些？",
+          "options": [
+            "Pre/Post/Request",
+            "PreToolUse/PostToolUse/PermissionRequest",
+            "Before/After/During",
+            "Start/End/Error"
+          ],
+          "answer": "PreToolUse/PostToolUse/PermissionRequest",
+          "explanation": "三種 Hook 類型涵蓋工具執行前、執行後和權限申請時三個關鍵時機，讓自動化邏輯能精確插入工作流程。"
+        },
+        {
+          "id": "cc-30-4",
+          "type": "填空題",
+          "question": "子代理人的最大優勢是___執行，讓多個任務同時進行，速度是依序執行的數倍。",
+          "options": [
+            "依序",
+            "平行",
+            "隨機",
+            "慢速"
+          ],
+          "answer": "平行",
+          "explanation": "平行執行是子代理人最核心的價值，讓 Claude Code 能同時處理複雜任務的多個面向，大幅提升效率。"
+        },
+        {
+          "id": "cc-30-5",
+          "type": "選擇題",
+          "question": "MCP（模型上下文協議）讓 Claude Code 能做什麼？",
+          "options": [
+            "讓Claude說話更快",
+            "連接到外部工具和資料來源，例如Jira、Datadog、資料庫",
+            "讓費用更低",
+            "讓程式碼更短"
+          ],
+          "answer": "連接到外部工具和資料來源，例如Jira、Datadog、資料庫",
+          "explanation": "MCP 是 Claude Code 擴展能力的標準介面，讓它能存取和操作任何支援此標準的外部服務。"
+        },
+        {
+          "id": "cc-30-6",
+          "type": "填空題",
+          "question": "AI 輔助開發的安全核心原則：Claude Code ___，人類決定，特別是部署到正式環境的改動。",
+          "options": [
+            "付費",
+            "提案",
+            "命令",
+            "執行"
+          ],
+          "answer": "提案",
+          "explanation": "提案而非命令的模式確保 AI 的強大能力在人類監督下運作，重要決策始終保留在人類手中。"
+        },
+        {
+          "id": "cc-30-7",
+          "type": "選擇題",
+          "question": "「無頭模式（Headless Mode）」最主要的應用場景是什麼？",
+          "options": [
+            "日常聊天使用",
+            "整合進自動化腳本和CI/CD，不需要人工互動地自動執行任務",
+            "學習新功能",
+            "設定CLAUDE.md"
+          ],
+          "answer": "整合進自動化腳本和CI/CD，不需要人工互動地自動執行任務",
+          "explanation": "無頭模式讓 Claude Code 能被程式碼自動呼叫，完全融入自動化工作流程，是高效 CI/CD 的重要組成部分。"
+        },
+        {
+          "id": "cc-30-8",
+          "type": "填空題",
+          "question": "打造 AI 輔助開發文化最重要的是把有效的 CLAUDE.md 範本和___在團隊裡分享，讓大家共同進步。",
+          "options": [
+            "密碼",
+            "Slash技能",
+            "帳號",
+            "費用"
+          ],
+          "answer": "Slash技能",
+          "explanation": "分享有效的技能和 CLAUDE.md 範本讓整個團隊都能受益，避免各自摸索，建立共同的 AI 輔助開發文化。"
+        },
+        {
+          "id": "cc-30-9",
+          "type": "選擇題",
+          "question": "Claude Agent SDK 讓開發者能建立什麼？",
+          "options": [
+            "更漂亮的介面",
+            "完全客製化的AI代理人，整合進公司技術環境和業務流程",
+            "更低費用的方案",
+            "更快的執行速度"
+          ],
+          "answer": "完全客製化的AI代理人，整合進公司技術環境和業務流程",
+          "explanation": "SDK 是 Claude Code 能力的最高層次應用，讓公司能打造完全符合自身需求的 AI 代理人系統。"
+        },
+        {
+          "id": "cc-30-10",
+          "type": "填空題",
+          "question": "成為 Claude Code 達人的關鍵：讓 AI 處理___性程式碼工作，讓工程師專注在定義問題、設計架構、審查成果上！",
+          "options": [
+            "創意",
+            "重複",
+            "困難",
+            "重要"
+          ],
+          "answer": "重複",
+          "explanation": "AI 最擅長處理重複性工作，讓工程師從繁瑣的重複工作中解放，把精力投入在需要人類創造力和判斷力的高價值工作上，這是 Claude Code 最根本的價值主張。"
+        }
+      ]
+    }
+  ]
+}

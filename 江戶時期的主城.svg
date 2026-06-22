@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" width="800" height="900" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .roof-dark { fill: #1e1e1e; }
+      .roof-gold { fill: #c8a020; }
+      .column { fill: #8b1a1a; }
+      .wood-wall { fill: #3a2518; }
+      .gold { fill: #d4a830; }
+      .stone-path { fill: #c0b898; }
+      .stone-line { fill: #a09070; }
+      .maple-red { fill: #cc3311; }
+      .maple-dark { fill: #aa2200; }
+      .green-bush { fill: #2a5010; }
+      .green-dark { fill: #1a3a0a; }
+      .tree-trunk { fill: #3a2518; }
+      .outline { stroke: #1a1a1a; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="800" height="900" class="bg" />
+
+  <!-- ═══ 背景樹木（柏樹輪廓） ═══════════════════════════════ -->
+  <g id="cypress-tree">
+    <!-- 樹幹 -->
+    <rect x="80" y="300" width="25" height="400" class="tree-trunk" />
+
+    <!-- 樹冠（深灰綠色，尖頂） -->
+    <polygon points="92,280 60,350 80,380 100,420 120,430 130,380 160,350" class="green-dark" />
+    <polygon points="92,260 50,340 75,370 105,410 125,420 140,370 170,340" class="green-dark" />
+  </g>
+
+  <!-- ═══ 前景石板路 ═══════════════════════════════════════════ -->
+  <g id="stone-path">
+    <!-- 石板方格（向遠處延伸感） -->
+    <rect x="150" y="700" width="500" height="150" class="stone-path" />
+
+    <!-- 磚縫網格 -->
+    <g class="stone-line" stroke-width="2">
+      <!-- 水平線 -->
+      <line x1="150" y1="720" x2="650" y2="720" />
+      <line x1="150" y1="745" x2="650" y2="745" />
+      <line x1="150" y1="770" x2="650" y2="770" />
+      <line x1="150" y1="795" x2="650" y2="795" />
+      <line x1="150" y1="820" x2="650" y2="820" />
+
+      <!-- 垂直線 -->
+      <line x1="200" y1="700" x2="200" y2="850" />
+      <line x1="250" y1="700" x2="250" y2="850" />
+      <line x1="300" y1="700" x2="300" y2="850" />
+      <line x1="350" y1="700" x2="350" y2="850" />
+      <line x1="400" y1="700" x2="400" y2="850" />
+      <line x1="450" y1="700" x2="450" y2="850" />
+      <line x1="500" y1="700" x2="500" y2="850" />
+      <line x1="550" y1="700" x2="550" y2="850" />
+      <line x1="600" y1="700" x2="600" y2="850" />
+    </g>
+  </g>
+
+  <!-- ═══ 主宮殿 ═══════════════════════════════════════════════ -->
+  <g id="main-palace">
+
+    <!-- ═══ 台階（屋前石板） ═══════════════════════════════════ -->
+    <g id="stairs">
+      <!-- 第三階 -->
+      <rect x="280" y="630" width="240" height="20" class="stone-path" />
+      <rect x="280" y="630" width="240" height="3" class="stone-line" />
+      <!-- 第二階 -->
+      <rect x="260" y="655" width="280" height="20" class="stone-path" />
+      <rect x="260" y="655" width="280" height="3" class="stone-line" />
+      <!-- 第一階 -->
+      <rect x="240" y="680" width="320" height="20" class="stone-path" />
+      <rect x="240" y="680" width="320" height="3" class="stone-line" />
+    </g>
+
+    <!-- ═══ 第一層（最底，最寬） ════════════════════════════ -->
+    <g id="layer-1">
+      <!-- 基礎牆體 -->
+      <rect x="220" y="450" width="360" height="180" class="wood-wall" />
+
+      <!-- 柱子（6 根，等距排列） -->
+      <!-- 左第1根 -->
+      <rect x="245" y="420" width="25" height="230" class="column" />
+      <!-- 左第2根 -->
+      <rect x="320" y="420" width="25" height="230" class="column" />
+      <!-- 左第3根 -->
+      <rect x="395" y="420" width="25" height="230" class="column" />
+      <!-- 右第3根 -->
+      <rect x="480" y="420" width="25" height="230" class="column" />
+      <!-- 右第2根 -->
+      <rect x="555" y="420" width="25" height="230" class="column" />
+      <!-- 右第1根 -->
+      <rect x="630" y="420" width="25" height="230" class="column" />
+
+      <!-- 柱子之間的木板牆 -->
+      <rect x="270" y="450" width="45" height="180" class="wood-wall" />
+      <rect x="345" y="450" width="45" height="180" class="wood-wall" />
+      <rect x="420" y="450" width="45" height="180" class="wood-wall" />
+      <rect x="505" y="450" width="45" height="180" class="wood-wall" />
+      <rect x="580" y="450" width="45" height="180" class="wood-wall" />
+
+      <!-- 中央入口開口 -->
+      <rect x="380" y="500" width="40" height="130" fill="#1a1a1a" />
+
+      <!-- 屋頂前簷（下方有金色線） -->
+      <rect x="220" y="430" width="360" height="20" class="roof-dark" />
+      <rect x="220" y="448" width="360" height="2" class="roof-gold" />
+
+      <!-- 斗拱裝飾（鋸齒狀托架） -->
+      <g class="gold">
+        <!-- 左側斗拱 -->
+        <rect x="245" y="415" width="8" height="10" />
+        <rect x="255" y="415" width="8" height="10" />
+        <rect x="265" y="415" width="8" height="10" />
+        <rect x="275" y="415" width="8" height="10" />
+        <rect x="285" y="415" width="8" height="10" />
+        <!-- 中央斗拱 -->
+        <rect x="365" y="415" width="8" height="10" />
+        <rect x="375" y="415" width="8" height="10" />
+        <rect x="385" y="415" width="8" height="10" />
+        <rect x="395" y="415" width="8" height="10" />
+        <rect x="405" y="415" width="8" height="10" />
+        <!-- 右側斗拱 -->
+        <rect x="515" y="415" width="8" height="10" />
+        <rect x="525" y="415" width="8" height="10" />
+        <rect x="535" y="415" width="8" height="10" />
+        <rect x="545" y="415" width="8" height="10" />
+        <rect x="555" y="415" width="8" height="10" />
+      </g>
+
+      <!-- 屋頂翹簷（兩端往上翹） -->
+      <polygon points="220,430 240,400 260,420" class="roof-dark" />
+      <polygon points="580,430 560,400 540,420" class="roof-dark" />
+      <!-- 屋頂主體 -->
+      <polygon points="220,430 400,350 580,430" class="roof-dark" />
+      <!-- 屋脊金色線 -->
+      <line x1="220" y1="428" x2="580" y2="428" stroke="#c8a020" stroke-width="3" />
+    </g>
+
+    <!-- ═══ 第二層（中間） ════════════════════════════════ -->
+    <g id="layer-2">
+      <!-- 牆體（比第一層窄約30%） -->
+      <rect x="280" y="280" width="240" height="90" class="wood-wall" />
+
+      <!-- 木板格窗紋路 -->
+      <g stroke="#2a1510" stroke-width="1">
+        <!-- 左邊窗戶 -->
+        <rect x="300" y="295" width="45" height="30" class="outline" />
+        <line x1="322" y1="295" x2="322" y2="325" />
+        <line x1="300" y1="310" x2="345" y2="310" />
+        <!-- 右邊窗戶 -->
+        <rect x="455" y="295" width="45" height="30" class="outline" />
+        <line x1="477" y1="295" x2="477" y2="325" />
+        <line x1="455" y1="310" x2="500" y2="310" />
+      </g>
+
+      <!-- 中央唐破風裝飾（圓弧形小屋簷） -->
+      <g>
+        <!-- 金色邊框 -->
+        <polygon points="375,270 425,270 430,285 370,285" class="gold" />
+        <!-- 屋簷弧形（用矩形近似） -->
+        <rect x="375" y="268" width="50" height="5" class="roof-dark" />
+        <polygon points="375,268 375,265 377,263 378,262 422,262 423,263 425,265 425,268" class="roof-dark" />
+      </g>
+
+      <!-- 屋頂翹簷 -->
+      <polygon points="280,280 295,260 310,280" class="roof-dark" />
+      <polygon points="520,280 505,260 490,280" class="roof-dark" />
+      <!-- 屋頂主體 -->
+      <polygon points="280,280 400,210 520,280" class="roof-dark" />
+      <!-- 屋脊金色線 -->
+      <line x1="280" y1="278" x2="520" y2="278" stroke="#c8a020" stroke-width="2" />
+    </g>
+
+    <!-- ═══ 第三層（最頂，最窄） ════════════════════════════ -->
+    <g id="layer-3">
+      <!-- 小型屋頂結構 -->
+      <rect x="350" y="160" width="100" height="50" class="wood-wall" />
+
+      <!-- 屋頂翹簷 -->
+      <polygon points="350,160 360,140 370,160" class="roof-dark" />
+      <polygon points="450,160 440,140 430,160" class="roof-dark" />
+      <!-- 屋頂主體 -->
+      <polygon points="350,160 400,120 450,160" class="roof-dark" />
+      <!-- 屋脊金色線 -->
+      <line x1="350" y1="158" x2="450" y2="158" stroke="#c8a020" stroke-width="2" />
+
+      <!-- 金色寶珠柱（細長尖頂） -->
+      <rect x="397" y="85" width="6" height="35" class="gold" />
+      <polygon points="397,85 400,75 403,85" class="gold" />
+      <!-- 寶珠球體 -->
+      <circle cx="400" cy="105" r="4" class="gold" />
+    </g>
+
+  </g>
+
+  <!-- ═══ 左側紅葉楓樹 ════════════════════════════════════════ -->
+  <g id="maple-tree-left">
+    <!-- 樹幹 -->
+    <rect x="100" y="400" width="20" height="220" class="tree-trunk" />
+
+    <!-- 樹冠（橘紅色，圓形蓬鬆，有深色陰影分層） -->
+    <!-- 底層（深紅） -->
+    <circle cx="110" cy="380" r="45" class="maple-dark" />
+    <!-- 中層（紅色） -->
+    <circle cx="110" cy="370" r="50" class="maple-red" />
+    <!-- 上層（淺紅） -->
+    <circle cx="110" cy="355" r="40" class="maple-red" />
+    <!-- 陰影細節 -->
+    <circle cx="90" cy="375" r="25" class="maple-dark" />
+    <circle cx="130" cy="375" r="25" class="maple-dark" />
+  </g>
+
+  <!-- ═══ 右側綠灌木 ══════════════════════════════════════════ -->
+  <g id="bush-right-1">
+    <!-- 灌木1（右側上方） -->
+    <circle cx="680" cy="420" r="35" class="green-bush" />
+    <circle cx="700" cy="410" r="30" class="green-dark" />
+    <circle cx="660" cy="410" r="28" class="green-dark" />
+  </g>
+
+  <g id="bush-right-2">
+    <!-- 灌木2（右側中間） -->
+    <circle cx="720" cy="500" r="32" class="green-bush" />
+    <circle cx="740" cy="495" r="28" class="green-dark" />
+    <circle cx="705" cy="510" r="25" class="green-dark" />
+  </g>
+
+  <g id="bush-right-3">
+    <!-- 灌木3（右側下方） -->
+    <circle cx="690" cy="600" r="30" class="green-bush" />
+    <circle cx="710" cy="595" r="26" class="green-dark" />
+    <circle cx="675" cy="610" r="24" class="green-dark" />
+  </g>
+
+  <!-- ═══ 邊框（畫面邊界） ════════════════════════════════════ -->
+  <rect width="800" height="900" fill="none" stroke="#1a1a1a" stroke-width="2" />
+</svg>

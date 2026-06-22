@@ -1,0 +1,74 @@
+/* ── CSS 變數：三個時代色板 ─────────────────────────── */
+:root {
+  /* 江戶時期（領地主畫面） */
+  --edo-bg-main:    #102f34;
+  --edo-bg-sub:     #22474c;
+  --edo-build-dark: #3f2323;
+  --edo-build-mid:  #633b3f;
+  --edo-build-light:#9f705a;
+  --edo-accent1:    #f22f46;
+  --edo-accent2:    #fcc539;
+  --edo-accent3:    #ffe08b;
+  --edo-glow:       #f87b1b;
+  --edo-ground-d:   #146756;
+  --edo-ground-l:   #148568;
+  --edo-outline:    #102f34;
+
+  /* 三國時期 */
+  --sg-bg-main:     #28192f;
+  --sg-bg-sub:      #432641;
+  --sg-build-dark:  #3f2323;
+  --sg-build-mid:   #633b3f;
+  --sg-build-light: #845750;
+  --sg-accent1:     #f22f46;
+  --sg-accent2:     #fcc539;
+  --sg-accent3:     #ffe08b;
+  --sg-glow:        #f87b1b;
+  --sg-ground-d:    #542323;
+  --sg-ground-l:    #67314b;
+  --sg-outline:     #28192f;
+
+  /* 騎士時期 */
+  --kn-bg-main:     #28192f;
+  --kn-bg-sub:      #4c3250;
+  --kn-build-dark:  #45365d;
+  --kn-build-mid:   #585d81;
+  --kn-build-light: #668faf;
+  --kn-accent1:     #315dcd;
+  --kn-accent2:     #a0d8d7;
+  --kn-accent3:     #eaeae8;
+  --kn-glow:        #fcc539;
+  --kn-ground-d:    #4c6051;
+  --kn-ground-l:    #61855a;
+  --kn-outline:     #28192f;
+
+  /* 共用特殊色 */
+  --portal-swirl:   #b070eb;
+  --portal-deep:    #7c3ce1;
+  --portal-active:  #fcc539;
+  --star-color:     #ffffff;
+}
+
+/* ── Reset & Base ──────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: 'DotGothic16', monospace;
+  image-rendering: pixelated;
+}
+
+#game-container {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#game-canvas {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
