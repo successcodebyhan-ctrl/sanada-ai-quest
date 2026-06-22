@@ -880,7 +880,7 @@
         {
           "id": "cc-12-2",
           "type": "填空題",
-          "question": "___指令可以設定重複執行任務，最長可排程三天，例如每小時自動跑測試。",
+          "question": "___指令可以設定依間隔重複執行任務，例如每小時自動跑一次測試。",
           "options": [
             "/repeat",
             "/loop",
@@ -888,20 +888,20 @@
             "/auto"
           ],
           "answer": "/loop",
-          "explanation": "/loop 讓 Claude 定期重複執行任務，最長三天，非常適合設定自動化的品質檢查或監控任務。"
+          "explanation": "/loop 讓 Claude 依固定間隔重複執行任務，非常適合設定自動化的品質檢查或監控任務。"
         },
         {
           "id": "cc-12-3",
           "type": "選擇題",
-          "question": "「/batch」指令的主要用途是什麼？",
+          "question": "「/review」指令的主要用途是什麼？",
           "options": [
-            "批量購買點數",
-            "批次處理多個檔案",
+            "購買點數",
+            "審查目前的程式碼變更，找出bug與可改進之處",
             "批准所有Claude的操作",
-            "備份所有程式碼"
+            "刪除所有程式碼"
           ],
-          "answer": "批次處理多個檔案",
-          "explanation": "/batch 讓 Claude 對多個檔案執行相同的操作，例如統一更新所有檔案的版權說明或格式，大幅節省時間。"
+          "answer": "審查目前的程式碼變更，找出bug與可改進之處",
+          "explanation": "/review 會檢視你目前的程式碼變更（diff），找出潛在 bug 與可以改進、簡化的地方，是提交前把關品質的好幫手。"
         },
         {
           "id": "cc-12-4",
@@ -932,15 +932,15 @@
         {
           "id": "cc-12-6",
           "type": "填空題",
-          "question": "/debug 指令會開始___流程，引導 Claude 系統性地找出程式碼的問題。",
+          "question": "___指令可以切換目前對話使用的 Claude 模型，例如切到 Opus 處理更複雜的任務。",
           "options": [
-            "付費",
-            "除錯",
-            "備份",
-            "安裝"
+            "/pay",
+            "/model",
+            "/delete",
+            "/backup"
           ],
-          "answer": "除錯",
-          "explanation": "/debug 啟動系統化的除錯流程，讓 Claude 按照有效的步驟分析問題，比隨機嘗試更有效率。"
+          "answer": "/model",
+          "explanation": "/model 讓你切換目前使用的 Claude 模型：需要更強推理時切到 Opus，想兼顧速度與成本則用 Sonnet 或 Haiku。"
         },
         {
           "id": "cc-12-7",
