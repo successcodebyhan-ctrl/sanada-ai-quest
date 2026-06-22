@@ -129,6 +129,7 @@ function drawSky(){
 
 // ── 地面（分層：綠→過渡→泥土） ────────────────────────────
 const GROUND_Y=Math.round(DESIGN_H*.82)-5;   // 為了容納題目框，往上移動至82%高度，並再上移5px
+const BATTLE_GY=Math.round(DESIGN_H*.56);    // 對戰專用地面線（較高，下方留更大題目框）
 
 // 各層色板（[深色, 亮色]）
 const GP={
@@ -951,17 +952,12 @@ function onTap(cx,cy){
       showRetractConfirm=true; // 顯示確認對話框而不是直接confirm
       return;
     }
-    // 選項點擊 (新的內聯布局)
+    // 選項點擊（與 battleOptGeo() 繪製幾何完全同步）
     if(!questionAnswered&&currentQuestion){
-      const qW=DESIGN_W-160, qH=120; // 與drawBattleSceneLandscape同步
-      const qX=(DESIGN_W-qW)/2;
-      const qY=GROUND_Y+(DESIGN_H-GROUND_Y-qH)/2;
-      const optY=qY+40, optH=35;
-      const perOptW=Math.max(80, (DESIGN_W-160-30)/4);
+      const L=battleOptGeo();
       for(let i=0;i<Math.min(currentQuestion.options.length, 4);i++){
-        const optW=perOptW-5;
-        const ox=qX+i*(optW+5);
-        if(cx>=ox&&cx<ox+optW&&cy>=optY&&cy<optY+optH){
+        const ox=L.optX0+i*(L.perOptW+L.gap);
+        if(cx>=ox&&cx<ox+L.perOptW&&cy>=L.optY&&cy<L.optY+L.optH){
           answerQuestion(i);
           return;
         }
@@ -976,7 +972,7 @@ function onTap(cx,cy){
     const invW=160;
     const invH=100;
     const invX=DESIGN_W-invW-10;
-    const invY=(DESIGN_H-invH)/2;
+    const invY=isPortrait?((DESIGN_H-invH)/2):120;
     const itemSpacing=30;
     const itemH=24; // 點擊區域高度
     const items=[
@@ -3022,12 +3018,14 @@ function drawBattleScene(){
   else drawBattleSceneLandscape();
 }
 
-// 閃爍星空（重用全域 stars，與其他場景一致）
-function drawTwinkleStars(){
+// 閃爍星空（重用全域 stars，與其他場景一致）；clipY 以下不繪製（避免畫到題目框）
+function drawTwinkleStars(clipY){
+  const cap=clipY||DESIGN_H;
   for(const s of stars){
     s.phase+=s.speed;
     s.x=s.bx+Math.sin(s.phase*.31)*1.4;
     s.y=s.by+Math.cos(s.phase*.19)*.7;
+    if(s.y>=cap) continue;
     const b=(Math.sin(s.phase)+1)/2;
     const a=Math.floor(70+b*185).toString(16).padStart(2,'0');
     const sx=Math.round(s.x), sy=Math.round(s.y);
@@ -3118,14 +3116,14 @@ function drawBattleSceneLandscape(){
   }
 
   const col=currentEra==='ai'?eraColors.ai:currentEra==='cowork'?eraColors.cowork:eraColors.code;
-  const g=ctx.createLinearGradient(0,0,0,GROUND_Y);
+  const g=ctx.createLinearGradient(0,0,0,BATTLE_GY);
   g.addColorStop(0,col.bgMain);
   g.addColorStop(1,col.bgSub);
   ctx.fillStyle=g;
-  ctx.fillRect(0,0,DESIGN_W,GROUND_Y);
+  ctx.fillRect(0,0,DESIGN_W,BATTLE_GY);
 
-  // 星空（隨機閃爍）
-  drawTwinkleStars();
+  // 星空（隨機閃爍，只畫在地面線以上）
+  drawTwinkleStars(BATTLE_GY);
 
   // 左上：答題進度
   ctx.fillStyle='#ffffff';
@@ -3162,14 +3160,14 @@ function drawBattleSceneLandscape(){
   ctx.strokeRect(16, 70, hpBarW, hpBarH);
 
   // 後方士兵（弓兵）：敵方在左、我方在右
-  drawBattleSoldiers([120,215,310], GROUND_Y, 2, 1, false);                                  // 敵方士兵（朝右）
-  drawBattleSoldiers([DESIGN_W-120,DESIGN_W-215,DESIGN_W-310], GROUND_Y, 2, -1, true);       // 我方士兵（朝左）
+  drawBattleSoldiers([120,215,310], BATTLE_GY, 2, 1, false);                                  // 敵方士兵（朝右）
+  drawBattleSoldiers([DESIGN_W-120,DESIGN_W-215,DESIGN_W-310], BATTLE_GY, 2, -1, true);       // 我方士兵（朝左）
 
   // 敵人角色（放大3倍，往中間移動）- 添加晃動效果
   ctx.save();
   ctx.scale(3, 3);
   const enemyShake=enemyShakeFrame>0?Math.sin(enemyShakeFrame*0.5)*3:0;
-  drawWarrior(430/3+enemyShake/3, GROUND_Y/3, 1, 'stand');
+  drawWarrior(430/3+enemyShake/3, BATTLE_GY/3, 1, 'stand');
   ctx.restore();
 
   // 真田幸村（右上）- 放大1.5倍
@@ -3195,50 +3193,43 @@ function drawBattleSceneLandscape(){
   ctx.scale(3, 3);
   const playerShake=playerAttackFrame>0?Math.sin(playerAttackFrame*0.5)*2:0;
   const playerAngle=playerAttackFrame>0?(15-playerAttackFrame)*0.2:0; // 揮刀角度
-  ctx.translate((DESIGN_W-430)/3+playerShake/3, GROUND_Y/3);
+  ctx.translate((DESIGN_W-430)/3+playerShake/3, BATTLE_GY/3);
   ctx.rotate(playerAngle*Math.PI/180);
-  ctx.translate(-((DESIGN_W-430)/3+playerShake/3), -GROUND_Y/3);
-  drawPlayer((DESIGN_W-430)/3+playerShake/3, GROUND_Y/3, -1, 0);
+  ctx.translate(-((DESIGN_W-430)/3+playerShake/3), -BATTLE_GY/3);
+  drawPlayer((DESIGN_W-430)/3+playerShake/3, BATTLE_GY/3, -1, 0);
   ctx.restore();
 
   // 雙方背景飛箭（從螢幕邊緣的後方士兵射向對面）
   updateBattleArrows({
-    enemy:{ ox:[15,140], oy:[GROUND_Y-60,GROUND_Y-35], tx:[850,1160], ty:[GROUND_Y-85,GROUND_Y-30] },
-    player:{ ox:[DESIGN_W-140,DESIGN_W-15], oy:[GROUND_Y-60,GROUND_Y-35], tx:[120,430], ty:[GROUND_Y-85,GROUND_Y-30] },
+    enemy:{ ox:[15,140], oy:[BATTLE_GY-60,BATTLE_GY-35], tx:[850,1160], ty:[BATTLE_GY-85,BATTLE_GY-30] },
+    player:{ ox:[DESIGN_W-140,DESIGN_W-15], oy:[BATTLE_GY-60,BATTLE_GY-35], tx:[120,430], ty:[BATTLE_GY-85,BATTLE_GY-30] },
   });
   drawBattleArrows();
 
-  // 題目區域（黑色區域正中心）
+  // 題目區域（下方大區塊，放大）
   if(currentQuestion){
-    const qW=DESIGN_W-160, qH=120; // 減小高度以完整顯示
-    const qX=(DESIGN_W-qW)/2; // 水平居中
-    const qY=GROUND_Y+(DESIGN_H-GROUND_Y-qH)/2; // 下方黑色區塊垂直居中
-
-    // 半透明紅色底色
-    ctx.fillStyle='rgba(242, 47, 70, 0.3)';
-    ctx.fillRect(qX, qY, qW, qH);
-
-    // 金色邊框
+    const L=battleOptGeo();
+    // 半透明紅色底色 + 金色邊框
+    ctx.fillStyle='rgba(242, 47, 70, 0.32)';
+    ctx.fillRect(L.qX, L.qY, L.qW, L.qH);
     ctx.strokeStyle='#fcc539';
     ctx.lineWidth=3;
-    ctx.strokeRect(qX, qY, qW, qH);
+    ctx.strokeRect(L.qX, L.qY, L.qW, L.qH);
 
-    // 題目文字
+    // 題目文字（放大、多行）
     ctx.fillStyle='#ffffff';
-    ctx.font='bold 12px DotGothic16';
     ctx.textAlign='left';
-    const qLines=currentQuestion.question.match(/.{1,40}/g)||[];
-    let qTy=qY+15;
-    for(const line of qLines.slice(0,1)){
-      ctx.fillText(line, qX+15, qTy);
+    ctx.font='bold 22px DotGothic16';
+    const maxChars=Math.floor((L.qW-44)/22);
+    const qt=currentQuestion.question;
+    let qty=L.qY+40;
+    for(let i=0;i<qt.length && qty<L.optY-14;i+=maxChars){
+      ctx.fillText(qt.slice(i,i+maxChars), L.qX+22, qty);
+      qty+=30;
     }
 
-    // 選項（改為一行四個）
-    if(currentQuestion.type==='選擇題'){
-      drawMultipleChoiceInline(currentQuestion.options, qX+15, qY+40);
-    } else {
-      drawFillInBlankInline(currentQuestion.question, currentQuestion.options, qX+15, qY+40);
-    }
+    // 選項（一行四個，放大；選擇題與填空題共用）
+    drawBattleOptions(currentQuestion.options);
   }
 
   // 伤害显示
@@ -3252,42 +3243,42 @@ function drawBattleSceneLandscape(){
 
   // 答題反饋與解釋（等待玩家點擊）
   if(questionAnswered){
-    const feedbackX=DESIGN_W/2, feedbackY=200;
+    const feedbackX=DESIGN_W/2, feedbackY=120;
     if(answerCorrect){
       ctx.fillStyle='#00ff00';
-      ctx.font='bold 24px DotGothic16';
+      ctx.font='bold 32px DotGothic16';
       ctx.textAlign='center';
       ctx.fillText('✓ 正確！', feedbackX, feedbackY);
     } else {
       ctx.fillStyle='#ff0000';
-      ctx.font='bold 24px DotGothic16';
+      ctx.font='bold 32px DotGothic16';
       ctx.textAlign='center';
       ctx.fillText('✗ 答錯了！', feedbackX, feedbackY);
     }
 
-    // 顯示題目解釋（對錯都顯示）
-    ctx.font='13px DotGothic16';
+    // 顯示題目解釋（對錯都顯示，放大）
+    ctx.font='17px DotGothic16';
     ctx.fillStyle='#ffffdd';
     ctx.textAlign='center';
-    const expLines=currentQuestion.explanation.match(/.{1,50}/g)||[];
-    let expY=feedbackY+45;
-    for(const line of expLines.slice(0,3)){
+    const expLines=currentQuestion.explanation.match(/.{1,40}/g)||[];
+    let expY=feedbackY+44;
+    for(const line of expLines.slice(0,4)){
       ctx.fillText(line, feedbackX, expY);
-      expY+=18;
+      expY+=26;
     }
 
     // 如果是答錯，顯示正確答案
     if(!answerCorrect){
       ctx.fillStyle='#ffff00';
-      ctx.font='bold 12px DotGothic16';
-      expY+=5;
+      ctx.font='bold 17px DotGothic16';
+      expY+=6;
       ctx.fillText(`正確答案：${currentQuestion.answer}`, feedbackX, expY);
     }
 
     // 提示玩家點擊繼續
     ctx.fillStyle='#cccccc';
-    ctx.font='11px DotGothic16';
-    ctx.fillText('(點擊螢幕繼續)', feedbackX, feedbackY+120);
+    ctx.font='14px DotGothic16';
+    ctx.fillText('(點擊螢幕繼續)', feedbackX, BATTLE_GY-16);
   }
 
   // 道具欄（右中處）
@@ -3659,41 +3650,42 @@ function drawFillInBlank(question, options, x, y){
 }
 
 // 新的內聯選項布局（一行四個）
-function drawMultipleChoiceInline(options, x, y){
-  const optH=35;
-  ctx.font='11px DotGothic16';
-  const perOptW=Math.max(80, (DESIGN_W-160-30)/4);
-  for(let i=0;i<Math.min(options.length, 4);i++){
-    const optW=perOptW-5;
-    const ox=x+i*(optW+5);
-    ctx.fillStyle=selectedAnswer===i?'#f22f46':'#cccccc';
-    ctx.fillRect(ox, y, optW, optH);
-    ctx.strokeStyle='#000000';
-    ctx.lineWidth=1;
-    ctx.strokeRect(ox, y, optW, optH);
-    ctx.fillStyle='#000000';
-    ctx.textAlign='center';
-    const text=options[i];
-    ctx.fillText(text, ox+optW/2, y+23);
-  }
+// 對戰題目框/選項的共用幾何（繪製與點擊判定都用這個，確保同步）
+function battleOptGeo(){
+  const qX=60, qW=DESIGN_W-120;
+  const qY=BATTLE_GY+16, qH=DESIGN_H-qY-16;
+  const padX=20, gap=14, optH=64;
+  const perOptW=(qW-padX*2-gap*3)/4;
+  const optX0=qX+padX;
+  const optY=qY+qH-optH-20;
+  return {qX,qW,qY,qH,optX0,perOptW,gap,optH,optY,padX};
 }
 
-function drawFillInBlankInline(question, options, x, y){
-  const optH=35;
-  ctx.font='11px DotGothic16';
-  const perOptW=Math.max(80, (DESIGN_W-160-30)/4);
+// 在指定方框內置中、自動換行繪製文字（CJK 友善）
+function drawCenteredWrapped(text, cx, boxY, boxH, maxW, fontPx){
+  ctx.font='bold '+fontPx+'px DotGothic16';
+  const maxChars=Math.max(3, Math.floor(maxW/fontPx));
+  const lines=[];
+  for(let i=0;i<text.length;i+=maxChars) lines.push(text.slice(i,i+maxChars));
+  const shown=lines.slice(0,3);
+  const lh=fontPx+4;
+  let ty=boxY+boxH/2-(shown.length-1)*lh/2+fontPx*0.36;
+  for(const ln of shown){ ctx.fillText(ln, cx, ty); ty+=lh; }
+}
+
+// 一行四個的選項（選擇題與填空題共用）
+function drawBattleOptions(options){
+  const L=battleOptGeo();
+  ctx.textAlign='center';
   for(let i=0;i<Math.min(options.length, 4);i++){
-    const optW=perOptW-5;
-    const ox=x+i*(optW+5);
-    ctx.fillStyle=selectedAnswer===i?'#f22f46':'#cccccc';
-    ctx.fillRect(ox, y, optW, optH);
+    const ox=L.optX0+i*(L.perOptW+L.gap);
+    ctx.fillStyle=selectedAnswer===i?'#f22f46':'#e8e8e8';
+    ctx.fillRect(ox, L.optY, L.perOptW, L.optH);
     ctx.strokeStyle='#000000';
     ctx.lineWidth=1;
-    ctx.strokeRect(ox, y, optW, optH);
-    ctx.fillStyle='#000000';
-    ctx.textAlign='center';
-    const text=options[i];
-    ctx.fillText(text, ox+optW/2, y+23);
+    ctx.strokeRect(ox, L.optY, L.perOptW, L.optH);
+    ctx.fillStyle=selectedAnswer===i?'#ffffff':'#000000';
+    drawCenteredWrapped(options[i], ox+L.perOptW/2, L.optY, L.optH, L.perOptW-14, 16);
   }
 }
 
@@ -3731,7 +3723,7 @@ function drawInventoryBar(){
   const invW=160;
   const invH=100;
   const invX=DESIGN_W-invW-10; // 右側，留10像素邊距
-  const invY=(DESIGN_H-invH)/2-10; // 垂直居中，向上移動10px
+  const invY=isPortrait?((DESIGN_H-invH)/2-10):120; // 橫屏往上移到上方（避開放大的題目框）
 
   // 紅底半透明背景
   ctx.fillStyle='rgba(242, 47, 70, 0.4)';
