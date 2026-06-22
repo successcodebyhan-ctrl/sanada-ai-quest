@@ -729,8 +729,12 @@ let battleAnimations=[]; // 正在進行的動畫
 let playerAttackFrame=0; // 我方揮刀幀數
 let enemyShakeFrame=0; // 敵方晃動幀數
 let damageDisplays=[]; // 傷害顯示 [{x,y,damage,timer}]
-let battleArrows=[]; // 對戰背景飛箭 [{x,y,vx,vy,color,life}]
-let battleArrowTimer=0; // 飛箭發射計時器
+let battleArrows=[]; // 對戰背景飛箭
+// 各陣營獨立的隨機發射排程（隨機間隔、隨機爆發支數）
+let arrowSched={
+  enemy:{cd:30+Math.floor(Math.random()*120), burst:0, burstCd:0},
+  player:{cd:30+Math.floor(Math.random()*120), burst:0, burstCd:0},
+};
 
 // 教學場景狀態
 let teachingPhase=1; // 1=隨從講話, 2=真田幸村確認
@@ -1217,7 +1221,9 @@ function startBattle(){
     maxHP=100;
     questionAnswered=false;
     selectedAnswer=null;
-    battleArrows=[]; battleArrowTimer=0; // 清空背景飛箭
+    battleArrows=[]; // 清空背景飛箭並重置發射排程
+    arrowSched={ enemy:{cd:20+Math.floor(Math.random()*100),burst:0,burstCd:0},
+                 player:{cd:20+Math.floor(Math.random()*100),burst:0,burstCd:0} };
     loadCurrentQuestion();
   };
 }
@@ -3029,9 +3035,10 @@ function drawTwinkleStars(){
 }
 
 // 發射一支從 (sx,sy) 飛向 (tx,ty) 的弧線箭矢（參數化，弧高固定不隨距離爆增）
+const ARROW_SPEED=4; // 像素/幀（越小越慢）
 function spawnBattleArrow(sx,sy,tx,ty,color){
   const dist=Math.hypot(tx-sx,ty-sy)||1;
-  battleArrows.push({sx,sy,tx,ty,t:0,speed:9/dist,arc:38+Math.random()*28,color});
+  battleArrows.push({sx,sy,tx,ty,t:0,speed:ARROW_SPEED/dist,arc:34+Math.random()*30,color});
 }
 function arrowPos(a,t){
   return {
@@ -3039,18 +3046,39 @@ function arrowPos(a,t){
     y:a.sy+(a.ty-a.sy)*t-a.arc*Math.sin(Math.PI*t), // 弧線：中段最高
   };
 }
+const rrange=r=>r[0]+Math.random()*(r[1]-r[0]);
 
-// 更新雙方背景飛箭：敵方(左)→我方(右)，我方(右)→敵方(左)
-function updateBattleArrows(ex,ey,px,py){
-  battleArrowTimer++;
-  if(battleArrowTimer>=42){
-    battleArrowTimer=0;
-    spawnBattleArrow(ex,ey,px+(Math.random()*40-20),py+(Math.random()*30-15),'#ffcf6b'); // 敵方箭（金黃）
-    spawnBattleArrow(px,py,ex+(Math.random()*40-20),ey+(Math.random()*30-15),'#aee4ff'); // 我方箭（淺藍）
+// 單一陣營的隨機發射排程：隨機間隔觸發一輪，一輪隨機 1~3 支，支與支間隔隨機
+function tickArrowFaction(s, fire){
+  if(s.burst>0){
+    if(--s.burstCd<=0){ fire(); s.burst--; s.burstCd=5+Math.floor(Math.random()*12); }
+  } else if(--s.cd<=0){
+    s.burst=1+Math.floor(Math.random()*3);      // 本輪 1~3 支
+    s.burstCd=0;
+    s.cd=40+Math.floor(Math.random()*150);       // 下一輪間隔 ~0.7~3.2 秒
   }
+}
+
+// 更新雙方背景飛箭：從各自螢幕邊緣（士兵後方）射向對面
+// L = {enemy:{ox,oy,tx,ty}, player:{ox,oy,tx,ty}}，每項為 [min,max] 範圍
+function updateBattleArrows(L){
+  tickArrowFaction(arrowSched.enemy, ()=>
+    spawnBattleArrow(rrange(L.enemy.ox),rrange(L.enemy.oy),rrange(L.enemy.tx),rrange(L.enemy.ty),'#ffcf6b'));
+  tickArrowFaction(arrowSched.player, ()=>
+    spawnBattleArrow(rrange(L.player.ox),rrange(L.player.oy),rrange(L.player.tx),rrange(L.player.ty),'#aee4ff'));
   for(let i=battleArrows.length-1;i>=0;i--){
     battleArrows[i].t+=battleArrows[i].speed;
     if(battleArrows[i].t>=1) battleArrows.splice(i,1);
+  }
+}
+
+// 繪製某陣營後方的一排士兵（弓兵）
+function drawBattleSoldiers(xs, feetY, s, facing, isPlayer){
+  for(const x of xs){
+    ctx.save(); ctx.scale(s,s);
+    if(isPlayer) drawPlayer(x/s, feetY/s, facing, 0);
+    else drawWarrior(x/s, feetY/s, facing, 'stand');
+    ctx.restore();
   }
 }
 
@@ -3092,10 +3120,6 @@ function drawBattleSceneLandscape(){
   // 星空（隨機閃爍）
   drawTwinkleStars();
 
-  // 雙方背景飛箭（敵左→我右、我右→敵左）
-  updateBattleArrows(150, GROUND_Y-55, DESIGN_W-150, GROUND_Y-55);
-  drawBattleArrows();
-
   // 左上：答題進度
   ctx.fillStyle='#ffffff';
   ctx.font='14px DotGothic16';
@@ -3130,11 +3154,15 @@ function drawBattleSceneLandscape(){
   ctx.lineWidth=1;
   ctx.strokeRect(16, 70, hpBarW, hpBarH);
 
-  // 敵人角色（放大3倍）- 添加晃動效果
+  // 後方士兵（弓兵）：敵方在左、我方在右
+  drawBattleSoldiers([120,215,310], GROUND_Y, 2, 1, false);                                  // 敵方士兵（朝右）
+  drawBattleSoldiers([DESIGN_W-120,DESIGN_W-215,DESIGN_W-310], GROUND_Y, 2, -1, true);       // 我方士兵（朝左）
+
+  // 敵人角色（放大3倍，往中間移動）- 添加晃動效果
   ctx.save();
   ctx.scale(3, 3);
   const enemyShake=enemyShakeFrame>0?Math.sin(enemyShakeFrame*0.5)*3:0;
-  drawWarrior(100/3+enemyShake/3, GROUND_Y/3, 1, 'stand');
+  drawWarrior(430/3+enemyShake/3, GROUND_Y/3, 1, 'stand');
   ctx.restore();
 
   // 真田幸村（右上）- 放大1.5倍
@@ -3155,16 +3183,23 @@ function drawBattleSceneLandscape(){
   ctx.textAlign='right';
   ctx.fillText(`${playerHP} HP`, DESIGN_W-16, 102);
 
-  // 幸村角色（放大）- 添加揮刀效果
+  // 幸村角色（放大，往中間移動）- 添加揮刀效果
   ctx.save();
   ctx.scale(3, 3);
   const playerShake=playerAttackFrame>0?Math.sin(playerAttackFrame*0.5)*2:0;
   const playerAngle=playerAttackFrame>0?(15-playerAttackFrame)*0.2:0; // 揮刀角度
-  ctx.translate((DESIGN_W-100)/3+playerShake/3, GROUND_Y/3);
+  ctx.translate((DESIGN_W-430)/3+playerShake/3, GROUND_Y/3);
   ctx.rotate(playerAngle*Math.PI/180);
-  ctx.translate(-((DESIGN_W-100)/3+playerShake/3), -GROUND_Y/3);
-  drawPlayer((DESIGN_W-100)/3+playerShake/3, GROUND_Y/3, -1, 0);
+  ctx.translate(-((DESIGN_W-430)/3+playerShake/3), -GROUND_Y/3);
+  drawPlayer((DESIGN_W-430)/3+playerShake/3, GROUND_Y/3, -1, 0);
   ctx.restore();
+
+  // 雙方背景飛箭（從螢幕邊緣的後方士兵射向對面）
+  updateBattleArrows({
+    enemy:{ ox:[15,140], oy:[GROUND_Y-60,GROUND_Y-35], tx:[850,1160], ty:[GROUND_Y-85,GROUND_Y-30] },
+    player:{ ox:[DESIGN_W-140,DESIGN_W-15], oy:[GROUND_Y-60,GROUND_Y-35], tx:[120,430], ty:[GROUND_Y-85,GROUND_Y-30] },
+  });
+  drawBattleArrows();
 
   // 題目區域（黑色區域正中心）
   if(currentQuestion){
@@ -3321,10 +3356,6 @@ function drawBattleScenePortrait(){
   // 星空（隨機閃爍）
   drawTwinkleStars();
 
-  // 雙方背景飛箭（上方，敵左↔我右）
-  updateBattleArrows(70, 95, DESIGN_W-70, 95);
-  drawBattleArrows();
-
   // 左上：答題進度
   ctx.fillStyle='#ffffff';
   ctx.font='14px DotGothic16';
@@ -3359,11 +3390,16 @@ function drawBattleScenePortrait(){
   ctx.lineWidth=1;
   ctx.strokeRect(16, 58, hpBarW, hpBarH);
 
-  // 敵人角色（放大2倍） - 添加晃動效果
+  // 後方士兵（弓兵）：敵方在左、我方在右
+  const pFeet=155;
+  drawBattleSoldiers([110,200,290], pFeet, 1.4, 1, false);                               // 敵方士兵（朝右）
+  drawBattleSoldiers([DESIGN_W-110,DESIGN_W-200,DESIGN_W-290], pFeet, 1.4, -1, true);    // 我方士兵（朝左）
+
+  // 敵人角色（放大2倍，往中間移動） - 添加晃動效果
   ctx.save();
   ctx.scale(2, 2);
   const enemyShakePortrait=enemyShakeFrame>0?Math.sin(enemyShakeFrame*0.5)*2:0;
-  drawWarrior(40/2+enemyShakePortrait/2, 50/2, 1, 'stand');
+  drawWarrior(430/2+enemyShakePortrait/2, pFeet/2, 1, 'stand');
   ctx.restore();
 
   // 真田幸村信息（中上）
@@ -3385,16 +3421,23 @@ function drawBattleScenePortrait(){
   ctx.textAlign='right';
   ctx.fillText(`${playerHP} HP`, DESIGN_W-16, 90);
 
-  // 幸村角色（放大2倍，右側） - 添加揮刀效果
+  // 幸村角色（放大2倍，往中間移動） - 添加揮刀效果
   ctx.save();
   ctx.scale(2, 2);
   const playerShakePortrait=playerAttackFrame>0?Math.sin(playerAttackFrame*0.5)*1.5:0;
   const playerAnglePortrait=playerAttackFrame>0?(15-playerAttackFrame)*0.15:0;
-  ctx.translate((DESIGN_W-80)/2+playerShakePortrait/2, 50/2);
+  ctx.translate((DESIGN_W-430)/2+playerShakePortrait/2, pFeet/2);
   ctx.rotate(playerAnglePortrait*Math.PI/180);
-  ctx.translate(-((DESIGN_W-80)/2+playerShakePortrait/2), -50/2);
-  drawPlayer((DESIGN_W-80)/2+playerShakePortrait/2, 50/2, -1, 0);
+  ctx.translate(-((DESIGN_W-430)/2+playerShakePortrait/2), -pFeet/2);
+  drawPlayer((DESIGN_W-430)/2+playerShakePortrait/2, pFeet/2, -1, 0);
   ctx.restore();
+
+  // 雙方背景飛箭（從螢幕邊緣的後方士兵射向對面）
+  updateBattleArrows({
+    enemy:{ ox:[10,120], oy:[120,pFeet], tx:[850,1150], ty:[110,pFeet] },
+    player:{ ox:[DESIGN_W-120,DESIGN_W-10], oy:[120,pFeet], tx:[130,430], ty:[110,pFeet] },
+  });
+  drawBattleArrows();
 
   // 題目區域（中央，正中心）
   if(currentQuestion){
