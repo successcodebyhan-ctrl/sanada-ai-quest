@@ -819,7 +819,8 @@ canvas.addEventListener('click',e=>{
 canvas.addEventListener('touchstart',e=>{
   e.preventDefault();
   const now=Date.now();
-  if(now-lastTap<300&&PL.onGround&&scene==='main'){
+  const canJump=scene==='main'||scene==='three-kingdom'||scene==='knight'||scene==='edo';
+  if(now-lastTap<300&&PL.onGround&&canJump){
     PL.vy=PL.jump; PL.onGround=false;
   }
   lastTap=now; touchSync(e.touches);
@@ -1108,7 +1109,9 @@ function onTap(cx,cy){
     if(cx<MX||cx>MX+945||cy<MY||cy>MY+492) closeUI();
     return;
   }
-  // 必須靠近建築才能點擊互動
+  // 時代場景：點擊時依靠近的目標互動（靠近傳送門回主城、靠近城堡開關卡選單）
+  if(scene==='three-kingdom'||scene==='knight'||scene==='edo'){ interact(); return; }
+  // 主城：必須靠近建築才能點擊互動
   if(nearBuilding&&cx>nearBuilding.zone[0]&&cx<nearBuilding.zone[1]) doAction(nearBuilding.id);
 }
 function showDialog(spk,txt){ dialogSpeaker=spk; dialogText=txt; }
@@ -4688,7 +4691,8 @@ function drawPortalParticles(){
 }
 
 // ── 進度儲存 ──────────────────────────────────────────────
-function buildSaveData(){
+// 目前記憶體中的進度（不含時間戳；updatedAt 由實際存檔時才蓋上）
+function currentStateData(){
   return {
     coins,
     inventory,
@@ -4697,7 +4701,6 @@ function buildSaveData(){
     flagsPlanted,
     musicEnabled,
     introShown:!showIntro, // 已看過開場動畫
-    updatedAt:Date.now(),  // 用於跨裝置比對哪份較新
   };
 }
 function applySaveData(data){
@@ -4711,7 +4714,8 @@ function applySaveData(data){
   showIntro=!data.introShown;
 }
 function saveProgress(){
-  const data=buildSaveData();
+  const data=currentStateData();
+  data.updatedAt=Date.now(); // 真正存檔的時間，用於跨裝置比對哪份較新
   localStorage.setItem('sanadaGameProgress',JSON.stringify(data));
   // 若已登入雲端，順便同步上傳（非阻塞）
   if(window.CloudSave && window.CloudSave.onLocalSave) window.CloudSave.onLocalSave(data);
@@ -4725,12 +4729,19 @@ function loadProgress(){
 
 // ── 提供給雲端存檔層（cloud-save.js）的橋接 API ──────────
 window.SanadaGame={
-  // 取得目前記憶體中的進度（含 updatedAt）
-  getLocalData(){ return buildSaveData(); },
-  // 套用雲端拉回的進度並寫回 localStorage（不再觸發雲端上傳，避免迴圈）
+  // 回傳 localStorage 中「真正存過」的進度（含真實 updatedAt）；從未存過則回 null，
+  // 讓全新裝置在登入時以雲端為準，避免空進度覆蓋雲端。
+  getLocalData(){
+    const s=localStorage.getItem('sanadaGameProgress');
+    if(!s) return null;
+    try{ return JSON.parse(s); } catch(e){ return null; }
+  },
+  // 套用雲端拉回的進度並寫回 localStorage，保留雲端的 updatedAt（避免本機看起來較新）
   applyCloudData(data){
     applySaveData(data);
-    localStorage.setItem('sanadaGameProgress',JSON.stringify(buildSaveData()));
+    const d=currentStateData();
+    d.updatedAt=data.updatedAt||Date.now();
+    localStorage.setItem('sanadaGameProgress',JSON.stringify(d));
   },
 };
 

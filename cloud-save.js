@@ -74,6 +74,17 @@
     }
   }
 
+  // 切回分頁/視窗時，從雲端重抓一次，若雲端較新就套用（接近即時同步）
+  async function refreshFromCloud(){
+    if(!sb || !currentUser) return;
+    const cloud = await pull();
+    if(!cloud) return;
+    const local = window.SanadaGame ? window.SanadaGame.getLocalData() : null;
+    if(!local || (cloud.updatedAt||0) > (local.updatedAt||0)){
+      if(window.SanadaGame) window.SanadaGame.applyCloudData(cloud);
+    }
+  }
+
   // ── 對外：本機每次存檔時被 game.js 呼叫，debounce 後上傳 ──
   function onLocalSave(saveData){
     if(!sb || !currentUser) return;
@@ -167,6 +178,10 @@
       return;
     }
     sb = window.supabase.createClient(cfg.url, cfg.anonKey);
+    // 切回此分頁時自動重抓雲端進度
+    document.addEventListener('visibilitychange', () => {
+      if(!document.hidden) refreshFromCloud();
+    });
     // 已有登入工作階段（session 會自動持久化）→ 直接進遊戲
     const { data:{ session } } = await sb.auth.getSession();
     if(session && session.user){
