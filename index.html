@@ -13,6 +13,27 @@
   <div id="game-container">
     <canvas id="game-canvas"></canvas>
   </div>
+
+  <!-- 登入狀態列（右上角） -->
+  <div id="auth-status"></div>
+
+  <!-- 登入 / 註冊畫面 -->
+  <div id="auth-overlay">
+    <div id="auth-box">
+      <h1>真田幸村的AI征途</h1>
+      <p class="auth-sub">登入以跨裝置同步進度</p>
+      <input id="auth-email" type="email" placeholder="Email" autocomplete="email">
+      <input id="auth-password" type="password" placeholder="密碼（至少6字）" autocomplete="current-password">
+      <div id="auth-error"></div>
+      <button id="auth-login-btn" class="auth-primary">登入</button>
+      <button id="auth-signup-btn" class="auth-secondary">註冊新帳號</button>
+      <button id="auth-guest-btn" class="auth-link">先試玩（不同步）</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <script src="game.js"></script>
+  <script src="cloud-save.js"></script>
 </body>
 </html>

@@ -4688,8 +4688,8 @@ function drawPortalParticles(){
 }
 
 // ── 進度儲存 ──────────────────────────────────────────────
-function saveProgress(){
-  const data={
+function buildSaveData(){
+  return {
     coins,
     inventory,
     levelProgress,
@@ -4697,24 +4697,42 @@ function saveProgress(){
     flagsPlanted,
     musicEnabled,
     introShown:!showIntro, // 已看過開場動畫
+    updatedAt:Date.now(),  // 用於跨裝置比對哪份較新
   };
+}
+function applySaveData(data){
+  if(!data) return;
+  coins=data.coins||0;
+  inventory=data.inventory||{noodle:0,fish:0,tempura:0};
+  levelProgress=data.levelProgress||{unlockedLevels:Array(30).fill(false).map((v,i)=>i===0),maxStars:Array(30).fill(0)};
+  gems=data.gems||[false,false,false];
+  flagsPlanted=data.flagsPlanted||{ai:false, cowork:false, code:false};
+  musicEnabled=data.musicEnabled!==false;
+  showIntro=!data.introShown;
+}
+function saveProgress(){
+  const data=buildSaveData();
   localStorage.setItem('sanadaGameProgress',JSON.stringify(data));
+  // 若已登入雲端，順便同步上傳（非阻塞）
+  if(window.CloudSave && window.CloudSave.onLocalSave) window.CloudSave.onLocalSave(data);
 }
 function loadProgress(){
   const saved=localStorage.getItem('sanadaGameProgress');
   if(saved){
-    try{
-      const data=JSON.parse(saved);
-      coins=data.coins||0;
-      inventory=data.inventory||{noodle:0,fish:0,tempura:0};
-      levelProgress=data.levelProgress||{unlockedLevels:Array(30).fill(false).map((v,i)=>i===0),maxStars:Array(30).fill(0)};
-      gems=data.gems||[false,false,false];
-      flagsPlanted=data.flagsPlanted||{ai:false, cowork:false, code:false};
-      musicEnabled=data.musicEnabled!==false;
-      showIntro=!data.introShown;
-    } catch(e){}
+    try{ applySaveData(JSON.parse(saved)); } catch(e){}
   }
 }
+
+// ── 提供給雲端存檔層（cloud-save.js）的橋接 API ──────────
+window.SanadaGame={
+  // 取得目前記憶體中的進度（含 updatedAt）
+  getLocalData(){ return buildSaveData(); },
+  // 套用雲端拉回的進度並寫回 localStorage（不再觸發雲端上傳，避免迴圈）
+  applyCloudData(data){
+    applySaveData(data);
+    localStorage.setItem('sanadaGameProgress',JSON.stringify(buildSaveData()));
+  },
+};
 
 // ── 音頻管理 ─────────────────────────────────────────────
 const AudioManager={

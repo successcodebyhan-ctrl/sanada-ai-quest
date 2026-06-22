@@ -72,3 +72,102 @@ html, body {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
+
+/* ── 登入 / 註冊畫面 ─────────────────────────────────── */
+#auth-overlay {
+  display: none; /* 由 JS 控制顯示 */
+  position: fixed; inset: 0;
+  z-index: 100;
+  align-items: center; justify-content: center;
+  background: rgba(8, 12, 18, 0.96);
+  font-family: 'DotGothic16', monospace;
+}
+
+#auth-box {
+  width: min(86vw, 360px);
+  padding: 28px 24px;
+  background: #102f34;
+  border: 3px solid var(--edo-accent2);
+  box-shadow: 0 0 0 3px #000, 6px 6px 0 0 rgba(0,0,0,0.5);
+  text-align: center;
+  color: #ffe08b;
+}
+
+#auth-box h1 {
+  font-size: 20px;
+  color: var(--edo-accent1);
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+#auth-box .auth-sub {
+  font-size: 12px;
+  color: #a0d8d7;
+  margin-bottom: 18px;
+}
+
+#auth-box input {
+  width: 100%;
+  padding: 11px 12px;
+  margin-bottom: 12px;
+  font-family: 'DotGothic16', monospace;
+  font-size: 14px;
+  color: #fff;
+  background: #0a1f23;
+  border: 2px solid #3f5d62;
+  outline: none;
+}
+#auth-box input:focus { border-color: var(--edo-accent2); }
+
+#auth-error {
+  min-height: 18px;
+  font-size: 12px;
+  color: #ff8b8b;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+#auth-box button {
+  width: 100%;
+  padding: 11px;
+  margin-bottom: 8px;
+  font-family: 'DotGothic16', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  border: 2px solid #000;
+}
+#auth-box button:disabled { opacity: 0.5; cursor: default; }
+
+.auth-primary { background: var(--edo-accent1); color: #fff; }
+.auth-secondary { background: var(--edo-accent2); color: #3f2323; }
+.auth-link {
+  background: transparent !important;
+  border: none !important;
+  color: #a0d8d7 !important;
+  text-decoration: underline;
+  font-size: 12px !important;
+}
+
+/* 右上角登入狀態列 */
+#auth-status {
+  display: none;
+  position: fixed;
+  top: 8px; right: 8px;
+  z-index: 90;
+  padding: 5px 10px;
+  background: rgba(8, 12, 18, 0.8);
+  border: 1px solid var(--edo-accent2);
+  color: #ffe08b;
+  font-family: 'DotGothic16', monospace;
+  font-size: 12px;
+}
+#auth-status button {
+  margin-left: 6px;
+  padding: 2px 8px;
+  font-family: 'DotGothic16', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  background: var(--edo-accent1);
+  color: #fff;
+  border: 1px solid #000;
+}
