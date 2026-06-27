@@ -15,6 +15,16 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
+// ── 圖片資源載入 ─────────────────────────────────────────
+const IMAGES = {};
+function loadImage(key, src){
+  const img = new Image();
+  img.src = src;
+  IMAGES[key] = img;
+  return img;
+}
+// 三座主城已改為程式手繪（drawEdoCastle / drawThreeKingdomCastle / drawKnightCastle），不再載入照片
+
 // ── 色板 ─────────────────────────────────────────────────
 const C = {
   bgMain:'#102f34', bgSub:'#22474c',
@@ -863,9 +873,10 @@ function interact(){
   if(dialogText||shopOpen||portalMenuOpen||levelMenuOpen) return;
 
   if(isEraScene){
-    // 時代場景：左側傳送門（靠近 x=200）或右側城堡（靠近 x=1050）
+    // 時代場景：左側傳送門（靠近 x=200）或右側城堡（圖片版主城對齊大門：江戶 860、三國 900、騎士 1000）
+    const castleX=scene==='edo'?860:scene==='three-kingdom'?880:880;
     const distToPortal=Math.abs(PL.x-200);
-    const distToCastle=Math.abs(PL.x-1050);
+    const distToCastle=Math.abs(PL.x-castleX);
 
     if(distToPortal<100){
       returnToMain();
@@ -1913,8 +1924,9 @@ function drawLabels(){
       ctx.fillStyle=col.accent2||'#fcc539'; ctx.textAlign='center'; ctx.fillText(text,PL.x,PL.y-48);
     }
 
-    // 右側城堡標籤（靠近 x=1050）
-    const distToCastle=Math.abs(PL.x-1050);
+    // 右側城堡標籤（圖片版主城對齊大門：江戶 860、三國 900、騎士 1000）
+    const castleX=scene==='edo'?860:scene==='three-kingdom'?880:880;
+    const distToCastle=Math.abs(PL.x-castleX);
     if(distToCastle<150){
       const text='[ E ] 選擇關卡';
       ctx.font='11px DotGothic16';
@@ -3827,11 +3839,7 @@ function drawEraScene(sceneName){
     ctx.fillRect(c1x, c1y, 50, 120);        // 塔身
     ctx.fillRect(c1x+10, c1y-50, 30, 50);   // 塔樓
     ctx.fillRect(c1x+15, c1y-70, 20, 20);   // 塔頂
-    // 右側宮殿
-    const r1x=950, r1y=GROUND_Y-90;
-    ctx.fillRect(r1x, r1y, 120, 90);        // 主殿
-    ctx.fillRect(r1x+30, r1y-50, 60, 50);   // 屋頂
-    ctx.fillRect(r1x+55, r1y-80, 10, 30);   // 中央塔
+    // 右側宮殿剪影已移除，改用 assets/three-kingdom-castle.png 主城圖
   } else if(sceneName==='knight'){
     // 騎士：城堡和防禦塔樓（尖塔風格）
     // 左側防禦塔
@@ -3846,10 +3854,7 @@ function drawEraScene(sceneName){
     ctx.fillRect(cb1x+100, cb1y-60, 40, 60);      // 右塔
     ctx.fillRect(cb1x+50, cb1y-30, 80, 30);       // 城牆頂
     ctx.fillRect(cb1x+60, cb1y-70, 60, 20);       // 中央堡壘
-    // 右側防禦塔
-    const rt1x=960, rt1y=GROUND_Y-130;
-    ctx.fillRect(rt1x, rt1y, 55, 130);      // 塔身
-    ctx.fillRect(rt1x+8, rt1y-35, 39, 35);  // 尖塔
+    // 右側防禦塔剪影已移除，改用 assets/knight-castle.png 主城圖
   } else {
     // 江戶：寺廟和城樓（飛簷風格）
     // 左側寺廟
@@ -3863,11 +3868,7 @@ function drawEraScene(sceneName){
     ctx.fillRect(p2x+15, p2y-50, 80, 50);   // 飛簷屋頂
     ctx.fillRect(p2x+40, p2y-80, 30, 30);   // 塔樓
     ctx.fillRect(p2x+45, p2y-100, 20, 20);  // 塔頂
-    // 右側建築群
-    const r2x=930, r2y=GROUND_Y-100;
-    ctx.fillRect(r2x, r2y, 100, 100);       // 左建築
-    ctx.fillRect(r2x+70, r2y-40, 50, 140);  // 右側塔樓
-    ctx.fillRect(r2x+80, r2y-80, 30, 40);   // 塔頂
+    // 右側建築群剪影已移除，改用 assets/edo-castle.png 主城圖
   }
 
   // 繪製地面
@@ -3876,14 +3877,15 @@ function drawEraScene(sceneName){
   // 左側傳送門（返回領地）
   drawEraPortal(200,GROUND_Y-106);
 
-  // 右側時代城堡（底部對齊地面 GROUND_Y）
-  const gY=GROUND_Y;
+  // 右側時代城堡（底部對齊地面，等比放大；以「底部中心(cx,gY)」為原點縮放→底部仍貼地、置中不變）
+  const gY=GROUND_Y, CASTLE_S=1.35;     // 放大倍率（改這個調整三座大小）
+  const drawScaled=(fn,cx)=>{ ctx.save(); ctx.translate(cx,gY); ctx.scale(CASTLE_S,CASTLE_S); ctx.translate(-cx,-gY); fn(cx,gY); ctx.restore(); };
   if(sceneName==='three-kingdom'){
-    drawThreeKingdomCastle(1000, gY-120); // 最低點 y+120；x 左移避免基座(±250)超出右緣
+    drawScaled(drawThreeKingdomCastle, 880);   // 中心 x=880
   } else if(sceneName==='knight'){
-    drawKnightCastle(1050, gY-40);        // 最低點 y+40
+    drawScaled(drawKnightCastle, 880);         // 中心 x=880（左移，原本 1000 太靠右）
   } else {
-    drawEdoCastle(1050, gY-85);           // 最低點 y+85
+    drawScaled(drawEdoCastle, 860);            // 中心 x=860
   }
 
   // 繪製時代NPC
@@ -3998,811 +4000,507 @@ function drawEraCamp(x,y,sceneName){
 }
 
 function drawThreeKingdomCastle(x,y){
-  // 三國城堡（詳細pixel art風格，依照SVG設計）
-  // 尺寸：約500×200像素，三段式（左箭樓-中央城門-右箭樓）
-
-  const col={
-    wallDark: '#4a3a2a',
-    wallMid: '#6a5a4a',
-    wallLight: '#8a7a6a',
-    brickDark: '#5a4a3a',
-    brickLight: '#7a6a5a',
-    doorDark: '#3a2a1a',
-    doorMid: '#5a4a3a',
-    roofDark: '#7a3a2a',
-    roofLight: '#aa5a4a',
-    flagYellow: '#d4a53a',
-    flagRed: '#c94a2a',
-    lantern: '#d95a2a',
-    gold: '#daa520',
-    wood: '#5a4a3a',
-    outline: '#2a1a1a'
+  const C={
+    stoneD:'#4a463f', stoneM:'#5e584d', stoneL:'#7c7363', stoneOL:'#2a2722',
+    wall:'#6b4636', wallHi:'#8a5d45', wallSh:'#4e3327', wallOL:'#321f16',
+    col:'#9c2b20', colHi:'#c24437', colSh:'#6e1d15', beam:'#7a2018',
+    roofD:'#28332f', roofM:'#3a4a44', roofHi:'#566a62', roofEave:'#161d1a', roofSh:'#1a2320',
+    gold:'#d4a830', goldL:'#f2d564',
+    banner:'#b9302a', bannerD:'#8f201c', bannerGold:'#e8c45a',
+    lan:'#d23a2a', lanHi:'#f06a4a',
+    win:'#16110c', door:'#241208',
   };
+  const R=Math.round;
+  const baseTop=y-58;            // 石牆頂
+  const bandTop=baseTop-26;      // 牆身頂
 
-  // ═══ 城牆基座 ════════════════════════════════════════
-  ctx.fillStyle=col.wallDark;
-  ctx.fillRect(x-250, y+40, 500, 80);
+  function stoneBase(botW,topW){
+    const h=y-baseTop;
+    for(let i=0;i<h;i++){const t=i/h, w=botW-(botW-topW)*t;
+      ctx.fillStyle=i<2?C.stoneOL:(i%6<3?C.stoneD:C.stoneM); ctx.fillRect(R(x-w/2),baseTop+i,R(w),1);}
+    ctx.fillStyle=C.stoneOL;
+    for(let ry=baseTop+6;ry<y;ry+=10){const t=(ry-baseTop)/h,w=botW-(botW-topW)*t;
+      ctx.fillRect(R(x-w/2),ry,R(w),1);
+      const off=((ry-baseTop)/10|0)%2?14:0;
+      for(let sx=R(x-w/2)+off;sx<x+w/2;sx+=28) ctx.fillRect(sx,ry-10<baseTop?baseTop:ry-10,1,11);}
+    ctx.fillStyle=C.stoneL; ctx.fillRect(R(x-topW/2),baseTop,R(topW),2);
+  }
 
-  // 城牆大磚塊紋理（模擬SVG的40像素寬磚塊）
-  ctx.fillStyle=col.brickDark;
-  ctx.globalAlpha=0.6;
-  for(let i=0; i<12; i++){
-    for(let j=0; j<3; j++){
-      ctx.fillRect(x-250+i*40, y+40+j*26, 38, 26);
+  // 中式飛簷瓦頂（大翹角 + 脊飾）
+  function roof(cx,eaveY,eaveW,h){
+    const topW=Math.max(8,eaveW*0.24);
+    for(let i=0;i<h;i++){const rw=eaveW-(eaveW-topW)*(i/h);const L=R(cx-rw/2),W=R(rw);
+      const half=Math.ceil(W*0.55);
+      ctx.fillStyle=C.roofM; ctx.fillRect(L,R(eaveY-1-i),half,1);
+      ctx.fillStyle=C.roofD; ctx.fillRect(L+half,R(eaveY-1-i),W-half,1);}
+    for(let i=0;i<h;i+=2){const rw=eaveW-(eaveW-topW)*(i/h);const L=R(cx-rw/2),W=R(rw);
+      ctx.fillStyle=C.roofSh; for(let gx=L+4;gx<L+W-2;gx+=7) ctx.fillRect(gx,R(eaveY-1-i),1,1);}
+    // 簷口
+    ctx.fillStyle=C.roofEave; ctx.fillRect(R(cx-eaveW/2-3),R(eaveY-1),R(eaveW+6),4);
+    ctx.fillStyle=C.roofSh;   ctx.fillRect(R(cx-eaveW/2-3),R(eaveY+3),R(eaveW+6),2);
+    // 大翹角（向上外掃）
+    for(const sd of [-1,1]){const ex=cx+sd*(eaveW/2);
+      ctx.fillStyle=C.roofEave;
+      ctx.fillRect(R(ex+sd*0-(sd<0?4:0)),R(eaveY-3),4,3);
+      ctx.fillRect(R(ex+sd*4-(sd<0?4:0)),R(eaveY-7),4,4);
+      ctx.fillStyle=C.gold; ctx.fillRect(R(ex+sd*6-(sd<0?2:0)),R(eaveY-10),2,2);}
+    // 屋脊 + 脊端金飾（鴟吻）
+    ctx.fillStyle=C.roofHi; ctx.fillRect(R(cx-topW/2),R(eaveY-h),R(topW),2);
+    ctx.fillStyle=C.gold;   ctx.fillRect(R(cx-topW/2-2),R(eaveY-h-3),4,4); ctx.fillRect(R(cx+topW/2-2),R(eaveY-h-3),4,4);
+  }
+
+  // 殿身（褐牆 + 紅柱 + 門窗）
+  function body(cx,topY,botY,w){
+    const L=R(cx-w/2),W=R(w),H=R(botY-topY),T=R(topY);
+    ctx.fillStyle=C.wall;   ctx.fillRect(L,T,W,H);
+    ctx.fillStyle=C.wallHi; ctx.fillRect(L,T,2,H);
+    ctx.fillStyle=C.wallSh; ctx.fillRect(L+W-2,T,2,H);
+    const n=w>=130?6:w>=90?5:w>=60?4:3;
+    for(let i=0;i<n;i++){const colX=L+i*(W-4)/(n-1);
+      ctx.fillStyle=C.col;   ctx.fillRect(R(colX),T,4,H);
+      ctx.fillStyle=C.colHi; ctx.fillRect(R(colX),T,1,H);}
+    ctx.fillStyle=C.beam; ctx.fillRect(L,T,W,3);                  // 上枋
+    ctx.fillStyle=C.gold; ctx.fillRect(L,T+3,W,1);               // 金線
+    // 門窗（柱間深色）
+    ctx.fillStyle=C.win;
+    for(let i=0;i<n-1;i++){const a=L+i*(W-4)/(n-1)+5, b=L+(i+1)*(W-4)/(n-1);
+      if(b-a>6) ctx.fillRect(R(a),T+6,R(b-a-4),H-9);}
+  }
+
+  // 階梯狀石台（中央高台，含石塊紋理）
+  function platform(topW,botW,topY,botY){
+    const steps=4, H=botY-topY, sh=H/steps;
+    for(let s=0;s<steps;s++){
+      const t=s/(steps-1), w=topW+(botW-topW)*t;
+      const sy=topY+s*sh, L=R(x-w/2), W=R(w), Y=R(sy), SH=R(sh)+1;
+      ctx.fillStyle=C.stoneM; ctx.fillRect(L,Y,W,SH);                       // 主體
+      // 石塊紋（水平縫 + 交錯直縫）
+      ctx.fillStyle=C.stoneOL;
+      for(let ry=Y+6; ry<sy+sh; ry+=6){
+        ctx.fillRect(L,ry,W,1);
+        const off=((ry-Y)/6|0)%2?14:0;
+        for(let sx=L+off; sx<L+W; sx+=28) ctx.fillRect(sx, ry-6<Y?Y:ry-6, 1, 7);
+      }
+      ctx.fillStyle=C.stoneL;  ctx.fillRect(L,Y,W,2);                       // 頂面受光
+      ctx.fillStyle=C.stoneD;  ctx.fillRect(L,Y,2,SH);                      // 左側暗
+      ctx.fillStyle=C.stoneOL; ctx.fillRect(L+W-2,Y,2,SH);                  // 右側暗
+      ctx.fillStyle=C.stoneOL; ctx.fillRect(L,Y+SH-1,W,1);                  // 前緣陰影
     }
   }
-  ctx.globalAlpha=1.0;
 
-  // 城牆磚線（垂直分割）
-  ctx.strokeStyle=col.brickLight;
-  ctx.lineWidth=1;
-  for(let i=0; i<13; i++){
-    ctx.beginPath();
-    ctx.moveTo(x-250+i*40, y+40);
-    ctx.lineTo(x-250+i*40, y+120);
-    ctx.stroke();
+  // 多層樓閣
+  function pagoda(cx,baseBot){
+    let cy=baseBot;
+    const tiers=[{w:150,h:30,ew:182,rh:22},{w:120,h:27,ew:150,rh:20},
+                 {w:92,h:25,ew:118,rh:18},{w:64,h:24,ew:88,rh:16}];
+    for(const t of tiers){const wt=cy-t.h; body(cx,wt,cy,t.w); roof(cx,wt,t.ew,t.rh); cy=wt-R(t.rh*0.5);}
+    ctx.fillStyle=C.gold;  ctx.fillRect(R(cx-2),R(cy-12),4,14);   // 頂剎
+    ctx.fillStyle=C.goldL; ctx.fillRect(R(cx-3),R(cy-15),6,3);
   }
 
-  // 城牆頂部雉堞（規則分布）
-  ctx.fillStyle=col.wallMid;
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=0.5;
-  for(let i=0; i<15; i++){
-    const cx=x-240+i*33;
-    ctx.fillRect(cx, y+18, 20, 22);
-    ctx.strokeRect(cx, y+18, 20, 22);
+  // 角樓（2層）
+  function pavilion(cx,baseBot){
+    let cy=baseBot;
+    const tiers=[{w:64,h:28,ew:84,rh:18},{w:42,h:20,ew:60,rh:14}];
+    for(const t of tiers){const wt=cy-t.h; body(cx,wt,cy,t.w); roof(cx,wt,t.ew,t.rh); cy=wt-R(t.rh*0.5);}
   }
 
-  // ═══ 左側箭樓（下層） ════════════════════════════════
-  const ltx=x-200, lty=y-40;
-
-  // 下層塔身
-  ctx.fillStyle=col.wallMid;
-  ctx.fillRect(ltx, lty, 70, 80);
-
-  // 下層磚紋（30×45像素磚塊）
-  ctx.fillStyle=col.brickDark;
-  ctx.globalAlpha=0.6;
-  for(let i=0; i<2; i++){
-    for(let j=0; j<2; j++){
-      ctx.fillRect(ltx+i*35, lty+j*40, 30, 35);
-    }
+  // 紅旗（直幟）
+  function banner(bx,topY,h){
+    ctx.fillStyle=C.bannerGold; ctx.fillRect(R(bx-5),R(topY),10,2);     // 橫桿
+    ctx.fillStyle=C.banner;     ctx.fillRect(R(bx-4),R(topY+2),8,h);
+    ctx.fillStyle=C.bannerD;    ctx.fillRect(R(bx+1),R(topY+2),3,h);
+    ctx.fillStyle=C.bannerGold; ctx.fillRect(R(bx-1),R(topY+4),2,2);    // 徽
+    ctx.fillStyle=C.bannerD;    ctx.fillRect(R(bx-4),R(topY+2+h),3,3); ctx.fillRect(R(bx+1),R(topY+2+h),3,3); // 燕尾
   }
-  ctx.globalAlpha=1.0;
 
-  // 下層窗戶
-  ctx.fillStyle=col.doorDark;
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=0.5;
-  ctx.fillRect(ltx+10, lty+20, 12, 16);
-  ctx.strokeRect(ltx+10, lty+20, 12, 16);
-  ctx.fillRect(ltx+48, lty+20, 12, 16);
-  ctx.strokeRect(ltx+48, lty+20, 12, 16);
-
-  // 下層門
-  ctx.fillRect(ltx+22, lty+50, 26, 30);
-  ctx.strokeRect(ltx+22, lty+50, 26, 30);
-  ctx.beginPath();
-  ctx.moveTo(ltx+35, lty+50);
-  ctx.lineTo(ltx+35, lty+80);
-  ctx.stroke();
-
-  // ═══ 左側箭樓（上層） ════════════════════════════════
-  const ltx2=ltx+10, lty2=lty-60;
-
-  // 上層塔身（縮小）
-  ctx.fillStyle=col.wallMid;
-  ctx.fillRect(ltx2, lty2, 50, 60);
-
-  // 上層磚紋
-  ctx.fillStyle=col.brickDark;
-  ctx.globalAlpha=0.6;
-  for(let i=0; i<2; i++){
-    for(let j=0; j<2; j++){
-      ctx.fillRect(ltx2+i*25, lty2+j*30, 22, 28);
-    }
+  // 紅燈籠（圓）
+  function lantern(lx,topY){
+    ctx.fillStyle=C.gold;  ctx.fillRect(R(lx-1),R(topY),2,3);
+    ctx.fillStyle='#ff885555'; ctx.fillRect(R(lx-7),R(topY+2),14,13);
+    ctx.fillStyle=C.lan;   ctx.fillRect(R(lx-5),R(topY+3),10,10);
+    ctx.fillStyle=C.lanHi; ctx.fillRect(R(lx-5),R(topY+3),3,10);
+    ctx.fillStyle=C.gold;  ctx.fillRect(R(lx-5),R(topY+3),10,1); ctx.fillRect(R(lx-5),R(topY+12),10,1);
+    ctx.fillStyle=C.bannerGold; ctx.fillRect(R(lx-1),R(topY+13),2,3);
   }
-  ctx.globalAlpha=1.0;
 
-  // 上層窗戶
-  ctx.fillStyle=col.doorDark;
-  ctx.fillRect(ltx2+8, lty2+15, 11, 14);
-  ctx.strokeRect(ltx2+8, lty2+15, 11, 14);
-  ctx.fillRect(ltx2+31, lty2+15, 11, 14);
-  ctx.strokeRect(ltx2+31, lty2+15, 11, 14);
-
-  // 左箭樓屋頂（中式翹簷）
-  ctx.fillStyle=col.roofDark;
-  ctx.beginPath();
-  ctx.moveTo(ltx2, lty2);
-  ctx.lineTo(ltx2+25, lty2-30);
-  ctx.lineTo(ltx2+50, lty2);
-  ctx.fill();
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=0.5;
-  ctx.stroke();
-
-  // 屋簷上翹
-  ctx.fillStyle=col.roofLight;
-  ctx.globalAlpha=0.8;
-  ctx.beginPath();
-  ctx.moveTo(ltx2-3, lty2+2);
-  ctx.lineTo(ltx2+25, lty2-28);
-  ctx.lineTo(ltx2+53, lty2+2);
-  ctx.fill();
-  ctx.globalAlpha=1.0;
-
-  // 屋脊金飾
-  ctx.fillStyle=col.gold;
-  ctx.beginPath();
-  ctx.arc(ltx2+25, lty2-33, 5, 0, Math.PI*2);
-  ctx.fill();
-
-  // 燈籠（左側）
-  ctx.fillStyle=col.lantern;
-  ctx.beginPath();
-  ctx.arc(ltx2+12, lty2+5, 6, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle=col.gold;
-  ctx.fillRect(ltx2+12, lty2-5, 1, 10);
-
-  // 燈籠（右側）
-  ctx.fillStyle=col.lantern;
-  ctx.beginPath();
-  ctx.arc(ltx2+38, lty2+5, 6, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle=col.gold;
-  ctx.fillRect(ltx2+38, lty2-5, 1, 10);
-
-  // ═══ 中央城門 ════════════════════════════════════════
-  const gatex=x-120, gatey=y-20;
-
-  // 城門基座
-  ctx.fillStyle=col.doorMid;
-  ctx.fillRect(gatex, gatey, 240, 70);
-
-  // 城門磚紋
-  ctx.fillStyle=col.doorDark;
-  ctx.globalAlpha=0.5;
-  for(let i=0; i<4; i++){
-    for(let j=0; j<2; j++){
-      ctx.fillRect(gatex+i*60, gatey+j*35, 55, 33);
-    }
+  // 城門 + 匾額 + 石階
+  function gate(cx,baseBot){
+    const gw=74, gtop=bandTop-10, totalH=y-baseBot;
+    ctx.fillStyle=C.wall;   ctx.fillRect(R(cx-gw/2),R(gtop),gw,baseBot-gtop);
+    ctx.fillStyle=C.wallSh; ctx.fillRect(R(cx+gw/2-2),R(gtop),2,baseBot-gtop);
+    ctx.fillStyle=C.col;    ctx.fillRect(R(cx-gw/2),R(gtop),4,baseBot-gtop); ctx.fillRect(R(cx+gw/2-4),R(gtop),4,baseBot-gtop);
+    // 匾額
+    ctx.fillStyle=C.gold;  ctx.fillRect(R(cx-15),R(gtop+5),30,9);
+    ctx.fillStyle=C.door;  ctx.fillRect(R(cx-13),R(gtop+7),26,5);
+    // 門洞 + 紅門
+    const dh=30;
+    ctx.fillStyle='#0c0a08'; ctx.fillRect(R(cx-18),R(baseBot-dh),36,dh);
+    ctx.fillStyle='#7a1a14'; ctx.fillRect(R(cx-17),R(baseBot-dh),17,dh); ctx.fillRect(R(cx),R(baseBot-dh),17,dh);
+    ctx.fillStyle=C.colSh;   ctx.fillRect(R(cx-1),R(baseBot-dh),2,dh);
+    ctx.fillStyle=C.gold; for(let dy=baseBot-dh+5;dy<baseBot-4;dy+=8){ctx.fillRect(R(cx-11),R(dy),2,2);ctx.fillRect(R(cx+9),R(dy),2,2);}
+    roof(cx,gtop,gw+16,16);
+    // 石階
+    const steps=5;
+    for(let s=0;s<steps;s++){const sw=46+s*13, sy=baseBot+s*(totalH/steps), sh=totalH/steps+1;
+      ctx.fillStyle=C.stoneM; ctx.fillRect(R(cx-sw/2),R(sy),R(sw),R(sh));
+      ctx.fillStyle=C.stoneL; ctx.fillRect(R(cx-sw/2),R(sy),R(sw),2);
+      ctx.fillStyle=C.stoneOL;ctx.fillRect(R(cx-sw/2),R(sy+sh-1),R(sw),1);
+      for(let gx=R(cx-sw/2)+13;gx<cx+sw/2-7;gx+=16) ctx.fillRect(gx,R(sy)+2,1,R(sh)-3);}
+    const bw=46+(steps-1)*13;
+    for(const sd of[-1,1]){const ex=cx+sd*(bw/2+3);
+      ctx.fillStyle=C.stoneD; ctx.fillRect(R(ex-3),R(baseBot),6,R(totalH));
+      ctx.fillStyle=C.stoneL; ctx.fillRect(R(ex-3),R(baseBot),6,2);}
+    lantern(cx-bw/2-14,baseBot-2); lantern(cx+bw/2+8,baseBot-2);
   }
-  ctx.globalAlpha=1.0;
 
-  // 拱形木門（左側）
-  ctx.strokeStyle=col.doorDark;
-  ctx.lineWidth=3;
-  ctx.beginPath();
-  ctx.moveTo(gatex+35, gatey+20);
-  ctx.quadraticCurveTo(gatex+25, gatey-10, gatex+50, gatey-15);
-  ctx.stroke();
-
-  // 拱形木門（右側）
-  ctx.beginPath();
-  ctx.moveTo(gatex+190, gatey+20);
-  ctx.quadraticCurveTo(gatex+200, gatey-10, gatex+175, gatey-15);
-  ctx.stroke();
-
-  // 門框
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=1;
-  ctx.strokeRect(gatex+15, gatey-20, 210, 90);
-
-  // 門上匾額
-  ctx.fillStyle=col.gold;
-  ctx.fillRect(gatex+45, gatey-35, 150, 20);
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=1;
-  ctx.strokeRect(gatex+45, gatey-35, 150, 20);
-
-  // 門上屋頂（中式翹簷）
-  ctx.fillStyle=col.roofDark;
-  ctx.beginPath();
-  ctx.moveTo(gatex, gatey-20);
-  ctx.lineTo(gatex+120, gatey-60);
-  ctx.lineTo(gatex+240, gatey-20);
-  ctx.fill();
-
-  // 屋簷上翹
-  ctx.fillStyle=col.roofLight;
-  ctx.globalAlpha=0.7;
-  ctx.beginPath();
-  ctx.moveTo(gatex-5, gatey-18);
-  ctx.lineTo(gatex+120, gatey-58);
-  ctx.lineTo(gatex+245, gatey-18);
-  ctx.fill();
-  ctx.globalAlpha=1.0;
-
-  // 屋脊金飾
-  ctx.fillStyle=col.gold;
-  ctx.beginPath();
-  ctx.arc(gatex+120, gatey-63, 6, 0, Math.PI*2);
-  ctx.fill();
-
-  // 門前旗竿與旗幟（左）
-  ctx.fillStyle=col.wood;
-  ctx.fillRect(gatex+25, gatey-55, 2, 60);
-  ctx.fillStyle=col.gold;
-  ctx.fillRect(gatex+24, gatey-55, 4, 2);
-  ctx.fillStyle=col.flagYellow;
-  ctx.fillRect(gatex+27, gatey-48, 20, 14);
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=0.5;
-  ctx.strokeRect(gatex+27, gatey-48, 20, 14);
-
-  // 門前旗竿與旗幟（右）
-  ctx.fillStyle=col.wood;
-  ctx.fillRect(gatex+213, gatey-55, 2, 60);
-  ctx.fillStyle=col.gold;
-  ctx.fillRect(gatex+212, gatey-55, 4, 2);
-  ctx.fillStyle=col.flagYellow;
-  ctx.fillRect(gatex+193, gatey-48, 20, 14);
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=0.5;
-  ctx.strokeRect(gatex+193, gatey-48, 20, 14);
-
-  // ═══ 右側箭樓（對稱） ════════════════════════════════
-  const rtx=x+130, rty=y-40;
-
-  // 下層塔身
-  ctx.fillStyle=col.wallMid;
-  ctx.fillRect(rtx, rty, 70, 80);
-
-  // 下層磚紋
-  ctx.fillStyle=col.brickDark;
-  ctx.globalAlpha=0.6;
-  for(let i=0; i<2; i++){
-    for(let j=0; j<2; j++){
-      ctx.fillRect(rtx+i*35, rty+j*40, 30, 35);
-    }
-  }
-  ctx.globalAlpha=1.0;
-
-  // 下層窗戶
-  ctx.fillStyle=col.doorDark;
-  ctx.fillRect(rtx+10, rty+20, 12, 16);
-  ctx.strokeRect(rtx+10, rty+20, 12, 16);
-  ctx.fillRect(rtx+48, rty+20, 12, 16);
-  ctx.strokeRect(rtx+48, rty+20, 12, 16);
-
-  // 下層門
-  ctx.fillRect(rtx+22, rty+50, 26, 30);
-  ctx.strokeRect(rtx+22, rty+50, 26, 30);
-  ctx.beginPath();
-  ctx.moveTo(rtx+35, rty+50);
-  ctx.lineTo(rtx+35, rty+80);
-  ctx.stroke();
-
-  // ═══ 右側箭樓（上層） ════════════════════════════════
-  const rtx2=rtx+10, rty2=rty-60;
-
-  // 上層塔身
-  ctx.fillStyle=col.wallMid;
-  ctx.fillRect(rtx2, rty2, 50, 60);
-
-  // 上層磚紋
-  ctx.fillStyle=col.brickDark;
-  ctx.globalAlpha=0.6;
-  for(let i=0; i<2; i++){
-    for(let j=0; j<2; j++){
-      ctx.fillRect(rtx2+i*25, rty2+j*30, 22, 28);
-    }
-  }
-  ctx.globalAlpha=1.0;
-
-  // 上層窗戶
-  ctx.fillStyle=col.doorDark;
-  ctx.fillRect(rtx2+8, rty2+15, 11, 14);
-  ctx.strokeRect(rtx2+8, rty2+15, 11, 14);
-  ctx.fillRect(rtx2+31, rty2+15, 11, 14);
-  ctx.strokeRect(rtx2+31, rty2+15, 11, 14);
-
-  // 右箭樓屋頂
-  ctx.fillStyle=col.roofDark;
-  ctx.beginPath();
-  ctx.moveTo(rtx2, rty2);
-  ctx.lineTo(rtx2+25, rty2-30);
-  ctx.lineTo(rtx2+50, rty2);
-  ctx.fill();
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=0.5;
-  ctx.stroke();
-
-  // 屋簷上翹
-  ctx.fillStyle=col.roofLight;
-  ctx.globalAlpha=0.8;
-  ctx.beginPath();
-  ctx.moveTo(rtx2-3, rty2+2);
-  ctx.lineTo(rtx2+25, rty2-28);
-  ctx.lineTo(rtx2+53, rty2+2);
-  ctx.fill();
-  ctx.globalAlpha=1.0;
-
-  // 屋脊金飾
-  ctx.fillStyle=col.gold;
-  ctx.beginPath();
-  ctx.arc(rtx2+25, rty2-33, 5, 0, Math.PI*2);
-  ctx.fill();
-
-  // 燈籠（左側）
-  ctx.fillStyle=col.lantern;
-  ctx.beginPath();
-  ctx.arc(rtx2+12, rty2+5, 6, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle=col.gold;
-  ctx.fillRect(rtx2+12, rty2-5, 1, 10);
-
-  // 燈籠（右側）
-  ctx.fillStyle=col.lantern;
-  ctx.beginPath();
-  ctx.arc(rtx2+38, rty2+5, 6, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle=col.gold;
-  ctx.fillRect(rtx2+38, rty2-5, 1, 10);
+  // ═══ 繪製順序 ═══
+  stoneBase(580,512);
+  // 牆身（柱列）
+  body(x, bandTop, baseTop, 496);
+  // 中央高台 + 樓閣
+  platform(190,300, baseTop-92, baseTop);
+  pagoda(x, baseTop-92);
+  // 側殿（中層矮殿）
+  body(x-150, baseTop-44, baseTop, 96); roof(x-150, baseTop-44, 122, 18);
+  body(x+150, baseTop-44, baseTop, 96); roof(x+150, baseTop-44, 122, 18);
+  // 角樓
+  pavilion(x-218, baseTop); pavilion(x+218, baseTop);
+  // 旗幟（角樓旁）
+  banner(x-180, bandTop-34, 30); banner(x+180, bandTop-34, 30);
+  // 燈籠（牆上等距）
+  for(const lx of [x-110,x+110]) lantern(lx, bandTop-2);
+  // 城門
+  gate(x, baseTop);
 }
 
 function drawKnightCastle(x,y){
-  // 騎士時期城堡（pixel art風格，依照SVG設計）
-  // 尺寸：約260×330像素（完全對稱的中世紀城堡）
-
-  const col={
-    stoneDark: '#4a4a4a',
-    stoneLight: '#6a6a6a',
-    stonePale: '#b0b0b0',
-    woodBrown: '#7a4a2a',
-    bandColor: '#b5622a',
-    roofDark: '#8b3a2a',
-    roofMid: '#c0392b',
-    roofLight: '#e67e22',
-    roofPale: '#f5a962',
-    doorDark: '#3a2a1a',
-    outline: '#2a2a2a'
+  const C={
+    stoneD:'#4c4a52', stoneM:'#636069', stoneL:'#888591', stoneOL:'#2a2830',
+    rRed:{m:'#b23a2c',d:'#7e2218',hi:'#d65e46',eave:'#541410'},
+    rBlue:{m:'#3f5bb0',d:'#283c80',hi:'#6280da',eave:'#1a2752'},
+    blade:'#b4c0cc', bladeHi:'#e6eef4', bladeBlue:'#8ea0ba', bladeD:'#6c7884', fuller:'#525e6c',
+    gold:'#d8af3c', goldL:'#f4d878', goldD:'#9a7620',
+    grip:'#3a2418', gripWrap:'#7a5230',
+    red:'#b9302a', redD:'#8f201c', blue:'#3552a8', blueD:'#223878', bannerGold:'#e8c45a',
+    wood:'#3a2518', woodL:'#5a3d28', woodOL:'#211309',
+    win:'#15110d',
   };
+  const R=Math.round;
+  const baseTop=y-60;            // 石牆頂
 
-  // ═══ 左角樓（下層） ════════════════════════════════════════
-  const ltx=x-120, lty=y-80;
+  function stoneBase(botW,topW){
+    const h=y-baseTop;
+    for(let i=0;i<h;i++){const t=i/h,w=botW-(botW-topW)*t;
+      ctx.fillStyle=i<2?C.stoneOL:(i%6<3?C.stoneD:C.stoneM); ctx.fillRect(R(x-w/2),baseTop+i,R(w),1);}
+    ctx.fillStyle=C.stoneOL;
+    for(let ry=baseTop+6;ry<y;ry+=10){const t=(ry-baseTop)/h,w=botW-(botW-topW)*t;
+      ctx.fillRect(R(x-w/2),ry,R(w),1);
+      const off=((ry-baseTop)/10|0)%2?14:0;
+      for(let sx=R(x-w/2)+off;sx<x+w/2;sx+=28) ctx.fillRect(sx,ry-10<baseTop?baseTop:ry-10,1,11);}
+    ctx.fillStyle=C.stoneL; ctx.fillRect(R(x-topW/2),baseTop,R(topW),2);
+  }
 
-  // 下層塔身
-  ctx.fillStyle=col.stoneLight;
-  ctx.fillRect(ltx, lty, 60, 120);
-
-  // 下層磚紋
-  ctx.fillStyle=col.stoneDark;
-  ctx.globalAlpha=0.6;
-  for(let i=0; i<2; i++){
-    for(let j=0; j<3; j++){
-      ctx.fillRect(ltx+i*30, lty+j*40, 28, 38);
+  // 雉堞（城垛）
+  function battlements(left,right,topY){
+    for(let mx=left; mx<right-6; mx+=15){
+      ctx.fillStyle=C.stoneM; ctx.fillRect(R(mx),R(topY-7),9,7);
+      ctx.fillStyle=C.stoneL; ctx.fillRect(R(mx),R(topY-7),9,1);
+      ctx.fillStyle=C.stoneD; ctx.fillRect(R(mx+7),R(topY-7),2,7);
     }
   }
-  ctx.globalAlpha=1.0;
 
-  // 下層磚線
-  ctx.strokeStyle=col.stoneLight;
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  ctx.moveTo(ltx+30, lty);
-  ctx.lineTo(ltx+30, lty+120);
-  ctx.stroke();
-  for(let j=0; j<4; j++){
-    ctx.beginPath();
-    ctx.moveTo(ltx, lty+j*40);
-    ctx.lineTo(ltx+60, lty+j*40);
-    ctx.stroke();
+  // 石塔身（含箭孔）
+  function stoneBox(cx,topY,botY,w){
+    const L=R(cx-w/2),W=R(w),T=R(topY),H=R(botY-topY);
+    ctx.fillStyle=C.stoneM; ctx.fillRect(L,T,W,H);
+    ctx.fillStyle=C.stoneL; ctx.fillRect(L,T,2,H);
+    ctx.fillStyle=C.stoneD; ctx.fillRect(L+W-2,T,2,H);
+    ctx.fillStyle=C.stoneOL;
+    for(let ry=T+7; ry<botY-1; ry+=7){ ctx.fillRect(L,ry,W,1);
+      const off=((ry-T)/7|0)%2?R(w/3):0;
+      for(let sx=L+off; sx<L+W; sx+=R(w*0.5)+2) ctx.fillRect(sx,ry-7<T?T:ry-7,1,8);}
+    ctx.fillStyle=C.win; ctx.fillRect(R(cx-2),T+R(H*0.32),4,R(H*0.36));   // 箭孔
   }
 
-  // ═══ 左角樓（上層，城垛） ════════════════════════════════
-  // 城垛 1
-  ctx.fillStyle=col.stoneLight;
-  ctx.fillRect(ltx, lty-40, 18, 40);
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=0.5;
-  ctx.strokeRect(ltx, lty-40, 18, 40);
-
-  // 城垛 2
-  ctx.fillRect(ltx+21, lty-40, 18, 40);
-  ctx.strokeRect(ltx+21, lty-40, 18, 40);
-
-  // 城垛 3
-  ctx.fillRect(ltx+42, lty-40, 18, 40);
-  ctx.strokeRect(ltx+42, lty-40, 18, 40);
-
-  // ═══ 左城牆 ═══════════════════════════════════════════
-  const lwx=ltx+60, lwy=y-60;
-
-  // 城牆主體
-  ctx.fillStyle=col.stoneLight;
-  ctx.fillRect(lwx, lwy, 40, 90);
-
-  // 城牆磚紋
-  ctx.fillStyle=col.stoneDark;
-  ctx.globalAlpha=0.6;
-  for(let i=0; i<1; i++){
-    for(let j=0; j<2; j++){
-      ctx.fillRect(lwx, lwy+j*45, 38, 43);
-    }
-  }
-  ctx.globalAlpha=1.0;
-
-  // 城牆磚線
-  ctx.strokeStyle=col.stoneLight;
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  ctx.moveTo(lwx, lwy+45);
-  ctx.lineTo(lwx+40, lwy+45);
-  ctx.stroke();
-
-  // ═══ 中央主塔（第一層：城門層） ═══════════════════════════
-  const gatex=x-60, gatey=y-20;
-
-  // 城門基座
-  ctx.fillStyle=col.doorDark;
-  ctx.fillRect(gatex, gatey, 120, 50);
-
-  // 城門磚紋
-  ctx.fillStyle=col.stoneDark;
-  ctx.globalAlpha=0.5;
-  for(let i=0; i<2; i++){
-    ctx.fillRect(gatex+i*60, gatey, 55, 50);
-  }
-  ctx.globalAlpha=1.0;
-
-  // 拱形木門（左側）
-  ctx.strokeStyle=col.woodBrown;
-  ctx.lineWidth=2;
-  ctx.beginPath();
-  ctx.moveTo(gatex+25, gatey+15);
-  ctx.quadraticCurveTo(gatex+20, gatey-8, gatex+40, gatey-12);
-  ctx.stroke();
-
-  // 拱形木門（右側）
-  ctx.beginPath();
-  ctx.moveTo(gatex+95, gatey+15);
-  ctx.quadraticCurveTo(gatex+100, gatey-8, gatex+80, gatey-12);
-  ctx.stroke();
-
-  // 門框
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=1;
-  ctx.strokeRect(gatex+10, gatey-15, 100, 65);
-
-  // ═══ 中央主塔（第二層：塔身層） ═══════════════════════════
-  const tbx=x-55, tby=y-80;
-
-  // 塔身
-  ctx.fillStyle=col.stoneLight;
-  ctx.fillRect(tbx, tby, 110, 60);
-
-  // 塔身磚紋
-  ctx.fillStyle=col.stoneDark;
-  ctx.globalAlpha=0.6;
-  for(let i=0; i<2; i++){
-    ctx.fillRect(tbx+i*55, tby, 50, 60);
-  }
-  ctx.globalAlpha=1.0;
-
-  // 塔身磚線
-  ctx.strokeStyle=col.stoneLight;
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  ctx.moveTo(tbx+55, tby);
-  ctx.lineTo(tbx+55, tby+60);
-  ctx.stroke();
-
-  // 腰部裝飾橫帶（橘棕色）
-  ctx.fillStyle=col.bandColor;
-  ctx.fillRect(tbx-5, tby+25, 120, 6);
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=0.5;
-  ctx.strokeRect(tbx-5, tby+25, 120, 6);
-
-  // ═══ 中央主塔（第三層：瞭望台） ═══════════════════════════
-  const wtx=x-50, wty=y-145;
-
-  // 瞭望台底座
-  ctx.fillStyle=col.stonePale;
-  ctx.fillRect(wtx, wty, 100, 50);
-
-  // 瞭望台磚紋
-  ctx.fillStyle=col.stoneLight;
-  ctx.globalAlpha=0.5;
-  for(let i=0; i<2; i++){
-    ctx.fillRect(wtx+i*50, wty, 45, 50);
-  }
-  ctx.globalAlpha=1.0;
-
-  // 瞭望台磚線
-  ctx.strokeStyle=col.stoneLight;
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  ctx.moveTo(wtx+50, wty);
-  ctx.lineTo(wtx+50, wty+50);
-  ctx.stroke();
-
-  // 窗洞（5個等距窗戶）
-  ctx.fillStyle=col.stoneDark;
-  const windowSpacing=20;
-  for(let i=0; i<5; i++){
-    const wx=wtx+10+i*18;
-    ctx.fillRect(wx, wty+15, 5, 10);
-    ctx.strokeRect(wx, wty+15, 5, 10);
+  // 圓錐尖頂（可指定顏色）
+  function coneRoof(cx,baseY,w,h,rc){
+    for(let i=0;i<h;i++){const rw=w*(1-i/h); const L=R(cx-rw/2),W=Math.max(1,R(rw));
+      const half=Math.ceil(W*0.5);
+      ctx.fillStyle=rc.m; ctx.fillRect(L,R(baseY-1-i),half,1);
+      ctx.fillStyle=rc.d; ctx.fillRect(L+half,R(baseY-1-i),W-half,1);}
+    ctx.fillStyle=rc.eave; ctx.fillRect(R(cx-w/2-2),R(baseY-1),R(w)+4,2);
+    ctx.fillStyle=rc.hi;   ctx.fillRect(R(cx-1),R(baseY-h),2,3);
   }
 
-  // ═══ 圓錐形尖頂 ═════════════════════════════════════════
-  // 最深層（黑邊）
-  ctx.fillStyle=col.roofDark;
-  ctx.beginPath();
-  ctx.moveTo(wtx, wty);
-  ctx.lineTo(wtx+50, wty-40);
-  ctx.lineTo(wtx+100, wty);
-  ctx.fill();
-
-  // 中層（紅色）
-  ctx.fillStyle=col.roofMid;
-  ctx.beginPath();
-  ctx.moveTo(wtx+2, wty-2);
-  ctx.lineTo(wtx+50, wty-38);
-  ctx.lineTo(wtx+98, wty-2);
-  ctx.fill();
-
-  // 淺層（橘色）
-  ctx.fillStyle=col.roofLight;
-  ctx.beginPath();
-  ctx.moveTo(wtx+4, wty-4);
-  ctx.lineTo(wtx+50, wty-36);
-  ctx.lineTo(wtx+96, wty-4);
-  ctx.fill();
-
-  // 最淺層（淡橘色）
-  ctx.fillStyle=col.roofPale;
-  ctx.beginPath();
-  ctx.moveTo(wtx+6, wty-6);
-  ctx.lineTo(wtx+50, wty-34);
-  ctx.lineTo(wtx+94, wty-6);
-  ctx.fill();
-
-  // 尖頂邊框
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=0.5;
-  ctx.beginPath();
-  ctx.moveTo(wtx, wty);
-  ctx.lineTo(wtx+50, wty-40);
-  ctx.lineTo(wtx+100, wty);
-  ctx.stroke();
-
-  // ═══ 右城牆（對稱左城牆） ════════════════════════════════
-  const rwx=x+80, rwy=y-60;
-
-  // 城牆主體
-  ctx.fillStyle=col.stoneLight;
-  ctx.fillRect(rwx, rwy, 40, 90);
-
-  // 城牆磚紋
-  ctx.fillStyle=col.stoneDark;
-  ctx.globalAlpha=0.6;
-  for(let i=0; i<1; i++){
-    for(let j=0; j<2; j++){
-      ctx.fillRect(rwx, rwy+j*45, 38, 43);
-    }
-  }
-  ctx.globalAlpha=1.0;
-
-  // 城牆磚線
-  ctx.strokeStyle=col.stoneLight;
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  ctx.moveTo(rwx, rwy+45);
-  ctx.lineTo(rwx+40, rwy+45);
-  ctx.stroke();
-
-  // ═══ 右角樓（下層） ════════════════════════════════════════
-  const rtx=x+60, rty=y-80;
-
-  // 下層塔身
-  ctx.fillStyle=col.stoneLight;
-  ctx.fillRect(rtx, rty, 60, 120);
-
-  // 下層磚紋
-  ctx.fillStyle=col.stoneDark;
-  ctx.globalAlpha=0.6;
-  for(let i=0; i<2; i++){
-    for(let j=0; j<3; j++){
-      ctx.fillRect(rtx+i*30, rty+j*40, 28, 38);
-    }
-  }
-  ctx.globalAlpha=1.0;
-
-  // 下層磚線
-  ctx.strokeStyle=col.stoneLight;
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  ctx.moveTo(rtx+30, rty);
-  ctx.lineTo(rtx+30, rty+120);
-  ctx.stroke();
-  for(let j=0; j<4; j++){
-    ctx.beginPath();
-    ctx.moveTo(rtx, rty+j*40);
-    ctx.lineTo(rtx+60, rty+j*40);
-    ctx.stroke();
+  // 三角旗（可指定顏色）
+  function pennant(cx,apexY,dir,col){ dir=dir||1;
+    ctx.fillStyle=C.gold; ctx.fillRect(R(cx),R(apexY-12),1,13);
+    ctx.fillStyle=col;
+    for(let i=0;i<9;i++){const len=9-i; ctx.fillRect(dir>0?R(cx+1):R(cx+1-len),R(apexY-11+i),len,1);}
   }
 
-  // ═══ 右角樓（上層，城垛） ════════════════════════════════
-  // 城垛 1
-  ctx.fillStyle=col.stoneLight;
-  ctx.fillRect(rtx, rty-40, 18, 40);
-  ctx.strokeStyle=col.outline;
-  ctx.lineWidth=0.5;
-  ctx.strokeRect(rtx, rty-40, 18, 40);
+  // 尖塔（石身 + 錐頂 + 旗）
+  function tower(cx,baseBot,w,bodyH,roofH,dir,rc,fcol){
+    stoneBox(cx,baseBot-bodyH,baseBot,w);
+    coneRoof(cx,baseBot-bodyH,w+6,roofH,rc);
+    pennant(cx,baseBot-bodyH-roofH+2,dir,fcol);
+  }
 
-  // 城垛 2
-  ctx.fillRect(rtx+21, rty-40, 18, 40);
-  ctx.strokeRect(rtx+21, rty-40, 18, 40);
+  // 火把
+  function torch(tx,baseY){
+    ctx.fillStyle=C.wood; ctx.fillRect(R(tx-1),R(baseY-10),2,10);
+    ctx.fillStyle='#ff6a1e55'; ctx.fillRect(R(tx-5),R(baseY-22),10,13);
+    ctx.fillStyle='#ff6a1e';   ctx.fillRect(R(tx-2),R(baseY-19),4,9);
+    ctx.fillStyle='#ffb43a';   ctx.fillRect(R(tx-1),R(baseY-22),2,8);
+    ctx.fillStyle='#ffe89a';   ctx.fillRect(R(tx),R(baseY-21),1,4);
+  }
 
-  // 城垛 3
-  ctx.fillRect(rtx+42, rty-40, 18, 40);
-  ctx.strokeRect(rtx+42, rty-40, 18, 40);
+  // 倒插巨劍（中央主塔：劍尖朝下，劍身向下延伸成主塔）
+  function sword(cx,tipY,topY){
+    const cgY=topY+52;                 // 護手中心
+    // 握柄（柄頭→護手）
+    ctx.fillStyle=C.grip;     ctx.fillRect(R(cx-6),R(topY+9),12,cgY-7-(topY+9));
+    ctx.fillStyle=C.gripWrap; for(let gy=topY+12; gy<cgY-8; gy+=5) ctx.fillRect(R(cx-6),R(gy),12,2);
+    // 柄頭（圓）
+    ctx.fillStyle=C.gold;  ctx.fillRect(R(cx-8),R(topY+2),16,10); ctx.fillRect(R(cx-10),R(topY+4),20,6);
+    ctx.fillStyle=C.goldL; ctx.fillRect(R(cx-7),R(topY+3),6,3);
+    ctx.fillStyle=C.goldD; ctx.fillRect(R(cx-10),R(topY+8),20,2);
+    // 護手（寬金十字 + 末端球）
+    ctx.fillStyle=C.gold;  ctx.fillRect(R(cx-52),R(cgY-7),104,13);
+    ctx.fillStyle=C.goldL; ctx.fillRect(R(cx-52),R(cgY-7),104,2);
+    ctx.fillStyle=C.goldD; ctx.fillRect(R(cx-52),R(cgY+4),104,2);
+    ctx.fillStyle=C.gold;  ctx.fillRect(R(cx-57),R(cgY-5),6,9); ctx.fillRect(R(cx+51),R(cgY-5),6,9);
+    ctx.fillStyle=C.goldL; ctx.fillRect(R(cx-56),R(cgY-4),2,3); ctx.fillRect(R(cx+52),R(cgY-4),2,3);
+    // 雙旗（紅 / 藍）垂自護手 — 先畫，劍身蓋其上
+    function flag(fx,col,colD){const bnTop=cgY+5, bnH=70;
+      ctx.fillStyle=col;  ctx.fillRect(R(fx),R(bnTop),22,bnH);
+      ctx.fillStyle=colD; ctx.fillRect(R(fx+14),R(bnTop),8,bnH);
+      ctx.fillStyle=C.bannerGold; ctx.fillRect(R(fx+7),R(bnTop+16),6,6);
+      ctx.fillStyle=colD; ctx.fillRect(R(fx),R(bnTop+bnH),9,4); ctx.fillRect(R(fx+13),R(bnTop+bnH),9,4);}
+    flag(cx-48,C.red,C.redD); flag(cx+26,C.blue,C.blueD);
+    // 劍身（自護手向下漸尖到 tipY）— 大支
+    const bladeTop=cgY+6, bladeLen=tipY-bladeTop, topW=46, tipLen=Math.round(bladeLen*0.18);
+    for(let i=0;i<bladeLen-tipLen;i++){const w=topW-(topW-32)*(i/(bladeLen-tipLen));
+      const yy=bladeTop+i, L=R(cx-w/2), W=R(w);
+      ctx.fillStyle=C.bladeHi;   ctx.fillRect(L,yy,3,1);
+      ctx.fillStyle=C.blade;     ctx.fillRect(L+3,yy,W-7,1);
+      ctx.fillStyle=C.bladeBlue; ctx.fillRect(L+W-4,yy,2,1);
+      ctx.fillStyle=C.bladeD;    ctx.fillRect(L+W-2,yy,2,1);
+      ctx.fillStyle=C.fuller;    ctx.fillRect(R(cx-1),yy,2,1);}     // 血槽
+    // 劍尖（漸縮成點）
+    for(let i=0;i<tipLen;i++){const w=32*(1-i/tipLen); const yy=bladeTop+(bladeLen-tipLen)+i; const L=R(cx-w/2),W=Math.max(1,R(w));
+      ctx.fillStyle=C.blade;   ctx.fillRect(L,yy,W,1);
+      ctx.fillStyle=C.bladeHi; ctx.fillRect(L,yy,2,1);
+      ctx.fillStyle=C.bladeD;  ctx.fillRect(L+W-1,yy,1,1);}
+  }
+
+  // 城門（尖拱 + 石階）
+  function gate(cx,baseBot){
+    const gw=72, totalH=y-baseBot;
+    ctx.fillStyle=C.stoneM; ctx.fillRect(R(cx-gw/2),R(baseBot-46),gw,46);
+    ctx.fillStyle=C.stoneL; ctx.fillRect(R(cx-gw/2),R(baseBot-46),2,46);
+    ctx.fillStyle=C.stoneD; ctx.fillRect(R(cx+gw/2-2),R(baseBot-46),2,46);
+    battlements(cx-gw/2+2,cx+gw/2-2,baseBot-46+1);
+    // 尖拱門洞
+    ctx.fillStyle='#0c0a08';
+    ctx.fillRect(R(cx-16),R(baseBot-34),32,34);
+    for(let i=0;i<10;i++) ctx.fillRect(R(cx-16+i),R(baseBot-34-i),32-i*2,2);
+    // 木門 + 鐵件
+    ctx.fillStyle=C.wood; ctx.fillRect(R(cx-13),R(baseBot-28),26,28);
+    ctx.fillStyle=C.woodOL; ctx.fillRect(R(cx-1),R(baseBot-28),2,28);
+    ctx.fillStyle='#8a8a8a'; for(let dy=baseBot-24;dy<baseBot-4;dy+=7){ctx.fillRect(R(cx-9),R(dy),2,2);ctx.fillRect(R(cx+7),R(dy),2,2);}
+    // 石階
+    const steps=5;
+    for(let s=0;s<steps;s++){const sw=46+s*13, sy=baseBot+s*(totalH/steps), sh=totalH/steps+1;
+      ctx.fillStyle=C.stoneM; ctx.fillRect(R(cx-sw/2),R(sy),R(sw),R(sh));
+      ctx.fillStyle=C.stoneL; ctx.fillRect(R(cx-sw/2),R(sy),R(sw),2);
+      ctx.fillStyle=C.stoneOL;ctx.fillRect(R(cx-sw/2),R(sy+sh-1),R(sw),1);
+      for(let gx=R(cx-sw/2)+13;gx<cx+sw/2-7;gx+=16) ctx.fillRect(gx,R(sy)+2,1,R(sh)-3);}
+    const bw=46+(steps-1)*13;
+    for(const sd of[-1,1]){const ex=cx+sd*(bw/2+3);
+      ctx.fillStyle=C.stoneD; ctx.fillRect(R(ex-3),R(baseBot),6,R(totalH));
+      ctx.fillStyle=C.stoneL; ctx.fillRect(R(ex-3),R(baseBot),6,2);}
+    torch(cx-bw/2-12,baseBot-2); torch(cx+bw/2+12,baseBot-2);
+  }
+
+  // 牆上掛旗（紅/藍交錯）
+  function wallBanner(bx,topY,col,colD){const h=30;
+    ctx.fillStyle=C.gold; ctx.fillRect(R(bx-6),R(topY),12,2);
+    ctx.fillStyle=col;  ctx.fillRect(R(bx-5),R(topY+2),10,h);
+    ctx.fillStyle=colD; ctx.fillRect(R(bx+1),R(topY+2),4,h);
+    ctx.fillStyle=C.bannerGold; ctx.fillRect(R(bx-2),R(topY+10),4,4);
+    ctx.fillStyle=colD; ctx.fillRect(R(bx-5),R(topY+2+h),4,3); ctx.fillRect(R(bx+1),R(topY+2+h),4,3);
+  }
+
+  // ═══ 繪製順序 ═══
+  stoneBase(580,512);
+  battlements(x-256+18, x+256-18, baseTop+1);
+  // 尖塔群（紅藍交錯，旗色配合）
+  tower(x-220, baseTop, 58, 120, 34, -1, C.rBlue, C.blue); tower(x+220, baseTop, 58, 120, 34, 1, C.rBlue, C.blue);
+  tower(x-150, baseTop, 46, 140, 30, -1, C.rRed,  C.red);  tower(x+150, baseTop, 46, 140, 30, 1, C.rRed,  C.red);
+  tower(x-92,  baseTop, 40, 110, 26, -1, C.rBlue, C.blue); tower(x+92,  baseTop, 40, 110, 26, 1, C.rBlue, C.blue);
+  // 牆上掛旗 + 火把
+  wallBanner(x-120, baseTop-2, C.red, C.redD); wallBanner(x+120, baseTop-2, C.blue, C.blueD);
+  for(const tx of [x-178,x+178]) torch(tx, baseTop-1);
+  // 城門
+  gate(x, baseTop);
+  // 中央倒插巨劍（最前、最高，劍尖插入城門頂）
+  sword(x, baseTop-44, baseTop-244);
 }
 
 function drawEdoCastle(x,y){
-  // 江戶時期宮殿（放大 8 倍版本，底部與地面齊平）
-  // 原始尺寸乘以 8，y 軸為底部位置
-
-  const col={
-    white: '#ffffff',
-    stonePath: '#c0b898',
-    stoneStep: '#d8cdb0',
-    woodWall: '#3a2518',
-    column: '#8b1a1a',
-    roofDark: '#1e1e1e',
-    roofGold: '#c8a020',
-    gold: '#d4a830',
-    window: '#1a1a1a',
-    mapleRed: '#cc3311',
-    mapleDark: '#aa2200',
-    greenBush: '#2a5010',
-    treeTrunk: '#5a2a00'
+  // 江戶主城（手繪像素風）：石垣台基 + 白牆下見板 + 多層天守 + 角樓 + 城門石階 + 石燈籠
+  // (x,y) = 底部中心點，底部對齊地面
+  const C={
+    stoneD:'#4e4842', stoneM:'#615a50', stoneL:'#827869', stoneOL:'#2c2924',
+    plaster:'#ddd8c8', plasterHi:'#efe9da', plasterSh:'#b3ac98', wood:'#3a2518', woodL:'#5a3d28', woodOL:'#211309',
+    board:'#2e2620', boardHi:'#473b2d', boardOL:'#1c1610',
+    roofD:'#242c35', roofM:'#36424e', roofHi:'#566472', roofEave:'#151a20', roofSh:'#1b2128',
+    gold:'#d4a830', goldL:'#f2d564', win:'#101216',
+    pine:'#1f5030', pineD:'#143a22', trunk:'#4a2a14',
   };
+  const R=Math.round;
+  const baseTop=y-56;            // 石垣台基頂
+  const bandTop=baseTop-24;      // 白牆頂
 
-  // 放大因子（8倍/3 ≈ 2.67倍）
-  const scale = 8/3;
-
-  // 調整 y 軸：傳入的 y 是底部位置，需要往上偏移台階高度
-  const stairH = 4 * scale;  // 第一層台階高度
-  const baseY = y - stairH;  // 宮殿基準線
-
-  // ═══ 台階（3層） ══════════════════════════════════════
-  // 第三層（最上）
-  ctx.fillStyle=col.stoneStep;
-  ctx.fillRect(x-18*scale, baseY-12*scale, 36*scale, 4*scale);
-  // 第二層
-  ctx.fillStyle=col.stoneStep;
-  ctx.fillRect(x-30*scale, baseY-8*scale, 60*scale, 4*scale);
-  // 第一層
-  ctx.fillStyle=col.stoneStep;
-  ctx.fillRect(x-42*scale, baseY-4*scale, 84*scale, 4*scale);
-
-  // ═══ 第一層宮殿主體 ════════════════════════════════════
-  const layer1W = 108*scale, layer1H = 36*scale;
-
-  // 牆身
-  ctx.fillStyle=col.woodWall;
-  ctx.fillRect(x-layer1W/2, baseY, layer1W, layer1H);
-
-  // 6根紅柱（縮小版）
-  const colSpacing = layer1W / 5;
-  for(let i=0; i<6; i++){
-    const colX = x - layer1W/2 + i*colSpacing;
-    ctx.fillStyle=col.column;
-    ctx.fillRect(colX, baseY-6*scale, 4*scale, layer1H+6*scale);
+  function stoneBase(){
+    const botW=560, topW=496, h=y-baseTop;
+    for(let i=0;i<h;i++){
+      const t=i/h, w=botW-(botW-topW)*t;
+      ctx.fillStyle = i<2?C.stoneOL:(i%6<3?C.stoneD:C.stoneM);
+      ctx.fillRect(R(x-w/2), baseTop+i, R(w), 1);
+    }
+    ctx.fillStyle=C.stoneOL;
+    for(let ry=baseTop+6; ry<y; ry+=10){
+      const t=(ry-baseTop)/h, w=botW-(botW-topW)*t;
+      ctx.fillRect(R(x-w/2), ry, R(w), 1);
+      const off=((ry-baseTop)/10|0)%2?14:0;
+      for(let sx=R(x-w/2)+off; sx<x+w/2; sx+=28) ctx.fillRect(sx, ry-10<baseTop?baseTop:ry-10, 1, 11);
+    }
+    ctx.fillStyle=C.stoneL; ctx.fillRect(R(x-topW/2), baseTop, R(topW), 2);
   }
 
-  // 屋頂（翹簷效果）
-  drawSmallRoof(x-layer1W/2, baseY-12*scale, layer1W, col.roofDark, col.roofGold, 12);
-
-  // ═══ 第二層宮殿主體 ════════════════════════════════════
-  const layer2W = 72*scale, layer2H = 24*scale;
-
-  ctx.fillStyle=col.woodWall;
-  ctx.fillRect(x-layer2W/2, baseY-42*scale, layer2W, layer2H);
-
-  // 2個小窗戶
-  ctx.fillStyle=col.window;
-  ctx.fillRect(x-24*scale, baseY-36*scale, 10*scale, 8*scale);
-  ctx.fillRect(x+14*scale, baseY-36*scale, 10*scale, 8*scale);
-
-  // 屋頂
-  drawSmallRoof(x-layer2W/2, baseY-54*scale, layer2W, col.roofDark, col.roofGold, 8);
-
-  // ═══ 第三層（頂部小塔） ═══════════════════════════════
-  const layer3W = 30*scale, layer3H = 15*scale;
-
-  ctx.fillStyle=col.woodWall;
-  ctx.fillRect(x-layer3W/2, baseY-75*scale, layer3W, layer3H);
-
-  // 小屋頂
-  drawSmallRoof(x-layer3W/2, baseY-86*scale, layer3W, col.roofDark, col.roofGold, 6);
-
-  // 頂端金色細柱
-  ctx.fillStyle=col.gold;
-  ctx.fillRect(x-1*scale, baseY-100*scale, 2*scale, 12*scale);
-  ctx.fillRect(x-0.5*scale, baseY-102*scale, 1*scale, 2*scale);
-
-  // ═══ 左側紅葉楓樹 ══════════════════════════════════════
-  const mapleX = x - 54*scale;
-  const mapleY = baseY - 24*scale;
-
-  // 樹幹
-  ctx.fillStyle=col.treeTrunk;
-  ctx.fillRect(mapleX-2*scale, mapleY, 3*scale, 24*scale);
-
-  // 樹冠（不規則矩形堆疊）
-  const maplePositions = [
-    // 中心層（深紅）
-    { dx: 0, dy: 6*scale, w: 15*scale, h: 8*scale, color: col.mapleDark },
-    { dx: -2*scale, dy: 8*scale, w: 6*scale, h: 5*scale, color: col.mapleDark },
-    { dx: 5*scale, dy: 8*scale, w: 6*scale, h: 5*scale, color: col.mapleDark },
-
-    // 外層（紅色）
-    { dx: -4*scale, dy: 4*scale, w: 10*scale, h: 6*scale, color: col.mapleRed },
-    { dx: 6*scale, dy: 4*scale, w: 10*scale, h: 6*scale, color: col.mapleRed },
-    { dx: -3*scale, dy: 0, w: 8*scale, h: 6*scale, color: col.mapleRed },
-    { dx: 4*scale, dy: 0, w: 8*scale, h: 6*scale, color: col.mapleRed },
-
-    // 上層（紅色）
-    { dx: 0, dy: -5*scale, w: 10*scale, h: 8*scale, color: col.mapleRed },
-  ];
-
-  for(let pos of maplePositions){
-    ctx.fillStyle=pos.color;
-    ctx.fillRect(mapleX+pos.dx, mapleY+pos.dy, pos.w, pos.h);
+  function win(cx,cy,ww,wh){
+    ctx.fillStyle=C.wood;  ctx.fillRect(R(cx-ww/2-1),R(cy-1),R(ww)+2,R(wh)+2);
+    ctx.fillStyle=C.win;   ctx.fillRect(R(cx-ww/2),R(cy),R(ww),R(wh));
+    ctx.fillStyle=C.woodL;
+    for(let lx=R(cx-ww/2)+2; lx<cx+ww/2-1; lx+=3) ctx.fillRect(lx,R(cy)+1,1,R(wh)-2);
   }
 
-  // ═══ 右側綠灌木（3叢） ═════════════════════════════════
-  const bushStartX = x + 54*scale;
-  const bushStartY = baseY - 20*scale;
-
-  const bushPositions = [
-    // 灌木1（上方）
-    { x: -9*scale, y: -12*scale, w: 10*scale, h: 10*scale, color: col.greenBush },
-    { x: -6*scale, y: -15*scale, w: 8*scale, h: 8*scale, color: col.greenBush },
-    { x: 2*scale, y: -12*scale, w: 10*scale, h: 10*scale, color: col.greenBush },
-
-    // 灌木2（中間）
-    { x: -8*scale, y: 3*scale, w: 9*scale, h: 8*scale, color: col.greenBush },
-    { x: 2*scale, y: 4*scale, w: 10*scale, h: 8*scale, color: col.greenBush },
-
-    // 灌木3（下方）
-    { x: -9*scale, y: 18*scale, w: 10*scale, h: 8*scale, color: col.greenBush },
-    { x: 3*scale, y: 20*scale, w: 9*scale, h: 8*scale, color: col.greenBush },
-  ];
-
-  for(let bush of bushPositions){
-    ctx.fillStyle=bush.color;
-    ctx.fillRect(bushStartX+bush.x, bushStartY+bush.y, bush.w, bush.h);
-  }
-}
-
-// 輔助函數：繪製縮小的屋頂
-function drawSmallRoof(x, y, w, roofColor, goldColor, steps){
-  const maxHeight = w / 6;
-
-  for(let i=0; i<steps; i++){
-    let height;
-    let distFromCenter = Math.abs(i - (steps-1)/2);
-    height = Math.max(2, maxHeight - (distFromCenter * maxHeight / (steps/2)));
-
-    let rectX = x + (i * w / steps);
-    let rectW = w / steps + 1;
-    let rectY = y + maxHeight - height;
-
-    ctx.fillStyle = roofColor;
-    ctx.fillRect(rectX, rectY, rectW, height);
+  function plasterWall(left,right,topY,botY){
+    left=R(left);right=R(right);topY=R(topY);botY=R(botY);
+    const w=right-left, h=botY-topY;
+    ctx.fillStyle=C.plaster;   ctx.fillRect(left,topY,w,h);
+    ctx.fillStyle=C.plasterHi; ctx.fillRect(left,topY,2,h);
+    ctx.fillStyle=C.plasterSh; ctx.fillRect(right-3,topY,3,h);
+    const bH=Math.max(5,Math.round(h*0.36));
+    ctx.fillStyle=C.board;   ctx.fillRect(left,botY-bH,w,bH);
+    ctx.fillStyle=C.boardHi; ctx.fillRect(left,botY-bH,w,1);
+    ctx.fillStyle=C.boardOL; for(let by=botY-bH+3; by<botY; by+=3) ctx.fillRect(left,by,w,1);
+    ctx.fillStyle=C.boardOL; ctx.fillRect(right-2,botY-bH,2,bH);
+    ctx.fillStyle=C.wood;   ctx.fillRect(left,topY,w,3);
+    ctx.fillStyle=C.woodOL; ctx.fillRect(left,topY+3,w,1);
   }
 
-  // 屋脊金線
-  ctx.fillStyle = goldColor;
-  ctx.fillRect(x, y - 2, w, 2);
+  function roof(cx,eaveY,eaveW,h){
+    const topW=Math.max(10,eaveW*0.30);
+    for(let i=0;i<h;i++){const rw=eaveW-(eaveW-topW)*(i/h); const L=R(cx-rw/2), W=R(rw);
+      const half=Math.ceil(W*0.55);
+      ctx.fillStyle=C.roofM; ctx.fillRect(L,R(eaveY-1-i),half,1);
+      ctx.fillStyle=C.roofD; ctx.fillRect(L+half,R(eaveY-1-i),W-half,1);
+    }
+    for(let i=0;i<h;i+=2){const rw=eaveW-(eaveW-topW)*(i/h); const L=R(cx-rw/2), W=R(rw);
+      ctx.fillStyle=C.roofSh; for(let gx=L+4; gx<L+W-2; gx+=7) ctx.fillRect(gx,R(eaveY-1-i),1,1);}
+    ctx.fillStyle=C.roofHi;   ctx.fillRect(R(cx-topW/2),R(eaveY-h),R(topW),2);
+    ctx.fillStyle=C.roofEave; ctx.fillRect(R(cx-eaveW/2-3),R(eaveY-1),R(eaveW+6),4);
+    ctx.fillStyle=C.roofSh;   ctx.fillRect(R(cx-eaveW/2-3),R(eaveY+3),R(eaveW+6),2);
+    ctx.fillStyle=C.roofEave;
+    ctx.fillRect(R(cx-eaveW/2-5),R(eaveY-7),5,7);
+    ctx.fillRect(R(cx+eaveW/2),  R(eaveY-7),5,7);
+  }
+
+  function plasterBox(cx,topY,botY,w){
+    plasterWall(cx-w/2,cx+w/2,topY,botY);
+    const wy=topY+7, wh=Math.max(7,Math.round((botY-topY)*0.30));
+    if(w>=120){win(cx-40,wy,16,wh);win(cx,wy,16,wh);win(cx+40,wy,16,wh);}
+    else if(w>=82){win(cx-24,wy,15,wh);win(cx+24,wy,15,wh);}
+    else if(w>=50){win(cx,wy,16,wh);}
+    else {win(cx,wy,11,wh);}
+  }
+
+  function keep(cx,baseBot){
+    let cy=baseBot;
+    const tiers=[{ww:152,wh:34,ew:188,rh:26},{ww:124,wh:30,ew:156,rh:22},
+                 {ww:96,wh:27,ew:124,rh:19},{ww:70,wh:25,ew:94,rh:17},
+                 {ww:48,wh:23,ew:66,rh:15}];
+    for(const t of tiers){const wt=cy-t.wh; plasterBox(cx,wt,cy,t.ww); roof(cx,wt,t.ew,t.rh); cy=wt-R(t.rh*0.5);}
+    ctx.fillStyle=C.gold;
+    ctx.fillRect(R(cx-26),R(cy+2),6,4); ctx.fillRect(R(cx-28),R(cy-2),4,5);
+    ctx.fillRect(R(cx+20),R(cy+2),6,4); ctx.fillRect(R(cx+24),R(cy-2),4,5);
+    ctx.fillStyle=C.goldL; ctx.fillRect(R(cx-1),R(cy-10),3,12);
+  }
+
+  function turret(cx,baseBot){
+    let cy=baseBot;
+    const tiers=[{ww:56,wh:26,ew:72,rh:16},{ww:36,wh:18,ew:50,rh:12}];
+    for(const t of tiers){const wt=cy-t.wh; plasterBox(cx,wt,cy,t.ww); roof(cx,wt,t.ew,t.rh); cy=wt-R(t.rh*0.5);}
+  }
+
+  function lantern(lx,baseY,s){ s=s||1;
+    ctx.fillStyle=C.stoneD; ctx.fillRect(R(lx-1.5*s),R(baseY-10*s),Math.max(2,R(3*s)),R(10*s));
+    ctx.fillStyle=C.stoneM; ctx.fillRect(R(lx-4*s),R(baseY-13*s),R(8*s),R(3*s));
+    ctx.fillStyle='#ffcf6a55'; ctx.fillRect(R(lx-5*s),R(baseY-20*s),R(10*s),R(8*s));
+    ctx.fillStyle=C.gold;   ctx.fillRect(R(lx-3*s),R(baseY-19*s),R(6*s),R(6*s));
+    ctx.fillStyle='#ffe7a0';ctx.fillRect(R(lx-2*s),R(baseY-18*s),R(4*s),R(4*s));
+    ctx.fillStyle=C.stoneL; ctx.fillRect(R(lx-5*s),R(baseY-23*s),R(10*s),R(4*s));
+    ctx.fillStyle=C.stoneD; ctx.fillRect(R(lx-1.5*s),R(baseY-26*s),Math.max(2,R(3*s)),R(3*s));
+  }
+
+  function gate(cx,baseBot){
+    const gw=68, gtop=bandTop-8, totalH=y-baseBot;
+    ctx.fillStyle=C.wood;   ctx.fillRect(R(cx-gw/2),R(gtop),gw,baseBot-gtop);
+    ctx.fillStyle=C.woodL;  ctx.fillRect(R(cx-gw/2),R(gtop),3,baseBot-gtop);
+    ctx.fillStyle=C.woodOL; ctx.fillRect(R(cx-gw/2),R(gtop),2,baseBot-gtop);
+    ctx.fillStyle=C.woodOL; ctx.fillRect(R(cx+gw/2-3),R(gtop),3,baseBot-gtop);
+    const dh=28;
+    ctx.fillStyle='#0c0a08'; ctx.fillRect(R(cx-17),R(baseBot-dh),34,dh);
+    ctx.fillStyle='#23150b'; ctx.fillRect(R(cx-16),R(baseBot-dh),16,dh); ctx.fillRect(R(cx),R(baseBot-dh),16,dh);
+    ctx.fillStyle=C.woodOL;  ctx.fillRect(R(cx-1),R(baseBot-dh),2,dh);
+    ctx.fillStyle=C.gold; for(let dy=baseBot-dh+5; dy<baseBot-4; dy+=8){ctx.fillRect(R(cx-11),R(dy),2,2);ctx.fillRect(R(cx+9),R(dy),2,2);}
+    roof(cx,gtop,gw+16,16);
+    const steps=5;
+    for(let s=0;s<steps;s++){
+      const sw=42+s*13, sy=baseBot+s*(totalH/steps), sh=totalH/steps+1;
+      ctx.fillStyle=C.stoneM; ctx.fillRect(R(cx-sw/2),R(sy),R(sw),R(sh));
+      ctx.fillStyle=C.stoneL; ctx.fillRect(R(cx-sw/2),R(sy),R(sw),2);
+      ctx.fillStyle=C.stoneOL;ctx.fillRect(R(cx-sw/2),R(sy+sh-1),R(sw),1);
+      for(let gx=R(cx-sw/2)+13; gx<cx+sw/2-7; gx+=16) ctx.fillRect(gx,R(sy)+2,1,R(sh)-3);
+    }
+    const bw=42+(steps-1)*13;
+    for(const sd of [-1,1]){const ex=cx+sd*(bw/2+3);
+      ctx.fillStyle=C.stoneD; ctx.fillRect(R(ex-3),R(baseBot),6,R(totalH));
+      ctx.fillStyle=C.stoneL; ctx.fillRect(R(ex-3),R(baseBot),6,2);
+    }
+    lantern(cx-bw/2-12, y, 1); lantern(cx+bw/2+12, y, 1);
+  }
+
+  function pine(px,py,s){
+    ctx.fillStyle=C.trunk; ctx.fillRect(R(px-1),R(py),3,R(10*s));
+    ctx.fillStyle=C.pineD; ctx.fillRect(R(px-10*s),R(py-6*s),R(20*s),R(8*s));
+    ctx.fillStyle=C.pine;  ctx.fillRect(R(px-8*s),R(py-12*s),R(16*s),R(8*s));
+    ctx.fillRect(R(px-5*s),R(py-17*s),R(10*s),R(7*s));
+  }
+
+  // ═══ 繪製順序 ═══
+  stoneBase();
+  plasterWall(x-248+30, x+248-30, bandTop, baseTop);
+  for(let wx=x-248+44; wx<x+248-40; wx+=30){ if(Math.abs(wx-x)<40) continue; win(wx, bandTop+6, 12, 7); }
+  pine(x-150, baseTop, 1.3); pine(x+150, baseTop, 1.3);
+  keep(x, baseTop-2);
+  turret(x-208, baseTop); turret(x+208, baseTop);
+  for(const lx of [x-150,x-100,x+100,x+150]) lantern(lx, bandTop, 0.7);
+  gate(x, baseTop);
 }
 
 function drawPortalParticles(){
@@ -4881,135 +4579,51 @@ window.SanadaGame={
 
 // ── 音頻管理 ─────────────────────────────────────────────
 const AudioManager={
-  audioContext:null,
   currentScene:null,
-  oscillators:[],
-  gains:[],
+  bgmAudio:null,        // 目前播放中的背景音樂 (HTMLAudioElement)
 
-  init(){
-    if(this.audioContext) return;
-    this.audioContext=new (window.AudioContext||window.webkitAudioContext)();
+  // ── 各場景背景音樂檔 ───────────────────────────────────────
+  // 之後把音樂檔放進 assets/audio/，再把對應路徑填進來即可。
+  // 留空字串 = 該場景目前無音樂（靜音）。
+  // 範例： 'main':'assets/audio/main.mp3',
+  sceneBgm:{
+    'main':'',
+    'three-kingdom':'',
+    'knight':'',
+    'edo':'',
+    'battle':'',
+    'teaching':'',
+    'levelClear':'',
   },
 
-  playSceneMusic(sceneName){
-    if(!musicEnabled||sceneName===this.currentScene) return;
-    this.stopMusic();
-    this.currentScene=sceneName;
+  init(){ /* 預留：之後若要用 Web Audio 做音效再初始化 */ },
 
-    switch(sceneName){
-      case 'main': this.playMainTheme(); break;
-      case 'three-kingdom': this.playThreeKingdomTheme(); break;
-      case 'knight': this.playKnightTheme(); break;
-      case 'edo': this.playEdoTheme(); break;
-      case 'battle': this.playBattleTheme(); break;
-      case 'teaching': this.playMainTheme(); break;
-      case 'levelClear': this.playVictoryFanfare(); break;
-    }
+  // 場景切換時呼叫（gameLoop 每幀呼叫，但場景沒變就略過）
+  playSceneMusic(sceneName){
+    if(sceneName===this.currentScene) return;
+    this.currentScene=sceneName;
+    this.refresh();
+  },
+
+  // 依「目前場景 + 音樂開關狀態」決定播放或停止背景音樂
+  refresh(){
+    this.stopMusic();
+    if(!musicEnabled) return;
+    const src=this.sceneBgm[this.currentScene];
+    if(!src) return;                 // 尚未設定音樂 → 維持靜音
+    const a=new Audio(src);
+    a.loop=true;
+    a.volume=0.5;
+    a.play().catch(()=>{});          // 瀏覽器可能因尚未互動而阻擋，忽略錯誤
+    this.bgmAudio=a;
   },
 
   stopMusic(){
-    for(const osc of this.oscillators){
-      osc.stop(this.audioContext.currentTime+0.1);
-    }
-    for(const gain of this.gains){
-      gain.gain.setTargetAtTime(0, this.audioContext.currentTime, 0.05);
-    }
-    this.oscillators=[];
-    this.gains=[];
-  },
-
-  playMainTheme(){
-    const ctx=this.audioContext;
-    const notes=[262,294,330,392,440]; // C D E G A
-    const tempo=0.4;
-    let time=ctx.currentTime;
-
-    for(let i=0;i<8;i++){
-      const note=notes[i%5];
-      this.playNote(note, time+i*tempo, tempo*0.9, 0.1);
+    if(this.bgmAudio){
+      this.bgmAudio.pause();
+      this.bgmAudio=null;
     }
   },
-
-  playThreeKingdomTheme(){
-    const ctx=this.audioContext;
-    const notes=[262,294,330,349,392,440,494]; // 五音階加4,7
-    const tempo=0.35;
-    let time=ctx.currentTime;
-
-    for(let i=0;i<12;i++){
-      const note=notes[Math.floor(i/2)%7];
-      this.playNote(note, time+i*tempo, tempo*0.85, 0.12);
-    }
-  },
-
-  playKnightTheme(){
-    const ctx=this.audioContext;
-    const notes=[220,247,262,294]; // A B C D (A minor scale)
-    const tempo=0.45;
-    let time=ctx.currentTime;
-
-    for(let i=0;i<10;i++){
-      const note=notes[i%4];
-      this.playNote(note, time+i*tempo, tempo*0.95, 0.08);
-    }
-  },
-
-  playEdoTheme(){
-    const ctx=this.audioContext;
-    const notes=[330,349,392,440,494]; // E F G A B (pentatonic)
-    const tempo=0.3;
-    let time=ctx.currentTime;
-
-    // Taiko drum simulation (low frequency burst)
-    for(let i=0;i<16;i++){
-      if(i%4===0){
-        this.playNote(60, time+i*tempo, tempo*0.4, 0.3); // Kick
-      } else {
-        this.playNote(notes[Math.floor(Math.random()*5)], time+i*tempo, tempo*0.8, 0.1);
-      }
-    }
-  },
-
-  playBattleTheme(){
-    const ctx=this.audioContext;
-    const notes=[330,349,392,440]; // E F G A
-    const tempo=0.25;
-    let time=ctx.currentTime;
-
-    for(let i=0;i<16;i++){
-      this.playNote(notes[i%4], time+i*tempo, tempo*0.9, 0.15);
-    }
-  },
-
-  playVictoryFanfare(){
-    const ctx=this.audioContext;
-    const notes=[262,330,392,523]; // C E G C (高八度)
-
-    for(let i=0;i<4;i++){
-      this.playNote(notes[i], ctx.currentTime+i*0.3, 0.25, 0.1);
-    }
-  },
-
-  playNote(freq, startTime, duration, volume){
-    const ctx=this.audioContext;
-    const osc=ctx.createOscillator();
-    const gain=ctx.createGain();
-
-    osc.frequency.value=freq;
-    osc.type='square';
-
-    gain.gain.setValueAtTime(volume, startTime);
-    gain.gain.setTargetAtTime(0, startTime+duration*0.8, 0.05);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(startTime);
-    osc.stop(startTime+duration);
-
-    this.oscillators.push(osc);
-    this.gains.push(gain);
-  }
 };
 
 function detectOrientation(){
@@ -5059,7 +4673,7 @@ function toggleMusic(){
   localStorage.setItem('musicEnabled', musicEnabled);
 
   if(musicEnabled){
-    AudioManager.playSceneMusic(scene);
+    AudioManager.refresh();   // 依目前場景啟動背景音樂（若該場景已設定音樂檔）
   } else {
     AudioManager.stopMusic();
   }
