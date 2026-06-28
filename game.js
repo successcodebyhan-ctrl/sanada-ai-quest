@@ -763,6 +763,8 @@ let levelClearStarCount=0; // 當前破關的星級數量
 let waitingForNextQuestion=false;
 let showRetractConfirm=false; // 是否顯示撤退確認對話框
 let bagOpen=false; // 對戰背包道具選單是否展開
+let settingsOpen=false; // 設定面板是否開啟
+let deviceMode=localStorage.getItem('deviceMode')||'pc'; // 'pc' | 'mobile'（先做 UI，實際功能後續）
 
 // ── 戰鬥動畫系統 ──────────────────────────────
 let battleAnimations=[]; // 正在進行的動畫
@@ -922,6 +924,7 @@ function doAction(id){
 }
 function onTap(cx,cy){
   AudioManager.onUserGesture();   // 首次互動解鎖背景音樂自動播放
+  if(!showIntro && scene!=='ending'){ if(handleSettingsTap(cx,cy)) return; }
   if(showIntro){
     // 跳過按鈕（右下角）
     const skipW=60, skipH=24;
@@ -2667,7 +2670,7 @@ function drawScene(){
   drawLabels();
   drawDialog(); drawShopUI(); drawPortalMenu();
   drawInventoryHUD();
-  drawMusicToggleButton();
+  drawSettingsUI();
   drawFadeOverlay();
   ctx.fillStyle=C.accent3; ctx.font='12px DotGothic16'; ctx.textAlign='right';
   ctx.fillText('真田幸村の領地',DESIGN_W-16,DESIGN_H-14);
@@ -2817,7 +2820,7 @@ function drawTeachingScene(){
   ctx.textAlign='right';
   ctx.fillText('按E或點擊繼續', dialogX+dialogW-22, dialogY+dialogH-12);
 
-  drawMusicToggleButton();
+  drawSettingsUI();
   drawFadeOverlay();
 }
 
@@ -3287,7 +3290,7 @@ function drawBattleSceneLandscape(){
     drawRetractConfirmDialog();
   }
 
-  drawMusicToggleButton();
+  drawSettingsUI();
   drawFadeOverlay();
 }
 
@@ -3539,7 +3542,7 @@ function drawBattleScenePortrait(){
     drawRetractConfirmDialog();
   }
 
-  drawMusicToggleButton();
+  drawSettingsUI();
   drawFadeOverlay();
 }
 
@@ -3608,7 +3611,7 @@ function drawLevelClearScene(){
   ctx.textAlign='center';
   ctx.fillText('回到領地', homeBtnX+homeBtnW/2, homeBtnY+26);
 
-  drawMusicToggleButton();
+  drawSettingsUI();
   drawFadeOverlay();
 }
 
@@ -3910,7 +3913,7 @@ function drawEraScene(sceneName){
   // 繪製UI
   drawLabels();
   drawDialog(); drawLevelMenu();
-  drawMusicToggleButton();
+  drawSettingsUI();
   drawFadeOverlay();
 
   // 場景標題
@@ -4665,38 +4668,86 @@ function detectOrientation(){
   }
 }
 
-function drawMusicToggleButton(){
-  const btnX=12; // 左下角
-  const btnY=isPortrait?DESIGN_H-45:DESIGN_H-40; // 左下角，避免被UI挡住
-  const btnW=48;
-  const btnH=24;
+// ── 設定按鈕（左下角）與設定面板 ─────────────────────────
+function settingsBtnGeo(){
+  const s=40;
+  if(scene==='battle') return {x:Math.round(DESIGN_W/2-s/2), y:10, w:s, h:s}; // 對戰：頂部中間（避開敵我名字與題目框）
+  return {x:12, y:(isPortrait?DESIGN_H-52:DESIGN_H-50), w:s, h:s};            // 其餘場景：左下角
+}
+function settingsPanelGeo(){
+  const w=380, h=250, x=Math.round((DESIGN_W-w)/2), y=Math.round((DESIGN_H-h)/2);
+  const cx=x+Math.round(w/2);
+  return { x,y,w,h,
+    mute:  {x:cx-44,  y:y+98,  w:88,  h:38},
+    pc:    {x:cx-150, y:y+182, w:132, h:42},
+    mobile:{x:cx+18,  y:y+182, w:132, h:42},
+  };
+}
+function inRect(cx,cy,r){ return cx>=r.x&&cx<r.x+r.w&&cy>=r.y&&cy<r.y+r.h; }
 
-  ctx.fillStyle=musicEnabled?'#4ade80':'#ef4444';
-  ctx.fillRect(btnX, btnY, btnW, btnH);
-
-  ctx.strokeStyle='#000000';
-  ctx.lineWidth=1;
-  ctx.strokeRect(btnX+0.5, btnY+0.5, btnW-1, btnH-1);
-
-  ctx.fillStyle='#ffffff';
-  ctx.font='bold 10px Arial';
-  ctx.textAlign='center';
-  ctx.fillText(musicEnabled?'🔊':'🔇', btnX+btnW/2, btnY+16);
+function drawSettingsUI(){
+  const b=settingsBtnGeo();
+  ctx.save();
+  ctx.globalAlpha=0.5;   // 設定鈕半透明 50%
+  ctx.fillStyle='rgba(20,16,28,0.82)'; ctx.fillRect(b.x,b.y,b.w,b.h);
+  ctx.strokeStyle='#fcc539'; ctx.lineWidth=2; ctx.strokeRect(b.x+0.5,b.y+0.5,b.w-1,b.h-1);
+  ctx.fillStyle='#ffffff'; ctx.font='20px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('⚙', b.x+b.w/2, b.y+b.h/2+1); ctx.textBaseline='alphabetic';
+  ctx.restore();
+  if(settingsOpen) drawSettingsPanel();
 }
 
-function handleMusicButtonClick(x,y){
-  const btnX=12; // 左下角
-  const btnY=isPortrait?DESIGN_H-45:DESIGN_H-40;
-  const btnW=48;
-  const btnH=24;
+function drawSettingsPanel(){
+  const p=settingsPanelGeo();
+  // 半透明遮罩（點此區域即關閉）
+  ctx.fillStyle='rgba(0,0,0,0.45)'; ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+  // 面板
+  ctx.fillStyle='rgba(14,22,30,0.96)'; ctx.fillRect(p.x,p.y,p.w,p.h);
+  ctx.strokeStyle='#fcc539'; ctx.lineWidth=2; ctx.strokeRect(p.x+1,p.y+1,p.w-2,p.h-2);
+  // 標題
+  ctx.fillStyle='#fcc539'; ctx.font='bold 18px DotGothic16'; ctx.textAlign='center';
+  ctx.fillText('設　定', p.x+p.w/2, p.y+34);
+  // 帳號
+  const email=(window.CloudSave&&window.CloudSave.userEmail&&window.CloudSave.userEmail())||null;
+  ctx.font='13px DotGothic16'; ctx.textAlign='left';
+  ctx.fillStyle='#ffe08b'; ctx.fillText('帳號：', p.x+24, p.y+66);
+  ctx.fillStyle='#ffffff'; ctx.fillText(email||'訪客模式', p.x+24+ctx.measureText('帳號：').width, p.y+66);
+  // 音樂
+  ctx.fillStyle='#ffe08b'; ctx.font='13px DotGothic16'; ctx.textAlign='left';
+  ctx.fillText('音樂', p.x+24, p.mute.y-8);
+  const mu=p.mute;
+  ctx.fillStyle=musicEnabled?'rgba(74,222,128,0.25)':'rgba(239,68,68,0.25)'; ctx.fillRect(mu.x,mu.y,mu.w,mu.h);
+  ctx.strokeStyle=musicEnabled?'#4ade80':'#ef4444'; ctx.lineWidth=2; ctx.strokeRect(mu.x+0.5,mu.y+0.5,mu.w-1,mu.h-1);
+  ctx.fillStyle='#ffffff'; ctx.font='15px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(musicEnabled?'🔊 開':'🔇 關', mu.x+mu.w/2, mu.y+mu.h/2+1); ctx.textBaseline='alphabetic';
+  // 模式
+  ctx.fillStyle='#ffe08b'; ctx.font='13px DotGothic16'; ctx.textAlign='left';
+  ctx.fillText('模式', p.x+24, p.pc.y-8);
+  const modeBtn=(r,label,active)=>{
+    ctx.fillStyle=active?'rgba(252,197,57,0.28)':'rgba(40,40,46,0.6)'; ctx.fillRect(r.x,r.y,r.w,r.h);
+    ctx.strokeStyle=active?'#fcc539':'#6a6a6a'; ctx.lineWidth=2; ctx.strokeRect(r.x+0.5,r.y+0.5,r.w-1,r.h-1);
+    ctx.fillStyle=active?'#fcc539':'#cccccc'; ctx.font='bold 14px DotGothic16'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(label, r.x+r.w/2, r.y+r.h/2+1); ctx.textBaseline='alphabetic';
+  };
+  modeBtn(p.pc,'🖥 電腦',deviceMode==='pc');
+  modeBtn(p.mobile,'📱 手機',deviceMode==='mobile');
+  // 關閉提示
+  ctx.fillStyle='#9aa6ab'; ctx.font='11px DotGothic16'; ctx.textAlign='center';
+  ctx.fillText('點擊介面外區域關閉', p.x+p.w/2, p.y+p.h-12);
+}
 
-  const scaledX=x/scale;
-  const scaledY=y/scale;
-
-  if(scaledX>=btnX&&scaledX<=btnX+btnW&&scaledY>=btnY&&scaledY<=btnY+btnH){
-    toggleMusic();
-    return true;
+// 設定相關點擊（回傳 true 表示已消化此點擊，阻擋穿透到遊戲）
+function handleSettingsTap(cx,cy){
+  const b=settingsBtnGeo();
+  if(settingsOpen){
+    const p=settingsPanelGeo();
+    if(inRect(cx,cy,p.mute)){ toggleMusic(); return true; }
+    if(inRect(cx,cy,p.pc)){ deviceMode='pc'; localStorage.setItem('deviceMode','pc'); return true; }
+    if(inRect(cx,cy,p.mobile)){ deviceMode='mobile'; localStorage.setItem('deviceMode','mobile'); return true; }
+    if(cx<p.x||cx>p.x+p.w||cy<p.y||cy>p.y+p.h){ settingsOpen=false; return true; } // 點面板外 → 關閉
+    return true; // 點面板內空白 → 吃掉
   }
+  if(inRect(cx,cy,b)){ settingsOpen=true; return true; }
   return false;
 }
 
@@ -4761,20 +4812,4 @@ generateStars(55);
 generateGroundMap();
 gameLoop();
 
-// ── 音樂開關按鈕點擊事件 ───────────────────────────────
-document.addEventListener('click',(e)=>{
-  if(showIntro||scene==='ending') return;
-  const rect=canvas.getBoundingClientRect();
-  const x=e.clientX-rect.left;
-  const y=e.clientY-rect.top;
-  handleMusicButtonClick(x,y);
-});
-
-document.addEventListener('touchend',(e)=>{
-  if(showIntro||scene==='ending') return;
-  const rect=canvas.getBoundingClientRect();
-  const touch=e.changedTouches[0];
-  const x=touch.clientX-rect.left;
-  const y=touch.clientY-rect.top;
-  handleMusicButtonClick(x,y);
-});
+// （設定按鈕點擊已整合進 onTap → handleSettingsTap）

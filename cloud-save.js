@@ -195,6 +195,7 @@
   window.CloudSave = {
     onLocalSave,
     isLoggedIn: () => !!currentUser,
+    userEmail: () => currentUser ? currentUser.email : null,
   };
 
   if(document.readyState === 'loading'){
