@@ -2782,8 +2782,8 @@ function drawTeachingScene(){
 
   // 對話框（已移除頭像框，置中顯示）
   const speaker=teachingPhase===1?'隨從':'真田幸村';
-  const dialogW=820, dialogH=290;
-  const dialogX=(DESIGN_W-dialogW)/2, dialogY=64;
+  const dialogW=900, dialogH=348;
+  const dialogX=(DESIGN_W-dialogW)/2, dialogY=44;
 
   // 對話框背景（深綠色）
   ctx.fillStyle='rgba(18, 34, 28, 0.86)';
@@ -2796,29 +2796,31 @@ function drawTeachingScene(){
 
   // 發言者名稱（金色、放大）
   ctx.fillStyle='#ffe08b';
-  ctx.font='bold 19px DotGothic16';
+  ctx.font='bold 23px DotGothic16';
   ctx.textAlign='left';
-  ctx.fillText(speaker, dialogX+22, dialogY+34);
+  ctx.fillText(speaker, dialogX+24, dialogY+38);
   ctx.strokeStyle='#D4AF37'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(dialogX+22, dialogY+42); ctx.lineTo(dialogX+dialogW-22, dialogY+42); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(dialogX+24, dialogY+48); ctx.lineTo(dialogX+dialogW-24, dialogY+48); ctx.stroke();
 
-  // 對話內容（淺色、放大，與深底高對比）
+  // 對話內容（淺色、放大，手機也清楚）
   ctx.fillStyle='#f6efdd';
-  ctx.font='17px DotGothic16';
+  const contentFont=21;
+  ctx.font=contentFont+'px DotGothic16';
+  const wrap=Math.floor((dialogW-48)/contentFont);
   const dialogText=teachingPhase===1?currentStage.teachingDialogue:'知道了，出發吧';
-  const lines=dialogText.match(/.{1,44}/g)||[];
-  let ty=dialogY+66;
-  for(const line of lines.slice(0,8)){
-    if(ty>dialogY+dialogH-24) break;
-    ctx.fillText(line, dialogX+22, ty);
-    ty+=26;
+  const lines=dialogText.match(new RegExp('.{1,'+wrap+'}','g'))||[];
+  let ty=dialogY+78;
+  for(const line of lines.slice(0,10)){
+    if(ty>dialogY+dialogH-26) break;
+    ctx.fillText(line, dialogX+24, ty);
+    ty+=31;
   }
 
   // 提示文字（按E或點擊繼續）
   ctx.fillStyle='#cfc8b8';
-  ctx.font='13px DotGothic16';
+  ctx.font='14px DotGothic16';
   ctx.textAlign='right';
-  ctx.fillText('按E或點擊繼續', dialogX+dialogW-22, dialogY+dialogH-12);
+  ctx.fillText('按E或點擊繼續', dialogX+dialogW-24, dialogY+dialogH-12);
 
   drawSettingsUI();
   drawFadeOverlay();
@@ -3220,13 +3222,14 @@ function drawBattleSceneLandscape(){
     // 題目文字（放大、多行）
     ctx.fillStyle='#ffffff';
     ctx.textAlign='left';
-    ctx.font='bold 22px DotGothic16';
-    const maxChars=Math.floor((L.qW-44)/22);
+    const qFont=27;
+    ctx.font='bold '+qFont+'px DotGothic16';
+    const maxChars=Math.floor((L.qW-44)/qFont);
     const qt=currentQuestion.question;
-    let qty=L.qY+40;
+    let qty=L.qY+44;
     for(let i=0;i<qt.length && qty<L.optY-14;i+=maxChars){
       ctx.fillText(qt.slice(i,i+maxChars), L.qX+22, qty);
-      qty+=30;
+      qty+=36;
     }
 
     // 選項（一行四個，放大；選擇題與填空題共用）
@@ -3440,7 +3443,7 @@ function drawBattleScenePortrait(){
 
   // 題目區域（中央，正中心）
   if(currentQuestion){
-    const qW=DESIGN_W-40, qH=220;
+    const qW=DESIGN_W-40, qH=300;
     const qX=(DESIGN_W-qW)/2; // 水平居中
     const qY=(DESIGN_H-qH)/2; // 垂直居中
 
@@ -3451,56 +3454,56 @@ function drawBattleScenePortrait(){
     ctx.lineWidth=3;
     ctx.strokeRect(qX, qY, qW, qH);
 
-    // 題目文字
+    // 題目文字（放大）
     ctx.fillStyle='#ffffff';
-    ctx.font='bold 13px DotGothic16';
+    ctx.font='bold 17px DotGothic16';
     ctx.textAlign='left';
-    const qLines=currentQuestion.question.match(/.{1,30}/g)||[];
-    let qTy=qY+15;
-    for(const line of qLines.slice(0,2)){
-      if(qTy>qY+qH-50) break;
-      ctx.fillText(line, qX+15, qTy);
-      qTy+=20;
+    const qLines=currentQuestion.question.match(/.{1,34}/g)||[];
+    let qTy=qY+24;
+    for(const line of qLines.slice(0,3)){
+      if(qTy>qY+qH-80) break;
+      ctx.fillText(line, qX+18, qTy);
+      qTy+=26;
     }
 
-    // 選項（縱排）
+    // 選項（縱排，放大）
     if(currentQuestion.type==='選擇題'){
-      const optH=40, optW=qW-30;
-      let optY=qY+60;
-      ctx.font='12px DotGothic16';
+      const optH=50, optW=qW-30;
+      let optY=qY+96;
+      ctx.font='16px DotGothic16';
       for(let i=0;i<currentQuestion.options.length;i++){
-        if(optY+optH>qY+qH-10) break;
+        if(optY+optH>qY+qH-8) break;
         const opt=currentQuestion.options[i];
         ctx.fillStyle=selectedAnswer===i?'#f22f46':'#cccccc';
         ctx.fillRect(qX+15, optY, optW, optH);
         ctx.strokeStyle='#000000';
         ctx.lineWidth=1;
         ctx.strokeRect(qX+15, optY, optW, optH);
-        ctx.fillStyle='#000000';
+        ctx.fillStyle=selectedAnswer===i?'#ffffff':'#000000';
         ctx.textAlign='left';
-        ctx.fillText(opt.substring(0,20), qX+25, optY+26);
-        optY+=optH+5;
+        ctx.fillText(opt.substring(0,24), qX+26, optY+31);
+        optY+=optH+6;
       }
     } else {
-      const optH=36, optW=(qW-30)/2;
-      let optY=qY+60;
+      const optH=46, optW=(qW-30)/2;
+      let optY=qY+96;
       let optX=qX+15;
-      ctx.font='12px DotGothic16';
+      ctx.font='16px DotGothic16';
       for(let i=0;i<currentQuestion.options.length;i++){
-        if(optY+optH>qY+qH-10) break;
+        if(optY+optH>qY+qH-8) break;
         const opt=currentQuestion.options[i];
         ctx.fillStyle=selectedAnswer===i?'#f22f46':'#cccccc';
         ctx.fillRect(optX, optY, optW, optH);
         ctx.strokeStyle='#000000';
         ctx.lineWidth=1;
         ctx.strokeRect(optX, optY, optW, optH);
-        ctx.fillStyle='#000000';
+        ctx.fillStyle=selectedAnswer===i?'#ffffff':'#000000';
         ctx.textAlign='center';
-        ctx.fillText(opt, optX+optW/2, optY+22);
+        ctx.fillText(opt, optX+optW/2, optY+28);
         optX+=optW+5;
         if(optX+optW>qX+qW-15){
           optX=qX+15;
-          optY+=optH+5;
+          optY+=optH+6;
         }
       }
     }
@@ -3655,7 +3658,7 @@ function drawFillInBlank(question, options, x, y){
 function battleOptGeo(){
   const qX=60, qW=DESIGN_W-120;
   const qY=BATTLE_GY+16, qH=DESIGN_H-qY-16;
-  const padX=20, gap=14, optH=64;
+  const padX=20, gap=14, optH=82;   // 選項框加大以容納放大的字
   const perOptW=(qW-padX*2-gap*3)/4;
   const optX0=qX+padX;
   const optY=qY+qH-optH-20;
@@ -3686,7 +3689,7 @@ function drawBattleOptions(options){
     ctx.lineWidth=1;
     ctx.strokeRect(ox, L.optY, L.perOptW, L.optH);
     ctx.fillStyle=selectedAnswer===i?'#ffffff':'#000000';
-    drawCenteredWrapped(options[i], ox+L.perOptW/2, L.optY, L.optH, L.perOptW-14, 16);
+    drawCenteredWrapped(options[i], ox+L.perOptW/2, L.optY, L.optH, L.perOptW-16, 21);
   }
 }
 
