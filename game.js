@@ -722,6 +722,29 @@ function freshLevelProgress(){ return {ai:freshEraProgress(), cowork:freshEraPro
 function isNewProgressFormat(lp){ return !!(lp && lp.ai && Array.isArray(lp.ai.unlockedLevels) && lp.cowork && lp.code); }
 let levelProgress=freshLevelProgress();
 function curProg(){ return levelProgress[currentEra] || levelProgress.ai; }
+// 修復單一時代進度：確保 unlockedLevels / maxStars 為長度30的陣列，且第一關必解鎖
+function sanitizeEraProgress(p){
+  const fresh=freshEraProgress();
+  if(!p||typeof p!=='object') return fresh;
+  if(!Array.isArray(p.unlockedLevels)||p.unlockedLevels.length!==30){
+    for(let i=0;i<30;i++) fresh.unlockedLevels[i]=!!(Array.isArray(p.unlockedLevels)&&p.unlockedLevels[i]);
+    p.unlockedLevels=fresh.unlockedLevels;
+  }
+  p.unlockedLevels[0]=true; // 第一關永遠可進入
+  if(!Array.isArray(p.maxStars)||p.maxStars.length!==30){
+    const m=Array(30).fill(0);
+    if(Array.isArray(p.maxStars)) for(let i=0;i<30;i++) m[i]=p.maxStars[i]||0;
+    p.maxStars=m;
+  }
+  return p;
+}
+// 修復整份進度（防止存檔損壞導致某時代關卡全鎖、點不進去）
+function sanitizeLevelProgress(){
+  if(!levelProgress||typeof levelProgress!=='object') levelProgress=freshLevelProgress();
+  levelProgress.ai    =sanitizeEraProgress(levelProgress.ai);
+  levelProgress.cowork=sanitizeEraProgress(levelProgress.cowork);
+  levelProgress.code  =sanitizeEraProgress(levelProgress.code);
+}
 let eraGameData={ai:null, cowork:null, code:null};
 let eraGroundMap=null; // 時期地面貼圖（固定）
 
@@ -739,6 +762,7 @@ let levelClearReward={coins:0, items:{}};
 let levelClearStarCount=0; // 當前破關的星級數量
 let waitingForNextQuestion=false;
 let showRetractConfirm=false; // 是否顯示撤退確認對話框
+let bagOpen=false; // 對戰背包道具選單是否展開
 
 // ── 戰鬥動畫系統 ──────────────────────────────
 let battleAnimations=[]; // 正在進行的動畫
@@ -813,6 +837,7 @@ let lastTap=0;
 
 window.addEventListener('keydown',e=>{
   keys[e.code]=true;
+  AudioManager.onUserGesture();   // 首次互動解鎖背景音樂自動播放
   if(e.code==='KeyE'||e.code==='Enter'){
     if(dialogText||shopOpen||portalMenuOpen||levelMenuOpen){ closeUI(); return; }
     if(scene==='main'||scene==='three-kingdom'||scene==='knight'||scene==='edo') interact();
@@ -896,6 +921,7 @@ function doAction(id){
   else if(id==='portal') portalMenuOpen=true;
 }
 function onTap(cx,cy){
+  AudioManager.onUserGesture();   // 首次互動解鎖背景音樂自動播放
   if(showIntro){
     // 跳過按鈕（右下角）
     const skipW=60, skipH=24;
@@ -979,24 +1005,28 @@ function onTap(cx,cy){
       proceedToNextQuestion();
       return;
     }
-    // 道具使用
-    const invW=160;
-    const invH=100;
-    const invX=DESIGN_W-invW-10;
-    const invY=isPortrait?((DESIGN_H-invH)/2):120;
-    const itemSpacing=30;
-    const itemH=24; // 點擊區域高度
-    const items=[
-      {key:'noodle', name:'蕎麥麵', heal:15},
-      {key:'fish', name:'烤魚', heal:30},
-      {key:'tempura', name:'天婦羅蓋飯', heal:50},
-    ];
-    for(let i=0;i<items.length;i++){
-      const iy=invY+12+i*itemSpacing-8; // 與drawInventoryBar同步
-      const itemCount=inventory[items[i].key]||0;
-      if(itemCount>0&&cx>=invX&&cx<invX+invW&&cy>=iy&&cy<iy+itemH){
-        useItem(items[i].key, items[i].heal);
+    // 背包按鈕 + 道具選單（與 drawInventoryBar 幾何同步）
+    {
+      const g=bagGeo();
+      // 點背包按鈕 → 展開/收起選單
+      if(cx>=g.bagX&&cx<g.bagX+g.size&&cy>=g.bagY&&cy<g.bagY+g.size){
+        bagOpen=!bagOpen;
         return;
+      }
+      // 選單展開時，點道具格 → 使用該道具
+      if(bagOpen){
+        const items=[
+          {key:'noodle', heal:15},
+          {key:'fish', heal:30},
+          {key:'tempura', heal:50},
+        ];
+        for(let i=0;i<items.length;i++){
+          const sx=g.bagX-(i+1)*(g.size+g.gap), sy=g.bagY;
+          if(cx>=sx&&cx<sx+g.size&&cy>=sy&&cy<sy+g.size){
+            useItem(items[i].key, items[i].heal);
+            return;
+          }
+        }
       }
     }
     return;
@@ -1127,6 +1157,15 @@ function onTap(cx,cy){
     if(cx<MX||cx>MX+945||cy<MY||cy>MY+492) closeUI();
     return;
   }
+  // 主城背包鈕（點開/收起，不需靠近建築；點選單格不消耗、僅攔截避免誤觸走動）
+  if(scene==='main'){
+    const g=bagGeo();
+    if(cx>=g.bagX&&cx<g.bagX+g.size&&cy>=g.bagY&&cy<g.bagY+g.size){ bagOpen=!bagOpen; return; }
+    if(bagOpen){
+      for(let i=1;i<=4;i++){ const sx=g.bagX-i*(g.size+g.gap);
+        if(cx>=sx&&cx<sx+g.size&&cy>=g.bagY&&cy<g.bagY+g.size) return; }
+    }
+  }
   // 時代場景：點擊時依靠近的目標互動（靠近傳送門回主城、靠近城堡開關卡選單）
   if(scene==='three-kingdom'||scene==='knight'||scene==='edo'){ interact(); return; }
   // 主城：必須靠近建築才能點擊互動
@@ -1233,6 +1272,7 @@ function startBattle(){
     maxHP=100;
     questionAnswered=false;
     selectedAnswer=null;
+    bagOpen=false; // 每場對戰背包預設收起
     battleArrows=[]; // 清空背景飛箭並重置發射排程
     arrowSched={ enemy:{cd:20+Math.floor(Math.random()*100),burst:0,burstCd:0},
                  player:{cd:20+Math.floor(Math.random()*100),burst:0,burstCd:0} };
@@ -2737,69 +2777,13 @@ function drawTeachingScene(){
   drawPlayer(DESIGN_W/2-80, GROUND_Y, 1, 0);
   drawWarrior(DESIGN_W/2+80, GROUND_Y, -1, 'sit');
 
-  // 對話框和大頭像
+  // 對話框（已移除頭像框，置中顯示）
   const speaker=teachingPhase===1?'隨從':'真田幸村';
-  const dialogW=700, dialogH=200;
-  const dialogX=(DESIGN_W-dialogW)/2, dialogY=100;
-
-  // 頭像框（在對話框外的左方）
-  const avatarFrameW=120, avatarFrameH=150;
-  const avatarFrameX=dialogX-avatarFrameW-20, avatarFrameY=dialogY-10;
-  const borderWidth=3;
-
-  // 頭像框背景（深綠色）
-  ctx.fillStyle='rgba(60, 140, 100, 0.5)';
-  ctx.fillRect(avatarFrameX, avatarFrameY, avatarFrameW, avatarFrameH);
-
-  // 頭像框金色邊框（直線長方形）
-  ctx.strokeStyle='#D4AF37';
-  ctx.lineWidth=borderWidth;
-  ctx.strokeRect(avatarFrameX, avatarFrameY, avatarFrameW, avatarFrameH);
-
-  // 頭像框內部邊距（金色邊框内側）
-  const innerPadding=5;
-  const innerX=avatarFrameX+innerPadding;
-  const innerY=avatarFrameY+innerPadding;
-  const innerW=avatarFrameW-innerPadding*2;
-  const innerH=avatarFrameH-innerPadding*2;
-
-  // 繪製人物圖像在框內（只顯示上半部，80%大小，正中間，底部切齊）
-  ctx.save();
-
-  // 設置裁剪區域（只顯示框內內容）
-  ctx.beginPath();
-  ctx.rect(innerX, innerY, innerW, innerH);
-  ctx.clip();
-
-  // 角色尺寸與位置計算
-  const charScale=0.8; // 縮放到 80%
-  const charBaseW=80; // 角色寬度
-  const charBaseH=44; // 角色上半身高度
-
-  // 在框內居中
-  const centerX=innerX+innerW/2;
-  const bottomY=innerY+innerH;
-
-  // 應用縮放
-  ctx.translate(centerX, bottomY);
-  ctx.scale(charScale, charScale);
-
-  // 角色中心對齐，底部對齐
-  const drawX=-charBaseW/2;
-  const drawY=-charBaseH;
-
-  if(teachingPhase===1){
-    // 隨從武士
-    drawWarrior(drawX, drawY, 1, 'stand');
-  } else {
-    // 真田幸村
-    drawPlayer(drawX, drawY, 1, 0);
-  }
-
-  ctx.restore();
+  const dialogW=820, dialogH=290;
+  const dialogX=(DESIGN_W-dialogW)/2, dialogY=64;
 
   // 對話框背景（深綠色）
-  ctx.fillStyle='rgba(60, 140, 100, 0.5)';
+  ctx.fillStyle='rgba(18, 34, 28, 0.86)';
   ctx.fillRect(dialogX, dialogY, dialogW, dialogH);
 
   // 對話框金色邊框（直線長方形）
@@ -2807,29 +2791,31 @@ function drawTeachingScene(){
   ctx.lineWidth=3;
   ctx.strokeRect(dialogX, dialogY, dialogW, dialogH);
 
-  // 發言者名稱（深色以確保可讀性）
-  ctx.fillStyle='#1a1a1a';
-  ctx.font='bold 14px DotGothic16';
+  // 發言者名稱（金色、放大）
+  ctx.fillStyle='#ffe08b';
+  ctx.font='bold 19px DotGothic16';
   ctx.textAlign='left';
-  ctx.fillText(speaker, dialogX+20, dialogY+25);
+  ctx.fillText(speaker, dialogX+22, dialogY+34);
+  ctx.strokeStyle='#D4AF37'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(dialogX+22, dialogY+42); ctx.lineTo(dialogX+dialogW-22, dialogY+42); ctx.stroke();
 
-  // 對話內容（深色文本）
-  ctx.fillStyle='#1a1a1a';
-  ctx.font='14px DotGothic16';
+  // 對話內容（淺色、放大，與深底高對比）
+  ctx.fillStyle='#f6efdd';
+  ctx.font='17px DotGothic16';
   const dialogText=teachingPhase===1?currentStage.teachingDialogue:'知道了，出發吧';
-  const lines=dialogText.match(/.{1,48}/g)||[];
-  let ty=dialogY+55;
-  for(const line of lines.slice(0,5)){
-    if(ty>dialogY+dialogH-25) break;
-    ctx.fillText(line, dialogX+20, ty);
-    ty+=22;
+  const lines=dialogText.match(/.{1,44}/g)||[];
+  let ty=dialogY+66;
+  for(const line of lines.slice(0,8)){
+    if(ty>dialogY+dialogH-24) break;
+    ctx.fillText(line, dialogX+22, ty);
+    ty+=26;
   }
 
   // 提示文字（按E或點擊繼續）
-  ctx.fillStyle='#4a4a4a';
-  ctx.font='12px DotGothic16';
+  ctx.fillStyle='#cfc8b8';
+  ctx.font='13px DotGothic16';
   ctx.textAlign='right';
-  ctx.fillText('按E或點擊繼續', dialogX+dialogW-20, dialogY+dialogH-12);
+  ctx.fillText('按E或點擊繼續', dialogX+dialogW-22, dialogY+dialogH-12);
 
   drawMusicToggleButton();
   drawFadeOverlay();
@@ -3701,28 +3687,28 @@ function drawBattleOptions(options){
   }
 }
 
-// ── 背包 HUD（主畫面右上角）────────────────────────────
+// ── 背包 HUD（主畫面右上角，背包鈕＋展開選單：3道具格＋1銅幣格）──
 function drawInventoryHUD(){
-  const hudX=DESIGN_W-180, hudY=8;
-  ctx.fillStyle='rgba(0,0,0,0.6)';
-  ctx.fillRect(hudX, hudY, 170, 90);
-  ctx.strokeStyle='#fcc539';
-  ctx.lineWidth=2;
-  ctx.strokeRect(hudX, hudY, 170, 90);
-
-  ctx.fillStyle='#fcc539';
-  ctx.font='bold 11px DotGothic16';
-  ctx.textAlign='left';
-  ctx.fillText('💰 銅幣：'+coins, hudX+8, hudY+18);
-
-  ctx.fillStyle='#ffe08b';
-  ctx.font='10px DotGothic16';
-  ctx.fillText('🍜 蕎麥麵：'+inventory.noodle, hudX+8, hudY+35);
-  ctx.fillText('🐟 烤魚：'+inventory.fish, hudX+8, hudY+50);
-  ctx.fillText('🍱 天婦羅蓋飯：'+inventory.tempura, hudX+8, hudY+65);
+  const g=bagGeo();
+  const items=[
+    {icon:'🍜', key:'noodle'},
+    {icon:'🐟', key:'fish'},
+    {icon:'🍱', key:'tempura'},
+  ];
+  if(bagOpen){
+    // 三格道具
+    for(let i=0;i<items.length;i++){
+      const sx=g.bagX-(i+1)*(g.size+g.gap);
+      drawItemCell(sx, g.bagY, g.size, items[i]);
+    }
+    // 多一格銅幣
+    drawCoinCell(g.bagX-4*(g.size+g.gap), g.bagY, g.size);
+  }
+  drawBagButton(g);
 }
 
 function useItem(key, heal){
+  if(scene!=='battle') return;            // 僅對戰中可消耗道具，避免誤觸
   if(!inventory[key]||inventory[key]<=0) return;
   const newHP=Math.min(playerHP+heal, maxHP);
   inventory[key]--;
@@ -3730,47 +3716,70 @@ function useItem(key, heal){
   saveProgress();
 }
 
-function drawInventoryBar(){
-  // 背包框位置：右中處（向上移動10像素）
-  const invW=160;
-  const invH=100;
-  const invX=DESIGN_W-invW-10; // 右側，留10像素邊距
-  const invY=isPortrait?((DESIGN_H-invH)/2-10):120; // 橫屏往上移到上方（避開放大的題目框）
+// 背包按鈕幾何（繪製與點擊共用；主畫面置頂右，對戰置中右）
+function bagGeo(){
+  const size=54, gap=8, margin=14;
+  const bagX=DESIGN_W-size-margin;
+  const bagY = scene==='main' ? 12 : (isPortrait?300:112);
+  return {size, gap, margin, bagX, bagY};
+}
 
-  // 紅底半透明背景
-  ctx.fillStyle='rgba(242, 47, 70, 0.4)';
-  ctx.fillRect(invX, invY, invW, invH);
+// 背包按鈕本體（方形 🎒）
+function drawBagButton(g){
+  ctx.fillStyle='rgba(20,16,28,0.82)';
+  ctx.fillRect(g.bagX, g.bagY, g.size, g.size);
+  ctx.strokeStyle='#fcc539'; ctx.lineWidth= bagOpen?3:2;
+  ctx.strokeRect(g.bagX, g.bagY, g.size, g.size);
+  ctx.fillStyle='#ffffff'; ctx.font='28px Arial';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('🎒', g.bagX+g.size/2, g.bagY+g.size/2+1);
+  ctx.textBaseline='alphabetic'; ctx.textAlign='left';
+}
 
-  // 金色邊框
-  ctx.strokeStyle='#fcc539';
-  ctx.lineWidth=2;
-  ctx.strokeRect(invX, invY, invW, invH);
-
-  // 道具列表
-  const items=[
-    {icon:'🍜', name:'蕎麥麵', key:'noodle'},
-    {icon:'🐟', name:'烤魚', key:'fish'},
-    {icon:'🍱', name:'天婦羅', key:'tempura'},
-  ];
-
-  ctx.fillStyle='#ffffff';
-  ctx.font='11px DotGothic16';
+// 銅幣方格（主畫面背包多出的一欄）
+function drawCoinCell(x,y,size){
+  ctx.fillStyle='rgba(252,197,57,0.20)'; ctx.fillRect(x,y,size,size);
+  ctx.strokeStyle='#fcc539'; ctx.lineWidth=2; ctx.strokeRect(x,y,size,size);
+  ctx.font='23px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('💰', x+size/2, y+size/2-6);
+  ctx.fillStyle='#ffe08b'; ctx.font='bold 13px DotGothic16';
+  ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  ctx.fillText(coins, x+size/2, y+size-6);
   ctx.textAlign='left';
+}
 
-  for(let i=0;i<items.length;i++){
-    const item=items[i];
-    const count=inventory[item.key]||0;
-    const itemSpacing=30; // 每個道具的間隔
-    const y=invY+12+i*itemSpacing; // 從框內頂部12像素開始
+// 單一道具方格
+function drawItemCell(x,y,size,item){
+  const count=inventory[item.key]||0;
+  ctx.fillStyle = count>0?'rgba(242,47,70,0.34)':'rgba(40,40,46,0.6)';
+  ctx.fillRect(x,y,size,size);
+  ctx.strokeStyle = count>0?'#fcc539':'#6a6a6a';
+  ctx.lineWidth=2; ctx.strokeRect(x,y,size,size);
+  // 道具圖樣（缺貨時變暗）
+  ctx.globalAlpha = count>0?1:0.4;
+  ctx.font='26px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(item.icon, x+size/2, y+size/2-3);
+  ctx.globalAlpha=1; ctx.textBaseline='alphabetic';
+  // 右下角數量
+  ctx.fillStyle='#ffffff'; ctx.font='bold 13px DotGothic16'; ctx.textAlign='right';
+  ctx.fillText('x'+count, x+size-4, y+size-5);
+}
 
-    // 繪製icon
-    ctx.font='14px Arial';
-    ctx.fillText(item.icon, invX+8, y);
-
-    // 繪製名稱和數量
-    ctx.font='11px DotGothic16';
-    ctx.fillText(item.name+':'+count, invX+28, y);
+function drawInventoryBar(){
+  const g=bagGeo();
+  const items=[
+    {icon:'🍜', key:'noodle'},
+    {icon:'🐟', key:'fish'},
+    {icon:'🍱', key:'tempura'},
+  ];
+  // 展開時：自背包按鈕往左延伸三格道具選單
+  if(bagOpen){
+    for(let i=0;i<items.length;i++){
+      const sx=g.bagX-(i+1)*(g.size+g.gap), sy=g.bagY;
+      drawItemCell(sx, sy, g.size, items[i]);
+    }
   }
+  drawBagButton(g);
 }
 
 // ── 傳送門懸浮粒子 ───────────────────────────────────────
@@ -4535,6 +4544,7 @@ function applySaveData(data){
     levelProgress=freshLevelProgress();
     musicEnabled=data.musicEnabled!==false;
     showIntro=!data.introShown;
+    sanitizeLevelProgress();
     return;
   }
   coins=data.coins||0;
@@ -4544,6 +4554,7 @@ function applySaveData(data){
   flagsPlanted=data.flagsPlanted||{ai:false, cowork:false, code:false};
   musicEnabled=data.musicEnabled!==false;
   showIntro=!data.introShown;
+  sanitizeLevelProgress(); // 自動修復損壞/不完整的進度，避免某時代關卡全鎖
 }
 function saveProgress(){
   const data=currentStateData();
@@ -4579,50 +4590,71 @@ window.SanadaGame={
 
 // ── 音頻管理 ─────────────────────────────────────────────
 const AudioManager={
-  currentScene:null,
-  bgmAudio:null,        // 目前播放中的背景音樂 (HTMLAudioElement)
+  // 兩軌：territory（領地，所有非對戰畫面）/ battle（對戰，教學＋對戰畫面）
+  files:{
+    territory:'assets/audio/領地.mp3',
+    battle:'assets/audio/對戰.mp3',
+  },
+  el:{},              // track key -> HTMLAudioElement
+  current:null,       // 目前應播放的音軌
+  fadeTimer:null,
+  VOL:0.5,
+  FADE_MS:900,        // 淡入/淡出時間
 
-  // ── 各場景背景音樂檔 ───────────────────────────────────────
-  // 之後把音樂檔放進 assets/audio/，再把對應路徑填進來即可。
-  // 留空字串 = 該場景目前無音樂（靜音）。
-  // 範例： 'main':'assets/audio/main.mp3',
-  sceneBgm:{
-    'main':'',
-    'three-kingdom':'',
-    'knight':'',
-    'edo':'',
-    'battle':'',
-    'teaching':'',
-    'levelClear':'',
+  init(){
+    for(const k in this.files){
+      const a=new Audio(this.files[k]);
+      a.loop=true; a.preload='auto'; a.volume=0;
+      this.el[k]=a;
+    }
   },
 
-  init(){ /* 預留：之後若要用 Web Audio 做音效再初始化 */ },
+  // 場景 → 音軌（對戰/教學=對戰；領地/各時代/破關/室內/結局…=領地）
+  trackFor(s){ return (s==='battle'||s==='teaching') ? 'battle' : 'territory'; },
 
-  // 場景切換時呼叫（gameLoop 每幀呼叫，但場景沒變就略過）
+  // gameLoop 每幀呼叫；音軌相同就略過（同為領地→切換時代不重播）
   playSceneMusic(sceneName){
-    if(sceneName===this.currentScene) return;
-    this.currentScene=sceneName;
-    this.refresh();
+    const want=this.trackFor(sceneName);
+    if(want===this.current) return;
+    this.current=want;
+    if(musicEnabled) this._crossfade(want);
   },
 
-  // 依「目前場景 + 音樂開關狀態」決定播放或停止背景音樂
+  // 淡出其他音軌、淡入指定音軌
+  _crossfade(toKey){
+    clearInterval(this.fadeTimer);
+    const to=this.el[toKey];
+    if(to){ try{ to.currentTime=0; }catch(e){} to.volume=0; to.play().catch(()=>{}); }
+    const starts={}; for(const k in this.el) starts[k]=this.el[k].volume;
+    const steps=Math.max(1, Math.round(this.FADE_MS/40)); let s=0;
+    this.fadeTimer=setInterval(()=>{
+      s++; const t=Math.min(1, s/steps);
+      for(const k in this.el){
+        const a=this.el[k];
+        if(k===toKey) a.volume=this.VOL*t;                              // 漸強
+        else { a.volume=Math.max(0, starts[k]*(1-t)); if(t>=1) a.pause(); } // 漸弱後暫停
+      }
+      if(t>=1){ clearInterval(this.fadeTimer); this.fadeTimer=null; }
+    }, 40);
+  },
+
+  // 首次使用者互動 → 解鎖瀏覽器自動播放限制
+  onUserGesture(){
+    if(musicEnabled && this.current){
+      const a=this.el[this.current];
+      if(a && a.paused) this._crossfade(this.current);
+    }
+  },
+
+  // 音樂開關：開→淡入目前音軌；關→全部停止
   refresh(){
-    this.stopMusic();
-    if(!musicEnabled) return;
-    const src=this.sceneBgm[this.currentScene];
-    if(!src) return;                 // 尚未設定音樂 → 維持靜音
-    const a=new Audio(src);
-    a.loop=true;
-    a.volume=0.5;
-    a.play().catch(()=>{});          // 瀏覽器可能因尚未互動而阻擋，忽略錯誤
-    this.bgmAudio=a;
+    if(musicEnabled){ if(this.current) this._crossfade(this.current); }
+    else this.stopMusic();
   },
 
   stopMusic(){
-    if(this.bgmAudio){
-      this.bgmAudio.pause();
-      this.bgmAudio=null;
-    }
+    clearInterval(this.fadeTimer); this.fadeTimer=null;
+    for(const k in this.el){ this.el[k].pause(); this.el[k].volume=0; }
   },
 };
 
