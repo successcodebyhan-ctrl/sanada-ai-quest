@@ -2,13 +2,19 @@
 
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
-const DESIGN_W = 1280, DESIGN_H = 720;
+const DESIGN_W = 1280, DESIGN_H = 720;   // 世界寬度固定 1280（遊戲座標都用這個）
 let scale = 1;
+let VIEW_W = DESIGN_W;       // 實際畫布寬度（依螢幕比例動態變寬，最小 1280）
+let worldOffsetX = 0;        // 世界置中位移 =(VIEW_W-1280)/2；渲染時 translate、輸入時扣除
 
 function resizeCanvas() {
-  scale = Math.min(window.innerWidth / DESIGN_W, window.innerHeight / DESIGN_H);
-  canvas.width = DESIGN_W; canvas.height = DESIGN_H;
-  canvas.style.width  = Math.floor(DESIGN_W * scale) + 'px';
+  const aspect = window.innerWidth / window.innerHeight;
+  // 高度固定 720，寬度跟著螢幕比例變寬（手機橫放更寬→延伸；桌機16:9維持1280）
+  VIEW_W = Math.max(DESIGN_W, Math.round(DESIGN_H * aspect));
+  worldOffsetX = Math.round((VIEW_W - DESIGN_W) / 2);
+  scale = Math.min(window.innerWidth / VIEW_W, window.innerHeight / DESIGN_H);
+  canvas.width = VIEW_W; canvas.height = DESIGN_H;
+  canvas.style.width  = Math.floor(VIEW_W * scale) + 'px';
   canvas.style.height = Math.floor(DESIGN_H * scale) + 'px';
   ctx.imageSmoothingEnabled = false;
 }
@@ -110,7 +116,7 @@ function generateStars(n){
 function drawSky(){
   const g=ctx.createLinearGradient(0,0,0,GROUND_Y);
   g.addColorStop(0,C.bgMain); g.addColorStop(1,C.bgSub);
-  ctx.fillStyle=g; ctx.fillRect(0,0,DESIGN_W,GROUND_Y);
+  ctx.fillStyle=g; ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,GROUND_Y);
 
   for(const s of stars){
     s.phase+=s.speed;
@@ -127,10 +133,11 @@ function drawSky(){
       ctx.fillRect(sx,sy-1,1,1);
     }
   }
-  // 遠山剪影（增加景深）
+  // 遠山剪影（增加景深，延伸至兩側）
   ctx.fillStyle='#0e2a2f';
-  for(let i=0;i<11;i++){
-    const mx=i*130+30, mh=18+((i*73)%28);
+  const iStart=Math.floor((-worldOffsetX-30)/130), iEnd=Math.ceil((DESIGN_W+worldOffsetX-30)/130);
+  for(let i=iStart;i<=iEnd;i++){
+    const mx=i*130+30, mh=18+(((i*73)%28)+28)%28;
     ctx.fillRect(mx-30,GROUND_Y-mh,70,mh+2);
     ctx.fillRect(mx-14,GROUND_Y-mh-12,28,14);
     ctx.fillRect(mx-6,GROUND_Y-mh-20,12,10);
@@ -223,24 +230,25 @@ function generateGroundMap(){
 
 function drawGround(){
   const S=8;
+  const cStart=Math.floor(-worldOffsetX/S), cEnd=Math.ceil((DESIGN_W+worldOffsetX)/S);
   for(let r=0;r<groundMap.length;r++){
-    for(let c=0;c<groundMap[r].length;c++){
+    const row=groundMap[r], len=row.length;
+    for(let c=cStart;c<cEnd;c++){
       const tx=c*S, ty=GROUND_Y+r*S;
       if(ty>DESIGN_H+S)continue;
-      const [dk,lt]=GP[groundMap[r][c]]||GP.g1;
+      const [dk,lt]=GP[row[((c%len)+len)%len]]||GP.g1;   // 超出原範圍時重複貼圖填滿兩側
       ctx.fillStyle=dk; ctx.fillRect(tx,ty,S,S);
       ctx.fillStyle=lt;
       ctx.fillRect(tx,ty,S-1,2); ctx.fillRect(tx,ty+2,2,S-3);
-      // 用各層深色當格線，增強像素感
       ctx.fillStyle=dk;
       ctx.fillRect(tx+S-1,ty,1,S); ctx.fillRect(tx,ty+S-1,S,1);
     }
   }
-  // 地面最上邊分隔線（深色）
+  // 地面最上邊分隔線（深色，延伸至兩側）
   ctx.fillStyle='#051a1f';
-  ctx.fillRect(0,GROUND_Y-2,DESIGN_W,2);
+  ctx.fillRect(-worldOffsetX,GROUND_Y-2,DESIGN_W+2*worldOffsetX,2);
   ctx.fillStyle='#0a2a32';
-  ctx.fillRect(0,GROUND_Y,DESIGN_W,1);
+  ctx.fillRect(-worldOffsetX,GROUND_Y,DESIGN_W+2*worldOffsetX,1);
 }
 
 // ── 石垣台（真田屋基台 + 傳送門共用） ───────────────────────
@@ -863,12 +871,12 @@ window.addEventListener('keyup',e=>{ keys[e.code]=false; });
 
 canvas.addEventListener('click',e=>{
   const r=canvas.getBoundingClientRect();
-  onTap((e.clientX-r.left)/scale,(e.clientY-r.top)/scale);
+  onTap((e.clientX-r.left)/scale-worldOffsetX,(e.clientY-r.top)/scale);
 });
 canvas.addEventListener('touchstart',e=>{
   e.preventDefault();
   const now=Date.now();
-  const canJump=scene==='main'||scene==='three-kingdom'||scene==='knight'||scene==='edo';
+  const canJump=deviceMode==='mobile'&&(scene==='main'||scene==='three-kingdom'||scene==='knight'||scene==='edo');
   if(now-lastTap<300&&PL.onGround&&canJump){
     PL.vy=PL.jump; PL.onGround=false;
   }
@@ -879,15 +887,30 @@ canvas.addEventListener('touchend',e=>{
   e.preventDefault(); touch.L=false; touch.R=false;
   if(e.changedTouches.length){
     const r=canvas.getBoundingClientRect(),t=e.changedTouches[0];
-    onTap((t.clientX-r.left)/scale,(t.clientY-r.top)/scale);
+    onTap((t.clientX-r.left)/scale-worldOffsetX,(t.clientY-r.top)/scale);
   }
 },{passive:false});
 
 function touchSync(ts){
   touch.L=false; touch.R=false;
-  const mid=window.innerWidth/2;
-  for(const t of ts){ if(t.clientX<mid) touch.L=true; else touch.R=true; }
+  if(deviceMode!=='mobile' || !isWalkScene(scene)) return; // 僅手機模式 + 可走動場景才用螢幕方向鍵
+  const d=dpadGeo(), r=canvas.getBoundingClientRect();
+  for(const t of ts){
+    const cx=(t.clientX-r.left)/scale-worldOffsetX, cy=(t.clientY-r.top)/scale;
+    if(inRect(cx,cy,d.left)) touch.L=true;
+    else if(inRect(cx,cy,d.right)) touch.R=true;
+  }
 }
+
+// 滑鼠按住方向鍵也可移動（方便桌機測試；觸控裝置因 touchstart preventDefault 不觸發合成滑鼠事件）
+canvas.addEventListener('mousedown',e=>{
+  if(deviceMode!=='mobile' || !isWalkScene(scene)) return;
+  const r=canvas.getBoundingClientRect(), cx=(e.clientX-r.left)/scale-worldOffsetX, cy=(e.clientY-r.top)/scale;
+  const d=dpadGeo();
+  if(inRect(cx,cy,d.left)) touch.L=true;
+  else if(inRect(cx,cy,d.right)) touch.R=true;
+});
+window.addEventListener('mouseup',()=>{ touch.L=false; touch.R=false; });
 
 // ── 互動邏輯 ─────────────────────────────────────────────
 function closeUI(){
@@ -925,6 +948,11 @@ function doAction(id){
 function onTap(cx,cy){
   AudioManager.onUserGesture();   // 首次互動解鎖背景音樂自動播放
   if(!showIntro && scene!=='ending'){ if(handleSettingsTap(cx,cy)) return; }
+  // 手機模式：點到螢幕方向鍵不觸發遊戲互動（移動由 touchSync 處理）
+  if(deviceMode==='mobile' && isWalkScene(scene)){
+    const d=dpadGeo();
+    if(inRect(cx,cy,d.left)||inRect(cx,cy,d.right)) return;
+  }
   if(showIntro){
     // 跳過按鈕（右下角）
     const skipW=60, skipH=24;
@@ -2337,7 +2365,7 @@ function drawBossIeyasu(cx,by){
 function drawFadeOverlay(){
   if(fadeAlpha<=0) return;
   ctx.fillStyle=`rgba(0,0,0,${fadeAlpha.toFixed(2)})`;
-  ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+  ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
   // 過場時代場景黑屏中的六文錢跳動（淡入淡出期間顯示1.2秒）
   if(currentEra&&fadeFrame>=24&&fadeFrame<=96){
     const coinTime=(fadeFrame-20)%30;
@@ -2383,7 +2411,7 @@ function drawIntroScene(){
   if(sceneNum===0){
     // 場景1：黑色背景 + 戰場像素圖
     ctx.fillStyle='#000000';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     // 簡單戰場圖案
     ctx.fillStyle='rgba(68,68,68,'+fadeInProgress+')';
     for(let y=0;y<DESIGN_H;y+=8){
@@ -2400,7 +2428,7 @@ function drawIntroScene(){
   } else if(sceneNum===1){
     // 場景2：真田幸村倒下
     ctx.fillStyle='#000000';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     // 倒下的人物轮廓
     ctx.fillStyle='rgba(255,0,0,'+fadeInProgress+')';
     ctx.fillRect(DESIGN_W/2-30,DESIGN_H/2-40,60,20);
@@ -2414,13 +2442,13 @@ function drawIntroScene(){
   } else if(sceneNum===2){
     // 場景3：光芒從黑暗中透出
     ctx.fillStyle='#000000';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     // 光芒效果
     const glow=ctx.createRadialGradient(DESIGN_W/2,DESIGN_H/2,0,DESIGN_W/2,DESIGN_H/2,300);
     glow.addColorStop(0,'rgba(255,200,100,'+0.6*fadeInProgress+')');
     glow.addColorStop(1,'rgba(0,0,0,0)');
     ctx.fillStyle=glow;
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     // 文字顯現
     ctx.fillStyle='rgba(255,255,255,'+textShowProgress+')';
     ctx.font='bold 32px DotGothic16';
@@ -2430,7 +2458,7 @@ function drawIntroScene(){
   } else if(sceneNum===3){
     // 場景4：領地全景，傳送門在遠方發光
     ctx.fillStyle='#102f34';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     // 遠景
     ctx.fillStyle='#22474c';
     ctx.fillRect(0,DESIGN_H*0.6,DESIGN_W,DESIGN_H*0.4);
@@ -2454,7 +2482,7 @@ function drawIntroScene(){
   } else if(sceneNum===4){
     // 場景5：傳送門特寫，三個寶石缺口
     ctx.fillStyle='#000000';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     // 傳送門框架
     ctx.strokeStyle='rgba(176,112,235,'+fadeInProgress+')';
     ctx.lineWidth=12;
@@ -2481,7 +2509,7 @@ function drawIntroScene(){
   } else if(sceneNum===5){
     // 場景6：真田幸村握刀站立 + 過場到領地
     ctx.fillStyle='#102f34';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     // 簡單人物
     ctx.fillStyle='rgba(255,0,0,'+fadeInProgress+')';
     ctx.fillRect(DESIGN_W/2-15,DESIGN_H/2-60,30,60);
@@ -2542,7 +2570,7 @@ function drawEndingScene(){
   if(sceneNum===0){
     // 場景1：真田幸村走向傳送門
     ctx.fillStyle='#102f34';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     ctx.fillStyle='#22474c';
     ctx.fillRect(0,GROUND_Y,DESIGN_W,DESIGN_H-GROUND_Y);
     // 簡單傳送門
@@ -2556,7 +2584,7 @@ function drawEndingScene(){
     ctx.fillStyle='#ffff00';
     ctx.fillRect(walkX+5,GROUND_Y-35,20,30);
     ctx.fillStyle='rgba(0,0,0,'+fade+')';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     ctx.fillStyle='rgba(255,255,255,'+(1-fade)+')';
     ctx.font='bold 28px DotGothic16';
     ctx.textAlign='center';
@@ -2564,15 +2592,15 @@ function drawEndingScene(){
   } else if(sceneNum===1){
     // 場景2：強光從門中溢出
     ctx.fillStyle='#000000';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     const strongGlow=ctx.createRadialGradient(DESIGN_W/2,DESIGN_H/2,0,DESIGN_W/2,DESIGN_H/2,500);
     strongGlow.addColorStop(0,'rgba(255,255,200,1)');
     strongGlow.addColorStop(0.5,'rgba(255,200,100,0.5)');
     strongGlow.addColorStop(1,'rgba(0,0,0,0)');
     ctx.fillStyle=strongGlow;
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     ctx.fillStyle='rgba(0,0,0,'+fade+')';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     ctx.fillStyle='rgba(255,255,255,'+(1-fade)+')';
     ctx.font='bold 32px DotGothic16';
     ctx.textAlign='center';
@@ -2586,7 +2614,7 @@ function drawEndingScene(){
     sunGrad.addColorStop(0.6,'#ffb366');
     sunGrad.addColorStop(1,'#4a5a81');
     ctx.fillStyle=sunGrad;
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     // 遠方山脈輪廓
     ctx.fillStyle='rgba(0,0,0,0.3)';
     ctx.beginPath();
@@ -2603,7 +2631,7 @@ function drawEndingScene(){
     ctx.fillStyle='#ffff00';
     ctx.fillRect(DESIGN_W/2-8,DESIGN_H*0.5-40,16,40);
     ctx.fillStyle='rgba(0,0,0,'+fade+')';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     ctx.fillStyle='rgba(255,255,255,'+(1-fade)+')';
     ctx.font='bold 24px DotGothic16';
     ctx.textAlign='center';
@@ -2612,7 +2640,7 @@ function drawEndingScene(){
   } else if(sceneNum===3){
     // 場景4-5-6 統一為黑屏，顯示THE END
     ctx.fillStyle='#000000';
-    ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+    ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
     ctx.fillStyle='rgba(255,255,255,'+(0.3+Math.sin(endingFrame*0.05)*0.3)+')';
     ctx.font='bold 64px DotGothic16';
     ctx.textAlign='center';
@@ -2670,7 +2698,7 @@ function drawScene(){
   drawLabels();
   drawDialog(); drawShopUI(); drawPortalMenu();
   drawInventoryHUD();
-  drawSettingsUI();
+  drawMobileControls(); drawSettingsUI();
   drawFadeOverlay();
   ctx.fillStyle=C.accent3; ctx.font='12px DotGothic16'; ctx.textAlign='right';
   ctx.fillText('真田幸村の領地',DESIGN_W-16,DESIGN_H-14);
@@ -2737,7 +2765,7 @@ function drawTeachingScene(){
   g.addColorStop(0,'#1a1a2e');
   g.addColorStop(1,'#0f0f1e');
   ctx.fillStyle=g;
-  ctx.fillRect(0,0,DESIGN_W,GROUND_Y);
+  ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,GROUND_Y);
 
   // 星星（緩慢閃爍）
   for(const s of stars){
@@ -2822,7 +2850,7 @@ function drawTeachingScene(){
   ctx.textAlign='right';
   ctx.fillText('按E或點擊繼續', dialogX+dialogW-24, dialogY+dialogH-12);
 
-  drawSettingsUI();
+  drawMobileControls(); drawSettingsUI();
   drawFadeOverlay();
 }
 
@@ -2853,8 +2881,9 @@ function drawTeachingGround(){
   const groundHeight=DESIGN_H-GROUND_Y;
   const layerHeight=Math.ceil(groundHeight/S);
 
+  const colStart=Math.floor(-worldOffsetX/S), colEnd=Math.ceil((DESIGN_W+worldOffsetX)/S);
   for(let row=0;row<layerHeight;row++){
-    for(let col=0;col<Math.ceil(DESIGN_W/S);col++){
+    for(let col=colStart;col<colEnd;col++){
       const tx=col*S, ty=GROUND_Y+row*S;
       if(ty>=DESIGN_H) break;
 
@@ -2872,7 +2901,7 @@ function drawTeachingGround(){
       }
 
       // 隨機輕微變化
-      const variance=(row+col)%4;
+      const variance=((row+col)%4+4)%4;
       const [dk,lt]=colorSet;
       ctx.fillStyle=variance===0?lt:dk;
       ctx.fillRect(tx, ty, S, S);
@@ -2884,11 +2913,11 @@ function drawTeachingGround(){
     }
   }
 
-  // 地面頂層分隔線（雙層）
+  // 地面頂層分隔線（雙層，延伸至兩側）
   ctx.fillStyle='#051a1f';
-  ctx.fillRect(0, GROUND_Y-2, DESIGN_W, 2);
+  ctx.fillRect(-worldOffsetX, GROUND_Y-2, DESIGN_W+2*worldOffsetX, 2);
   ctx.fillStyle='#0a2a32';
-  ctx.fillRect(0, GROUND_Y, DESIGN_W, 1);
+  ctx.fillRect(-worldOffsetX, GROUND_Y, DESIGN_W+2*worldOffsetX, 1);
 }
 
 function drawTeachingCamp(x,y,size){
@@ -3123,7 +3152,7 @@ function drawBattleSceneLandscape(){
   g.addColorStop(0,col.bgMain);
   g.addColorStop(1,col.bgSub);
   ctx.fillStyle=g;
-  ctx.fillRect(0,0,DESIGN_W,BATTLE_GY);
+  ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,BATTLE_GY);
 
   // 星空（隨機閃爍，只畫在地面線以上）
   drawTwinkleStars(BATTLE_GY);
@@ -3293,7 +3322,7 @@ function drawBattleSceneLandscape(){
     drawRetractConfirmDialog();
   }
 
-  drawSettingsUI();
+  drawMobileControls(); drawSettingsUI();
   drawFadeOverlay();
 }
 
@@ -3353,7 +3382,7 @@ function drawBattleScenePortrait(){
   g.addColorStop(0,col.bgMain);
   g.addColorStop(1,col.bgSub);
   ctx.fillStyle=g;
-  ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+  ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
 
   // 星空（隨機閃爍）
   drawTwinkleStars();
@@ -3545,7 +3574,7 @@ function drawBattleScenePortrait(){
     drawRetractConfirmDialog();
   }
 
-  drawSettingsUI();
+  drawMobileControls(); drawSettingsUI();
   drawFadeOverlay();
 }
 
@@ -3555,7 +3584,7 @@ function drawLevelClearScene(){
   g.addColorStop(0,col.bgMain);
   g.addColorStop(1,col.bgSub);
   ctx.fillStyle=g;
-  ctx.fillRect(0,0,DESIGN_W,GROUND_Y);
+  ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,GROUND_Y);
 
   // 大標題
   ctx.fillStyle='#fcc539';
@@ -3614,7 +3643,7 @@ function drawLevelClearScene(){
   ctx.textAlign='center';
   ctx.fillText('回到領地', homeBtnX+homeBtnW/2, homeBtnY+26);
 
-  drawSettingsUI();
+  drawMobileControls(); drawSettingsUI();
   drawFadeOverlay();
 }
 
@@ -3725,7 +3754,7 @@ function useItem(key, heal){
 // 背包按鈕幾何（繪製與點擊共用；主畫面置頂右，對戰置中右）
 function bagGeo(){
   const size=54, gap=8, margin=14;
-  const bagX=DESIGN_W-size-margin;
+  const bagX=DESIGN_W+worldOffsetX-size-margin;   // 真實畫面右側
   const bagY = scene==='main' ? 12 : (isPortrait?300:112);
   return {size, gap, margin, bagX, bagY};
 }
@@ -3821,7 +3850,7 @@ function drawEraScene(sceneName){
   g.addColorStop(0,col.bgMain);
   g.addColorStop(1,col.bgSub);
   ctx.fillStyle=g;
-  ctx.fillRect(0,0,DESIGN_W,GROUND_Y);
+  ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,GROUND_Y);
 
   // 繪製星星（使用主城相同方法）
   for(const s of stars){
@@ -3916,7 +3945,7 @@ function drawEraScene(sceneName){
   // 繪製UI
   drawLabels();
   drawDialog(); drawLevelMenu();
-  drawSettingsUI();
+  drawMobileControls(); drawSettingsUI();
   drawFadeOverlay();
 
   // 場景標題
@@ -3946,13 +3975,15 @@ function drawEraGround(col){
     b3:['#3f2323','#542323'],
   };
 
-  // 使用預生成的地面貼圖
+  // 使用預生成的地面貼圖（延伸至兩側）
   if(!eraGroundMap) generateEraGroundMap();
+  const cStart=Math.floor(-worldOffsetX/S), cEnd=Math.ceil((DESIGN_W+worldOffsetX)/S);
   for(let r=0;r<eraGroundMap.length;r++){
-    for(let c=0;c<eraGroundMap[r].length;c++){
+    const erow=eraGroundMap[r], elen=erow.length;
+    for(let c=cStart;c<cEnd;c++){
       const tx=c*S, ty=GROUND_Y+r*S;
       if(ty>DESIGN_H+S)continue;
-      const [dk,lt]=eraGP[eraGroundMap[r][c]];
+      const [dk,lt]=eraGP[erow[((c%elen)+elen)%elen]];
       ctx.fillStyle=dk; ctx.fillRect(tx,ty,S,S);
       ctx.fillStyle=lt;
       ctx.fillRect(tx,ty,S-1,2); ctx.fillRect(tx,ty+2,2,S-3);
@@ -3961,7 +3992,7 @@ function drawEraGround(col){
     }
   }
   ctx.fillStyle='#0b2428';
-  ctx.fillRect(0,GROUND_Y-1,DESIGN_W,2);
+  ctx.fillRect(-worldOffsetX,GROUND_Y-1,DESIGN_W+2*worldOffsetX,2);
 }
 
 function drawEraPortal(x,y){
@@ -4674,8 +4705,8 @@ function detectOrientation(){
 // ── 設定按鈕（左下角）與設定面板 ─────────────────────────
 function settingsBtnGeo(){
   const s=40;
-  if(scene==='battle') return {x:Math.round(DESIGN_W/2-s/2), y:10, w:s, h:s}; // 對戰：頂部中間（避開敵我名字與題目框）
-  return {x:12, y:(isPortrait?DESIGN_H-52:DESIGN_H-50), w:s, h:s};            // 其餘場景：左下角
+  if(scene==='battle') return {x:Math.round(DESIGN_W/2-s/2), y:10, w:s, h:s};            // 對戰：頂部中間
+  return {x:-worldOffsetX+12, y:(isPortrait?DESIGN_H-52:DESIGN_H-50), w:s, h:s};         // 其餘：真實畫面左下角
 }
 function settingsPanelGeo(){
   const w=380, h=250, x=Math.round((DESIGN_W-w)/2), y=Math.round((DESIGN_H-h)/2);
@@ -4703,7 +4734,7 @@ function drawSettingsUI(){
 function drawSettingsPanel(){
   const p=settingsPanelGeo();
   // 半透明遮罩（點此區域即關閉）
-  ctx.fillStyle='rgba(0,0,0,0.45)'; ctx.fillRect(0,0,DESIGN_W,DESIGN_H);
+  ctx.fillStyle='rgba(0,0,0,0.45)'; ctx.fillRect(-worldOffsetX,0,DESIGN_W+2*worldOffsetX,DESIGN_H);
   // 面板
   ctx.fillStyle='rgba(14,22,30,0.96)'; ctx.fillRect(p.x,p.y,p.w,p.h);
   ctx.strokeStyle='#fcc539'; ctx.lineWidth=2; ctx.strokeRect(p.x+1,p.y+1,p.w-2,p.h-2);
@@ -4765,6 +4796,30 @@ function toggleMusic(){
   }
 }
 
+// ── 手機模式：螢幕方向鍵（左/右三角；雙擊螢幕跳躍）─────────
+function isWalkScene(s){ return s==='main'||s==='three-kingdom'||s==='knight'||s==='edo'||s==='interior'; }
+function dpadGeo(){
+  const s=86, gap=18, x=-worldOffsetX+28, y=DESIGN_H-s-92; // 真實畫面左邊偏下方
+  return { left:{x:x, y:y, w:s, h:s}, right:{x:x+s+gap, y:y, w:s, h:s} };
+}
+function drawTriBtn(r, dir){
+  const pad=r.w*0.20;
+  ctx.beginPath();
+  if(dir==='L'){ ctx.moveTo(r.x+pad, r.y+r.h/2); ctx.lineTo(r.x+r.w-pad, r.y+pad); ctx.lineTo(r.x+r.w-pad, r.y+r.h-pad); }
+  else        { ctx.moveTo(r.x+r.w-pad, r.y+r.h/2); ctx.lineTo(r.x+pad, r.y+pad); ctx.lineTo(r.x+pad, r.y+r.h-pad); }
+  ctx.closePath();
+  ctx.fillStyle='#4ade80'; ctx.fill();                                  // 綠色底
+  ctx.strokeStyle='#fcc539'; ctx.lineWidth=3; ctx.lineJoin='round'; ctx.stroke(); // 金邊
+}
+// 手機模式且在可走動場景時，畫左/右三角方向鍵（整體 50% 透明）
+function drawMobileControls(){
+  if(deviceMode!=='mobile' || !isWalkScene(scene)) return;
+  const d=dpadGeo();
+  ctx.save(); ctx.globalAlpha=0.5;
+  drawTriBtn(d.left,'L'); drawTriBtn(d.right,'R');
+  ctx.restore();
+}
+
 function gameLoop(){
   portalTime++;
   detectOrientation();
@@ -4794,7 +4849,12 @@ function gameLoop(){
     if(scene==='battle') updateBattle();
   }
   updateFade();
+  // 動態延伸：先清整個畫布，再把世界(1280)置中位移後繪製
+  ctx.clearRect(0,0,VIEW_W,DESIGN_H);
+  ctx.save();
+  ctx.translate(worldOffsetX,0);
   drawScene();
+  ctx.restore();
   requestAnimationFrame(gameLoop);
 }
 
